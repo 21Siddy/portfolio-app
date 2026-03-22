@@ -164,9 +164,9 @@ body {
   align-items: center;
   justify-content: center;
 }
-.card-icon.purple { background: #EEEDFE; }
-.card-icon.teal { background: #E1F5EE; }
-.card-icon.amber { background: #FAEEDA; }
+.card-icon.purple { background: #c8c5f9; }
+.card-icon.teal { background: #a3eed4; }
+.card-icon.amber { background: #f0d5a5; }
 .card-title {
   font-size: 14px;
   font-weight: 500;
