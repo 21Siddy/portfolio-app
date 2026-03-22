@@ -9,22 +9,30 @@
 </head>
 <body>
 
+  <div id="chess-scrollbar">
+    <div class="chess-square light"></div><div class="chess-square dark"></div>
+    <div class="chess-square light"></div><div class="chess-square dark"></div>
+    <div class="chess-square light"></div><div class="chess-square dark"></div>
+    <div class="chess-square light"></div><div class="chess-square dark"></div>
+    <div id="scroll-pawn">♙</div>
+  </div>
+
   <nav class="nav">
     <span class="nav-logo">Siddharth Hemnani</span>
     <ul class="nav-links">
-      <li><a href="#">projects</a></li>
-      <li><a href="#">germany faq</a></li>
-      <li><a href="#">github</a></li>
+      <li><a href="#" class="interactive">projects</a></li>
+      <li><a href="#" class="interactive">germany faq</a></li>
+      <li><a href="#" class="interactive">github</a></li>
     </ul>
   </nav>
 
   <div class="hero">
     <p class="hero-eyebrow">M.Sc. Computer Science · Paderborn University</p>
     <h1 class="hero-name">Siddharth<br><span>Hemnani.</span></h1>
-    <p class="hero-desc">Software engineer whom you will find crashing out at a LLM for not letting him build systems from scratch. Currently studying in Germany, building tools by day, and all-time whimsiest chess player by night.</p>
+    <p class="hero-desc" id="typewriter-text"><span class="cursor-blink"></span></p>
     <div class="hero-actions">
-      <a href="#" class="btn-primary">view projects</a>
-      <a href="#" class="btn-secondary">germany faq</a>
+      <a href="#" class="btn-primary interactive">view projects</a>
+      <a href="#" class="btn-secondary interactive">germany faq</a>
     </div>
   </div>
 
@@ -33,48 +41,138 @@
   <div class="cards-section">
     <p class="section-label">what you'll find here</p>
     <div class="cards-grid">
-      <a href="#" class="card">
-        <div class="card-icon purple">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <rect x="2" y="2" width="5" height="5" rx="1" fill="#534AB7"/>
-            <rect x="9" y="2" width="5" height="5" rx="1" fill="#534AB7" opacity="0.4"/>
-            <rect x="2" y="9" width="5" height="5" rx="1" fill="#534AB7" opacity="0.4"/>
-            <rect x="9" y="9" width="5" height="5" rx="1" fill="#534AB7" opacity="0.2"/>
-          </svg>
+      <a href="#" class="card interactive">
+        <div class="card-content">
+          <div class="card-icon purple">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <rect x="2" y="2" width="5" height="5" rx="1" fill="#534AB7"/>
+              <rect x="9" y="2" width="5" height="5" rx="1" fill="#534AB7" opacity="0.4"/>
+              <rect x="2" y="9" width="5" height="5" rx="1" fill="#534AB7" opacity="0.4"/>
+              <rect x="9" y="9" width="5" height="5" rx="1" fill="#534AB7" opacity="0.2"/>
+            </svg>
+          </div>
+          <p class="card-title">Projects</p>
+          <p class="card-desc">RAG pipelines, Vulnerability platforms, Prelead.</p>
         </div>
-        <p class="card-title">Projects</p>
-        <p class="card-desc">RAG pipelines, Vulnerability platforms, Prelead.</p>
       </a>
-      <a href="#" class="card">
-        <div class="card-icon teal">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <circle cx="8" cy="8" r="6" stroke="#0F6E56" stroke-width="1.2"/>
-            <path d="M8 5v3.5l2 1.5" stroke="#0F6E56" stroke-width="1.2" stroke-linecap="round"/>
-          </svg>
+      <a href="#" class="card interactive">
+        <div class="card-content">
+          <div class="card-icon teal">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="6" stroke="#0F6E56" stroke-width="1.2"/>
+              <path d="M8 5v3.5l2 1.5" stroke="#0F6E56" stroke-width="1.2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <p class="card-title">Germany FAQ</p>
+          <p class="card-desc">Anmeldung, Health insurance, Banking — the things nobody tells you.</p>
         </div>
-        <p class="card-title">Germany FAQ</p>
-        <p class="card-desc">Anmeldung, Health insurance, Banking — the things nobody tells you.</p>
       </a>
-      <a href="#" class="card">
-        <div class="card-icon amber">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <rect x="2" y="4" width="12" height="8" rx="1.5" stroke="#854F0B" stroke-width="1.2"/>
-            <path d="M5 4V3a1 1 0 011-1h4a1 1 0 011 1v1" stroke="#854F0B" stroke-width="1.2"/>
-            <circle cx="8" cy="8" r="1.5" fill="#854F0B"/>
-          </svg>
+      <a href="#" class="card interactive">
+        <div class="card-content">
+          <div class="card-icon amber">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <rect x="2" y="4" width="12" height="8" rx="1.5" stroke="#854F0B" stroke-width="1.2"/>
+              <path d="M5 4V3a1 1 0 011-1h4a1 1 0 011 1v1" stroke="#854F0B" stroke-width="1.2"/>
+              <circle cx="8" cy="8" r="1.5" fill="#854F0B"/>
+            </svg>
+          </div>
+          <p class="card-title">Homelab</p>
+          <p class="card-desc">An old gaming laptop repurposed as a server. This site runs on it. Read more about it.</p>
         </div>
-        <p class="card-title">Homelab</p>
-        <p class="card-desc">An old gaming laptop repurposed as a server. This site runs on it. Read more about it.</p>
       </a>
     </div>
   </div>
 
   <div class="divider"></div>
 
-  <div class="homelab-strip" style="margin-top: 40px;">
+  <div class="homelab-strip" style="margin-top: 40px; margin-bottom: 80px;">
     <div class="dot"></div>
     <p class="homelab-text">served from <strong>siddharth-lenovo-legion · paderborn, germany</strong></p>
   </div>
 
+  <script>
+    // 1. LLM Typewriter Effect
+    const textTarget = document.getElementById("typewriter-text");
+    const typeSequence = [
+      { text: "Software engineer whom you will find crashing out at a LLM for not letting him build systems from ", delay: 30 },
+      { text: "stack.", delay: 50, isMistake: true }, // The typo
+      { action: "delete", chars: 6, delay: 100 }, // Backspace
+      { text: "scratch. Currently studying in Germany, building tools by day, and all-time whimsiest chess player by night.", delay: 30 }
+    ];
+
+    let currentHTML = "";
+    
+    async function typeWriter() {
+      for (const step of typeSequence) {
+        if (step.text) {
+          for (let i = 0; i < step.text.length; i++) {
+            currentHTML += step.text.charAt(i);
+            textTarget.innerHTML = currentHTML + '<span class="cursor-blink"></span>';
+            await new Promise(r => setTimeout(r, step.delay + (Math.random() * 20))); 
+          }
+          if (step.isMistake) await new Promise(r => setTimeout(r, 600)); 
+        } else if (step.action === "delete") {
+          for (let i = 0; i < step.chars; i++) {
+            currentHTML = currentHTML.slice(0, -1);
+            textTarget.innerHTML = currentHTML + '<span class="cursor-blink"></span>';
+            await new Promise(r => setTimeout(r, 50));
+          }
+          await new Promise(r => setTimeout(r, 300)); 
+        }
+      }
+    }
+    setTimeout(typeWriter, 800);
+
+    // 2. Interactive Card Glow (Tracking Mouse Position)
+    document.querySelectorAll('.card').forEach(card => {
+      card.onmousemove = e => {
+        const rect = card.getBoundingClientRect(),
+              x = e.clientX - rect.left,
+              y = e.clientY - rect.top;
+        card.style.setProperty("--mouse-x", `${x}px`);
+        card.style.setProperty("--mouse-y", `${y}px`);
+      }
+    });
+
+    // 3. Random Pawn Promotion Cursor
+    const pieces = ['♕', '♖', '♗', '♘']; 
+    const isDarkMode = window.matchMatchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const pieceColor = isDarkMode ? 'white' : 'black'; // Ensure piece is visible in both modes
+
+    document.querySelectorAll('.interactive').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        const randomPiece = pieces[Math.floor(Math.random() * pieces.length)];
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" style="fill:${pieceColor};"><text y="24" font-size="24">${randomPiece}</text></svg>`;
+        const encoded = encodeURIComponent(svg);
+        el.style.cursor = `url("data:image/svg+xml;utf8,${encoded}") 16 16, pointer`;
+      });
+      el.addEventListener('mouseleave', () => { el.style.cursor = 'pointer'; });
+    });
+
+    // 4. Chess Scrollbar Logic
+    const pawnEl = document.getElementById('scroll-pawn');
+    let isPromoted = false;
+
+    window.addEventListener('scroll', () => {
+      const maxScroll = document.body.scrollHeight - window.innerHeight;
+      const scrollPercent = Math.max(0, Math.min(1, window.scrollY / maxScroll));
+      
+      const pawnY = scrollPercent * (window.innerHeight - 40); 
+      pawnEl.style.top = `${pawnY}px`;
+
+      if (scrollPercent > 0.95 && !isPromoted) {
+        const randomPromotion = pieces[Math.floor(Math.random() * pieces.length)];
+        pawnEl.innerText = randomPromotion;
+        pawnEl.style.color = "#0F6E56"; // Glows teal on promotion
+        pawnEl.style.textShadow = "0 0 15px rgba(15, 110, 86, 0.8)";
+        isPromoted = true;
+      } else if (scrollPercent <= 0.95 && isPromoted) {
+        pawnEl.innerText = "♙";
+        pawnEl.style.color = "var(--text-primary)";
+        pawnEl.style.textShadow = "none";
+        isPromoted = false;
+      }
+    });
+  </script>
 </body>
 </html>

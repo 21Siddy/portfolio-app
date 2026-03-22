@@ -13,6 +13,7 @@
   --font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   --font-mono: 'SF Mono', 'Fira Code', monospace;
 }
+
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #111110;
@@ -24,30 +25,49 @@
     --border-hover: rgba(255,255,255,0.18);
   }
 }
+
+/* Hide default scrollbar so our Chess one shines */
+::-webkit-scrollbar { width: 0px; background: transparent; }
+html { scrollbar-width: none; }
+
 body {
   font-family: var(--font);
   background: var(--bg);
   color: var(--text-primary);
   min-height: 100vh;
+  overflow-x: hidden;
+  /* Ambient animated background mesh - very subtle so it doesn't break brutalism */
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(83, 74, 183, 0.05) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(15, 110, 86, 0.05) 0px, transparent 50%);
+  background-attachment: fixed;
 }
+
 .nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 20px 48px;
   border-bottom: 0.5px solid var(--border);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
+
 .nav-logo {
   font-size: 14px;
   font-weight: 500;
   color: var(--text-primary);
   letter-spacing: 0.02em;
 }
+
 .nav-links {
   display: flex;
   gap: 32px;
   list-style: none;
 }
+
 .nav-links a {
   font-size: 13px;
   color: var(--text-secondary);
@@ -55,11 +75,14 @@ body {
   letter-spacing: 0.02em;
   transition: color 0.15s;
 }
+
 .nav-links a:hover { color: var(--text-primary); }
+
 .hero {
   padding: 80px 48px 64px;
   max-width: 860px;
 }
+
 .hero-eyebrow {
   font-size: 12px;
   letter-spacing: 0.12em;
@@ -67,6 +90,7 @@ body {
   color: var(--text-tertiary);
   margin-bottom: 20px;
 }
+
 .hero-name {
   font-size: 56px;
   font-weight: 500;
@@ -75,20 +99,37 @@ body {
   letter-spacing: -0.02em;
   margin-bottom: 24px;
 }
+
 .hero-name span { color: var(--text-tertiary); }
+
 .hero-desc {
   font-size: 17px;
   line-height: 1.7;
   color: var(--text-secondary);
   max-width: 520px;
   margin-bottom: 40px;
+  min-height: 90px; /* Prevents layout jumping while typing */
 }
+
+/* Typewriter Cursor */
+.cursor-blink {
+  display: inline-block;
+  width: 8px;
+  height: 17px;
+  background-color: var(--text-primary);
+  animation: blink 1s step-end infinite;
+  vertical-align: middle;
+  margin-left: 4px;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
 .hero-actions {
   display: flex;
   gap: 12px;
   align-items: center;
   flex-wrap: wrap;
 }
+
 .btn-primary {
   padding: 10px 22px;
   font-size: 13px;
@@ -101,7 +142,14 @@ body {
   letter-spacing: 0.01em;
   text-decoration: none;
   display: inline-block;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
 .btn-secondary {
   padding: 10px 22px;
   font-size: 13px;
@@ -114,15 +162,19 @@ body {
   letter-spacing: 0.01em;
   text-decoration: none;
   display: inline-block;
-  transition: color 0.15s;
+  transition: color 0.15s, border-color 0.15s;
 }
-.btn-secondary:hover { color: var(--text-primary); }
+
+.btn-secondary:hover { color: var(--text-primary); border-color: var(--text-primary); }
+
 .divider {
   height: 0.5px;
   background: var(--border);
   margin: 0 48px;
 }
+
 .cards-section { padding: 48px 48px 40px; }
+
 .section-label {
   font-size: 11px;
   letter-spacing: 0.1em;
@@ -130,31 +182,46 @@ body {
   color: var(--text-tertiary);
   margin-bottom: 20px;
 }
+
 .cards-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
 }
-@media (max-width: 640px) {
-  .cards-grid { grid-template-columns: 1fr; }
-  .nav { padding: 16px 24px; }
-  .hero { padding: 48px 24px 40px; }
-  .hero-name { font-size: 36px; }
-  .cards-section { padding: 32px 24px 24px; }
-  .divider { margin: 0 24px; }
-  .homelab-strip { margin: 0 24px 32px; }
-}
+
+/* Modern Glowing Cards */
 .card {
   background: var(--bg-secondary);
   border-radius: var(--radius-lg);
   padding: 20px;
   cursor: pointer;
   border: 0.5px solid var(--border);
-  transition: border-color 0.15s;
+  transition: border-color 0.3s, transform 0.3s ease;
   text-decoration: none;
   display: block;
+  position: relative;
+  overflow: hidden;
 }
-.card:hover { border-color: var(--border-hover); }
+
+/* The Flashlight Gradient */
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: var(--radius-lg);
+  background: radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), var(--border-hover), transparent 40%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.card:hover { border-color: var(--border-hover); transform: translateY(-3px); }
+.card:hover::before { opacity: 1; }
+
+/* Keep text above the glow */
+.card-content { position: relative; z-index: 2; }
+
 .card-icon {
   width: 32px;
   height: 32px;
@@ -163,21 +230,28 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: transform 0.3s ease;
 }
+
+.card:hover .card-icon { transform: scale(1.1) rotate(5deg); }
+
 .card-icon.purple { background: #c8c5f9; }
 .card-icon.teal { background: #a3eed4; }
 .card-icon.amber { background: #f0d5a5; }
+
 .card-title {
   font-size: 14px;
   font-weight: 500;
   color: var(--text-primary);
   margin-bottom: 6px;
 }
+
 .card-desc {
   font-size: 12px;
   line-height: 1.6;
   color: var(--text-secondary);
 }
+
 .homelab-strip {
   margin: 0 48px 48px;
   padding: 20px 24px;
@@ -188,6 +262,7 @@ body {
   align-items: center;
   gap: 16px;
 }
+
 .dot {
   width: 8px;
   height: 8px;
@@ -196,17 +271,61 @@ body {
   flex-shrink: 0;
   animation: pulse 2s ease-in-out infinite;
 }
+
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.4; }
 }
+
 .homelab-text {
   font-size: 12px;
   color: var(--text-secondary);
   font-family: var(--font-mono);
   flex: 1;
 }
+
 .homelab-text strong {
   color: var(--text-primary);
   font-weight: 500;
+}
+
+/* CHESS SCROLLBAR */
+#chess-scrollbar {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 30px;
+  height: 100vh;
+  background-color: var(--bg-secondary);
+  border-left: 0.5px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+}
+
+.chess-square { flex: 1; width: 100%; }
+/* Adjust square colors based on your theme */
+.chess-square.dark { background-color: var(--border); opacity: 0.5;}
+.chess-square.light { background-color: transparent; }
+
+#scroll-pawn {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 20px;
+  color: var(--text-primary);
+  pointer-events: none;
+  transition: top 0.1s ease-out;
+}
+
+@media (max-width: 640px) {
+  .cards-grid { grid-template-columns: 1fr; }
+  .nav { padding: 16px 24px; }
+  .hero { padding: 48px 24px 40px; }
+  .hero-name { font-size: 36px; }
+  .cards-section { padding: 32px 24px 24px; }
+  .divider { margin: 0 24px; }
+  .homelab-strip { margin: 0 24px 32px; }
+  #chess-scrollbar { display: none; /* Hide on very small screens to save space */ }
 }
