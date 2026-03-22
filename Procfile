@@ -1,1 +1,1 @@
-web: gunicorn portfolio.wsgi --bind 0.0.0.0:8001
+web: gunicorn portfolio.wsgi --bind 0.0.0.0:800
