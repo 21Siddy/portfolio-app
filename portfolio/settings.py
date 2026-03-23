@@ -11,22 +11,28 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+import environ, os
+import dj_database_url
+
+# initialise environment
+env = environ.Env(DEBUG=(bool, False))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load the environment variables
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-@%$5s-wu0=1k^kfegtk0geywu7dd+g_#n!$i_jb&7e(!bm$49#'
+SECRET_KEY = env('LOCAL_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = env('LOCAL_DEBUG')
 
-ALLOWED_HOSTS = ["siddharth.oldisserving.live", "localhost", "127.0.0.1"]
-
+ALLOWED_HOSTS = env.list('LOCAL_ALLOWED_HOST', default=['localhost', '127.0.0.1'])
 
 # Application definition
 
@@ -75,12 +81,8 @@ WSGI_APPLICATION = 'portfolio.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': env.db('LOCAL_DATABASE_URL')
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators

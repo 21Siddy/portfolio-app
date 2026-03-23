@@ -1,4 +1,5 @@
 {% load static %}
+{% load markdown_extras %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,8 +21,8 @@
   <nav class="nav">
     <span class="nav-logo">Siddharth Hemnani</span>
     <ul class="nav-links">
-      <li><a href="#">projects</a></li>
-      <li><a href="#">germany faq</a></li>
+      <li><a href="{% url 'projects' %}">projects</a></li>
+      <li><a href="{% url 'faq' %}">germany faq</a></li>
       <li><a href="#">github</a></li>
     </ul>
   </nav>
@@ -31,8 +32,8 @@
     <h1 class="hero-name">Siddharth<br><span>Hemnani.</span></h1>
     <p class="hero-desc" id="typewriter-text"><span class="cursor-blink"></span></p>
     <div class="hero-actions">
-      <a href="#" class="btn-primary">view projects</a>
-      <a href="#" class="btn-secondary">germany faq</a>
+      <a href="{% url 'projects' %}" class="btn-primary">view projects</a>
+      <a href="{% url 'faq' %}" class="btn-secondary">germany faq</a>
     </div>
   </div>
 
@@ -41,7 +42,7 @@
   <div class="cards-section">
     <p class="section-label">what you'll find here</p>
     <div class="cards-grid">
-      <a href="#" class="card interactive">
+      <a href="{% url 'projects' %}" class="card interactive">
         <div class="card-content">
           <div class="card-icon purple">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -55,7 +56,7 @@
           <p class="card-desc">RAG pipelines, Vulnerability platforms, Prelead.</p>
         </div>
       </a>
-      <a href="#" class="card interactive">
+      <a href="{% url 'faq' %}" class="card interactive">
         <div class="card-content">
           <div class="card-icon teal">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -67,7 +68,7 @@
           <p class="card-desc">Anmeldung, Health insurance, Banking — the things nobody tells you.</p>
         </div>
       </a>
-      <a href="#" class="card interactive">
+      <a href="{% url 'homelab' %}" class="card interactive">
         <div class="card-content">
           <div class="card-icon amber">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -136,7 +137,7 @@
 
     // 3. Random Pawn Promotion Cursor
     const pieces = ['♕', '♖', '♗', '♘']; 
-    const isDarkMode = window.matchMatchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
     const pieceColor = isDarkMode ? 'white' : 'black'; // Ensure piece is visible in both modes
 
     document.querySelectorAll('.interactive').forEach(el => {

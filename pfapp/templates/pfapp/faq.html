@@ -1,0 +1,102 @@
+{% load static %}
+{% load markdown_extras %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Germany FAQ | Siddharth Hemnani</title>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <style>
+    /* Clean Vertical Layout */
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      margin-top: 40px;
+    }
+    
+    .faq-item {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth, premium easing */
+      position: relative;
+    }
+    
+    /* --- THE FOCUS EFFECT --- */
+    /* 1. When hovering ANYWHERE in the list, dim ALL items slightly and push them back */
+    .faq-list:hover .faq-item {
+      opacity: 0.4;
+      filter: blur(1px);
+      transform: scale(0.98);
+    }
+    
+    /* 2. BUT bring the specifically hovered item back to full focus and pop it forward */
+    .faq-list .faq-item:hover {
+      opacity: 1;
+      filter: blur(0);
+      transform: scale(1.02);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+      border-color: var(--text-primary);
+      z-index: 10;
+    }
+
+    .faq-category {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      color: #0F6E56; /* Teal accent */
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+      display: block;
+    }
+    
+    .faq-question {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+      line-height: 1.3;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="{% url 'index' %}" class="nav-logo" style="text-decoration: none;">Siddharth Hemnani</a>
+    <ul class="nav-links">
+      <li><a href="{% url 'projects' %}">projects</a></li>
+      <li><a href="{% url 'faq' %}" style="color: var(--text-primary);">germany faq</a></li>
+    </ul>
+  </nav>
+
+  <div class="cards-section" style="margin-top: 10px; padding-bottom: 80px; max-width: 800px; margin-left: auto; margin-right: auto;">
+    <h1 class="hero-name" style="font-size: 40px;">Studying / Working in Germany FAQs</h1>
+    <p class="section-label">answers to common or frequently asked questions</p>
+
+    <div style="padding: 16px; border-left: 4px solid #854F0B; background: rgba(133, 79, 11, 0.05); margin-top: 24px; border-radius: 0 var(--radius-md) var(--radius-md) 0;">
+      <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; margin: 0;">
+        <strong>Disclaimer:</strong> All answers here are based strictly on my personal experience and conjecture as a student. I am not an educational consultant. Take everything with a grain of salt and do your own research.
+      </p>
+    </div>
+
+    <div class="faq-list">
+      {% for faq in faqs %}
+      <div class="faq-item">
+        <span class="faq-category">{{ faq.category }}</span>
+        <h3 class="faq-question">{{ faq.question_text }}</h3>
+        
+        <div class="markdown-content">
+          {{ faq.answer_text|markdown|safe }}
+        </div>
+      </div>
+      {% empty %}
+      <p style="color: var(--text-tertiary);">No FAQs loaded yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+</body>
+</html>

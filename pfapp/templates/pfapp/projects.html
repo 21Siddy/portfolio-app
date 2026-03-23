@@ -1,0 +1,134 @@
+{% load static %}
+{% load markdown_extras %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects | Siddharth Hemnani</title>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <style>
+    /* Specific CSS for the horizontal layout and animations */
+    .horizontal-track {
+      display: flex;
+      overflow-x: auto;
+      gap: 24px;
+      padding: 20px 0 40px 0;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none; /* Hides default scrollbar */
+    }
+    .horizontal-track::-webkit-scrollbar { display: none; }
+    
+    .project-card {
+      min-width: 320px;
+      flex-shrink: 0;
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .project-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: auto;
+      padding-top: 16px;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border-hover);
+      color: var(--text-primary);
+      padding: 8px 16px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      transition: all 0.2s ease;
+    }
+    .btn-outline:hover { background: var(--border); }
+
+    /* The "Water Drop" Reveal Container */
+    .project-details-container {
+      width: 100%;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+      opacity: 0;
+      background: var(--bg-secondary);
+      border-radius: var(--radius-lg);
+      margin-top: 20px;
+    }
+    
+    .project-details-container.expanded {
+      max-height: 2000px; /* Arbitrary large number to allow full expansion */
+      opacity: 1;
+      padding: 32px;
+      border: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="{% url 'index' %}" class="nav-logo" style="text-decoration: none;">Siddharth Hemnani</a>
+    <ul class="nav-links">
+      <li><a href="{% url 'projects' %}">projects</a></li>
+      <li><a href="{% url 'faq' %}">germany faq</a></li>
+    </ul>
+  </nav>
+
+  <div class="cards-section" style="margin-top: 10px;">
+    <h1 class="hero-name" style="font-size: 40px;">Engineering Architecture.</h1>
+
+    <div class="horizontal-track">
+      {% for project in projects %}
+      <div class="card project-card interactive">
+        <div class="card-content">
+          <h3 class="card-title" style="font-size: 1.4rem;">{{ project.title }}</h3>
+          <p style="font-size: 0.85rem; font-family: var(--font-mono); color: var(--text-tertiary); margin-bottom: 24px;">
+            > {{ project.tech_stack }}
+          </p>
+          
+          <div class="project-actions">
+            <button class="btn-outline" onclick="toggleDetails('details-{{ project.id }}')">Read More ↓</button>
+            <button class="btn-outline" style="color: #534AB7; border-color: #534AB7;">View Design ↗</button>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    {% for project in projects %}
+    <div id="details-{{ project.id }}" class="project-details-container">
+      <div class="markdown-content">
+        {{ project.content|markdown|safe }}
+      </div>
+    </div>
+    {% endfor %}
+
+  </div>
+
+  <script>
+    // Handles the water drop expansion
+    function toggleDetails(targetId) {
+      // Close all other open containers first for a clean UX
+      document.querySelectorAll('.project-details-container').forEach(container => {
+        if (container.id !== targetId) {
+          container.classList.remove('expanded');
+        }
+      });
+
+      // Toggle the targeted one
+      const target = document.getElementById(targetId);
+      target.classList.toggle('expanded');
+      
+      // Scroll the page down slightly so the user sees the newly opened text
+      if (target.classList.contains('expanded')) {
+        setTimeout(() => {
+          target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 300);
+      }
+    }
+  </script>
+</body>
+</html>

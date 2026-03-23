@@ -21,4 +21,7 @@ from pfapp import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
+    path('projects/', views.projects_page, name='projects'),
+    path('faq/', views.faq_page, name='faq'),
+    path('homelab/', views.homelab_page, name='homelab'),
 ]

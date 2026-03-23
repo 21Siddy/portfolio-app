@@ -308,35 +308,44 @@ body {
 .chess-square.dark { background-color: var(--border); opacity: 0.5;}
 .chess-square.light { background-color: transparent; }
 
-/* Update the existing nav-links CSS */
-.nav-links a {
-  font-size: 13px;
+/* --- DYNAMIC MARKDOWN STYLING --- */
+.markdown-content {
+  font-size: 0.95rem;
+  line-height: 1.7;
   color: var(--text-secondary);
+}
+
+.markdown-content p {
+  margin-bottom: 16px;
+}
+
+/* Makes your bold tags pop like headers */
+.markdown-content strong {
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.markdown-content ul {
+  margin-bottom: 20px;
+  padding-left: 24px;
+}
+
+.markdown-content li {
+  margin-bottom: 8px;
+}
+
+/* Styles your inline links (like the Prelead Springer link) */
+.markdown-content a {
+  color: #534AB7; /* Matches your purple accent */
   text-decoration: none;
-  letter-spacing: 0.02em;
-  transition: color 0.15s, transform 0.2s;
-  position: relative;
-  display: inline-block;
+  font-weight: 600;
+  border-bottom: 1px solid transparent;
+  transition: border-bottom 0.2s ease;
 }
 
-.nav-links a:hover { 
-  color: var(--text-primary); 
-  transform: translateX(4px); /* Slight nudge to the right */
-}
-
-/* Add the terminal prompt arrow on hover */
-.nav-links a::before {
-  content: '>';
-  position: absolute;
-  left: -14px;
-  color: #0F6E56; /* Subtle teal */
-  opacity: 0;
-  transition: opacity 0.2s;
-  font-family: var(--font-mono);
-}
-
-.nav-links a:hover::before {
-  opacity: 1;
+.markdown-content a:hover {
+  border-bottom: 1px solid #534AB7;
 }
 
 #scroll-pawn {
