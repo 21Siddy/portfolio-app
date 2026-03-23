@@ -34,7 +34,7 @@ DEBUG = env.bool('LOCAL_DEBUG')
 
 ALLOWED_HOSTS = env.list('LOCAL_ALLOWED_HOSTS')
 
-CSRF_TRUSTED_ORIGINS = ['https://siddharth.oldisserving.live']
+CSRF_TRUSTED_ORIGINS = env.list('LOCAL_CSRF_TRUSTED_ORIGINS')
 
 # Application definition
 
