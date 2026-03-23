@@ -30,9 +30,11 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = env('LOCAL_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('LOCAL_DEBUG')
+DEBUG = env.bool('LOCAL_DEBUG')
 
 ALLOWED_HOSTS = env.list('LOCAL_ALLOWED_HOSTS')
+
+CSRF_TRUSTED_ORIGINS = ['https://siddharth.oldisserving.live']
 
 # Application definition
 
