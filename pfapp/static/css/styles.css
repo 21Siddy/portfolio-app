@@ -328,6 +328,14 @@ body {
   text-underline-offset: 4px;
 }
 
+.credit-footer {
+      text-align: center;
+      padding: 80px 48px;
+      font-size: 12px;
+      color: var(--text-tertiary);
+      letter-spacing: 0.02em;
+    }
+    
 /* --- CHESS SCROLLBAR --- */
 #chess-scrollbar {
   position: fixed; right: 0; top: 0; width: 30px; height: 100vh;
