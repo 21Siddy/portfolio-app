@@ -273,6 +273,61 @@ body {
 
 .homelab-text { font-size: 12px; color: var(--text-secondary); font-family: var(--font-mono); }
 
+/* Prevent the logo from turning purple after visiting */
+.nav-logo, 
+.nav-logo:visited, 
+.nav-logo:active {
+  color: var(--text-primary) !important;
+  text-decoration: none;
+}
+
+/* --- LAYOUT POLISH --- */
+.cards-section {
+  padding: 0 48px 80px; /* Restores the 48px side margins */
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (max-width: 900px) {
+  .cards-section {
+    padding: 0 24px 40px; /* Consistent mobile padding */
+  }
+}
+
+/* --- MARKDOWN STYLING (The Missing Piece) --- */
+.markdown-content {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.markdown-content p {
+  margin-bottom: 20px;
+}
+
+.markdown-content strong {
+  color: var(--text-primary);
+  font-weight: 700;
+  display: block; /* Makes 'Key-Problem' and 'Architecture' behave like headers */
+  margin-top: 24px;
+  margin-bottom: 8px;
+}
+
+.markdown-content ul {
+  margin-left: 20px;
+  margin-bottom: 20px;
+}
+
+.markdown-content li {
+  margin-bottom: 12px;
+}
+
+.markdown-content a {
+  color: #534AB7;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
 /* --- CHESS SCROLLBAR --- */
 #chess-scrollbar {
   position: fixed; right: 0; top: 0; width: 30px; height: 100vh;

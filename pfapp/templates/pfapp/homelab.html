@@ -107,6 +107,22 @@
       letter-spacing: 0.02em;
     }
 
+    /* --- HOMELAB SPACING FIX --- */
+    .hero {
+    padding-top: 40px !important;
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+    }
+
+    .hero-desc {
+    margin-bottom: 0 !important;
+    min-height: unset !important;
+    }
+
+    .architecture-grid {
+    padding-top: 24px !important;
+    }
+
     @media (max-width: 600px) {
       .architecture-grid { padding: 24px; }
       .hero-name { font-size: 38px; }
@@ -120,7 +136,6 @@
     <ul class="nav-links">
       <li><a href="{% url 'projects' %}">projects</a></li>
       <li><a href="{% url 'faq' %}">germany faq</a></li>
-      <li><a href="https://github.com/your-username" target="_blank">github</a></li>
     </ul>
   </nav>
 
@@ -128,36 +143,35 @@
     <p class="hero-eyebrow">The Infrastructure</p>
     <h1 class="hero-name">Inside the <span>Homelab.</span></h1>
     <p class="hero-desc" style="margin: 0 auto 40px;">Tracing the path from a line of code in Paderborn to a live production packet served from an old gaming laptop.</p>
+    <hr style="border: none; border-top: 0.5px solid var(--border); margin: 24px auto; max-width: 900px;">
   </div>
-
-  <div class="divider"></div>
 
   <div class="architecture-grid">
     
     <div class="step-card">
-      <span class="step-number">Phase 01: The Push</span>
-      <h3 class="step-title">💻 Local Development</h3>
+      <span class="step-number">Phase 01: Where The Code Comes From</span>
+      <h3 class="step-title">Local Development</h3>
       <p class="step-desc">Code is written on my daily-driver laptop. A single <code>git push origin main</code> triggers a chain reaction across the internet.</p>
       <div class="tech-pill">Django 5.0</div> <div class="tech-pill">Git Hooks</div>
     </div>
 
     <div class="step-card">
-      <span class="step-number">Phase 02: The Gateway</span>
-      <h3 class="step-title">☁️ Cloudflare Edge & Tunnel</h3>
+      <span class="step-number">Phase 02: Cloudflaring!</span>
+      <h3 class="step-title">Cloudflare Edge & Tunnel</h3>
       <p class="step-desc">The domain <code>oldisserving.live</code> is managed by Cloudflare. Instead of opening risky ports on my home router, a <strong>Cloudflare Tunnel</strong> (Lenovo BareMetal Server) creates a secure, encrypted outbound pipe from my apartment to the global edge.</p>
       <div class="tech-pill">Argo Tunnel</div> <div class="tech-pill">CNAME Routing</div> <div class="tech-pill">Full SSL</div>
     </div>
 
     <div class="step-card">
-      <span class="step-number">Phase 03: The Orchestrator</span>
-      <h3 class="step-title">🚀 Coolify Engine</h3>
+      <span class="step-number">Phase 03: Something "Cool"</span>
+      <h3 class="step-title">Coolify Engine</h3>
       <p class="step-desc">Coolify acts as an open-source Heroku. It listens for a <strong>Webhook</strong> from GitHub, pulls the latest code, and builds a fresh Nixpacks container without me ever touching a deploy button.</p>
       <div class="tech-pill">Webhooks</div> <div class="tech-pill">Docker Containers</div> <div class="tech-pill">PostgreSQL</div>
     </div>
 
     <div class="step-card" style="border-color: #0F6E56;">
-      <span class="step-number">Phase 04: Physical Origin</span>
-      <h3 class="step-title">🔋 Lenovo Legion Y540</h3>
+      <span class="step-number">Phase 04: The Bare Metal</span>
+      <h3 class="step-title">Lenovo Legion Y540</h3>
       <p class="step-desc">The final destination. An old gaming laptop repurposed as a Linux server. It handles the Django application, the database, and the reverse proxy 24/7 from my desk.</p>
       
       <div class="server-visual">
@@ -173,8 +187,8 @@
   <div class="divider"></div>
 
   <footer class="credit-footer">
-    <p>This entire frontend interface was meticulously designed and engineered by **Gemini** through iterative collaborative prompts.</p>
-    <p style="margin-top: 12px; opacity: 0.5;">&copy; 2026 Siddharth Hemnani · Self-Hosted & Proud.</p>
+    <p>This frontend interface was designed with **Gemini** through some expert level prompting.</p>
+    <p style="margin-top: 12px; opacity: 0.5;">&copy; 2026 Siddharth Hemnani · M.Sc. Computer Science</p>
   </footer>
 
 </body>
