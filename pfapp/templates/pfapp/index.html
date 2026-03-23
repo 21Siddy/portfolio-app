@@ -10,6 +10,8 @@
 </head>
 <body>
 
+  <div id="toast" class="toast">Email copied to clipboard!</div>
+
   <div id="chess-scrollbar">
     <div class="chess-square light"></div><div class="chess-square dark"></div>
     <div class="chess-square light"></div><div class="chess-square dark"></div>
@@ -28,20 +30,17 @@
   </nav>
 
   <div class="hero">
-    <p class="hero-eyebrow">M.Sc. Computer Science · Paderborn University</p>
-    <h1 class="hero-name">Siddharth<br><span>Hemnani.</span></h1>
-    <p class="hero-desc" id="typewriter-text"><span class="cursor-blink"></span></p>
-    <div class="hero-actions">
-      <a href="{% url 'projects' %}" class="btn-primary">view projects</a>
-      <a href="{% url 'faq' %}" class="btn-secondary">germany faq</a>
+    <div class="hero-content">
+      <p class="hero-eyebrow">M.Sc. Computer Science · Paderborn University</p>
+      <h1 class="hero-name">Siddharth<br><span>Hemnani.</span></h1>
+      <p class="hero-desc" id="typewriter-text"><span class="cursor-blink"></span></p>
+      <div class="hero-actions">
+        <button id="open-contact" class="btn-primary">contact</button>
+      </div>
     </div>
-  </div>
 
-  <div class="divider"></div>
-
-  <div class="cards-section">
-    <p class="section-label">what you'll find here</p>
-    <div class="cards-grid">
+    <div class="hero-cards">
+      <p class="section-label" style="margin-bottom: 12px;">what you'll find here</p>
       <a href="{% url 'projects' %}" class="card interactive">
         <div class="card-content">
           <div class="card-icon purple">
@@ -78,7 +77,7 @@
             </svg>
           </div>
           <p class="card-title">Homelab</p>
-          <p class="card-desc">An old gaming laptop repurposed as a server. This site runs on it. Read more about it.</p>
+          <p class="card-desc">An old gaming laptop repurposed as a server. This site runs on it.</p>
         </div>
       </a>
     </div>
@@ -91,18 +90,36 @@
     <p class="homelab-text">served from <strong>siddharth-lenovo-legion · paderborn, germany</strong></p>
   </div>
 
+  <div id="contact-modal" class="modal-overlay">
+    <div class="modal-box">
+      <h3 class="modal-title">Get in touch.</h3>
+      <p class="modal-desc">Write me an email or drop a DM on LinkedIn. I usually reply within 24 hours.</p>
+      
+      <div class="modal-links">
+        <button id="copy-email" class="modal-link-btn email-btn">
+          siddharthhemnani.de@gmail.com
+          <span class="copy-hint">(click to copy)</span>
+        </button>
+        <a href="https://www.linkedin.com/in/siddharth-hemnani-02a030226/" target="_blank" class="modal-link-btn linkedin-btn">
+          LinkedIn Profile ↗
+        </a>
+      </div>
+
+      <button id="close-modal" class="btn-secondary" style="width: 100%; margin-top: 24px;">OK</button>
+    </div>
+  </div>
+
   <script>
-    // 1. LLM Typewriter Effect
+    // 1. LLM Typewriter Effect (Untouched)
     const textTarget = document.getElementById("typewriter-text");
     const typeSequence = [
       { text: "Software engineer whom you will find crashing out at a LLM for not letting him build systems from ", delay: 30 },
-      { text: "stack.", delay: 50, isMistake: true }, // The typo
-      { action: "delete", chars: 6, delay: 100 }, // Backspace
+      { text: "stack.", delay: 50, isMistake: true }, 
+      { action: "delete", chars: 6, delay: 100 }, 
       { text: "scratch. Currently studying in Germany, building tools by day, and all-time whimsiest chess player by night.", delay: 30 }
     ];
 
     let currentHTML = "";
-    
     async function typeWriter() {
       for (const step of typeSequence) {
         if (step.text) {
@@ -124,7 +141,7 @@
     }
     setTimeout(typeWriter, 800);
 
-    // 2. Interactive Card Glow (Tracking Mouse Position)
+    // 2. Interactive Card Glow 
     document.querySelectorAll('.card').forEach(card => {
       card.onmousemove = e => {
         const rect = card.getBoundingClientRect(),
@@ -138,7 +155,7 @@
     // 3. Random Pawn Promotion Cursor
     const pieces = ['♕', '♖', '♗', '♘']; 
     const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const pieceColor = isDarkMode ? 'white' : 'black'; // Ensure piece is visible in both modes
+    const pieceColor = isDarkMode ? 'white' : 'black'; 
 
     document.querySelectorAll('.interactive').forEach(el => {
       el.addEventListener('mouseenter', () => {
@@ -157,14 +174,13 @@
     window.addEventListener('scroll', () => {
       const maxScroll = document.body.scrollHeight - window.innerHeight;
       const scrollPercent = Math.max(0, Math.min(1, window.scrollY / maxScroll));
-      
       const pawnY = scrollPercent * (window.innerHeight - 40); 
       pawnEl.style.top = `${pawnY}px`;
 
       if (scrollPercent > 0.95 && !isPromoted) {
         const randomPromotion = pieces[Math.floor(Math.random() * pieces.length)];
         pawnEl.innerText = randomPromotion;
-        pawnEl.style.color = "#0F6E56"; // Glows teal on promotion
+        pawnEl.style.color = "#0F6E56"; 
         pawnEl.style.textShadow = "0 0 15px rgba(15, 110, 86, 0.8)";
         isPromoted = true;
       } else if (scrollPercent <= 0.95 && isPromoted) {
@@ -172,6 +188,55 @@
         pawnEl.style.color = "var(--text-primary)";
         pawnEl.style.textShadow = "none";
         isPromoted = false;
+      }
+    });
+
+    // 5. Modal & Clipboard Logic
+    const modal = document.getElementById('contact-modal');
+    const openBtn = document.getElementById('open-contact');
+    const closeBtn = document.getElementById('close-modal');
+    const emailBtn = document.getElementById('copy-email');
+    const toast = document.getElementById('toast');
+
+    // Open/Close Modal
+    openBtn.addEventListener('click', () => {
+      modal.classList.add('active');
+    });
+    
+    closeBtn.addEventListener('click', () => {
+      modal.classList.remove('active');
+    });
+
+    // Close on clicking outside the box
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.classList.remove('active');
+    });
+
+    // Copy to Clipboard & Show Toast
+    emailBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText('siddharthhemnani.de@gmail.com');
+        
+        // Show Toast
+        toast.classList.add('show');
+        setTimeout(() => {
+          toast.classList.remove('show');
+        }, 3000);
+        
+        // Visual feedback on button
+        const originalText = emailBtn.innerHTML;
+        emailBtn.innerHTML = 'Copied! ✓';
+        emailBtn.style.borderColor = '#0F6E56';
+        emailBtn.style.color = '#0F6E56';
+        
+        setTimeout(() => {
+          emailBtn.innerHTML = originalText;
+          emailBtn.style.borderColor = '';
+          emailBtn.style.color = '';
+        }, 2000);
+
+      } catch (err) {
+        console.error('Failed to copy!', err);
       }
     });
   </script>
