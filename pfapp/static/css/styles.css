@@ -308,6 +308,37 @@ body {
 .chess-square.dark { background-color: var(--border); opacity: 0.5;}
 .chess-square.light { background-color: transparent; }
 
+/* Update the existing nav-links CSS */
+.nav-links a {
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  transition: color 0.15s, transform 0.2s;
+  position: relative;
+  display: inline-block;
+}
+
+.nav-links a:hover { 
+  color: var(--text-primary); 
+  transform: translateX(4px); /* Slight nudge to the right */
+}
+
+/* Add the terminal prompt arrow on hover */
+.nav-links a::before {
+  content: '>';
+  position: absolute;
+  left: -14px;
+  color: #0F6E56; /* Subtle teal */
+  opacity: 0;
+  transition: opacity 0.2s;
+  font-family: var(--font-mono);
+}
+
+.nav-links a:hover::before {
+  opacity: 1;
+}
+
 #scroll-pawn {
   position: absolute;
   top: 0;
