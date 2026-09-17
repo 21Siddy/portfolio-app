@@ -1,76 +1,315 @@
 {% load static %}
-{% load markdown_extras %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Projects | Siddharth Hemnani</title>
+  <title>Engineering Architecture & Projects | Siddharth Hemnani</title>
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
   <style>
-    /* Specific CSS for the horizontal layout and animations */
-    .horizontal-track {
-      display: flex;
-      overflow-x: auto;
-      gap: 24px;
-      padding: 20px 0 40px 0;
-      scroll-snap-type: x mandatory;
-      scrollbar-width: none; /* Hides default scrollbar */
+    .projects-container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 40px 32px 80px;
     }
-    .horizontal-track::-webkit-scrollbar { display: none; }
-    
-    .project-card {
-      min-width: 320px;
-      flex-shrink: 0;
-      scroll-snap-align: start;
+
+    .projects-hero {
+      text-align: center;
+      margin-bottom: 52px;
+    }
+
+    .projects-hero .hero-eyebrow {
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 14px;
+      font-family: var(--font-mono);
+    }
+
+    .projects-hero .hero-name {
+      font-size: 46px;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+      line-height: 1.15;
+    }
+
+    .projects-hero .hero-desc {
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      max-width: 680px;
+      margin: 0 auto 36px;
+    }
+
+    /* Segmented Pill Toggle Control */
+    .toggle-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 12px;
+    }
+
+    .segmented-control {
+      display: inline-flex;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+      padding: 5px;
+      gap: 6px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .toggle-btn {
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      padding: 9px 24px;
+      border-radius: 9999px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toggle-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .toggle-btn.active {
+      background: var(--text-primary);
+      color: var(--bg);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .toggle-count {
+      font-size: 11px;
+      opacity: 0.75;
+      padding: 1px 6px;
+      border-radius: 10px;
+      background: rgba(125, 125, 125, 0.2);
+    }
+
+    .toggle-btn.active .toggle-count {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Cards Grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 32px;
+      animation: fadeIn 0.35s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .project-showcase-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 36px 40px;
+      position: relative;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
       display: flex;
       flex-direction: column;
     }
 
-    .project-actions {
-      display: flex;
-      gap: 12px;
-      margin-top: auto;
-      padding-top: 16px;
+    .project-showcase-card:hover {
+      border-color: var(--border-hover);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.06);
     }
 
-    .btn-outline {
+    .card-meta-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .category-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-tertiary);
+    }
+
+    .accent-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 9999px;
+      font-weight: 500;
+    }
+
+    .accent-tag.research {
+      background: rgba(83, 74, 183, 0.12);
+      color: #6c63ff;
+      border: 1px solid rgba(83, 74, 183, 0.3);
+    }
+
+    .accent-tag.infrastructure {
+      background: rgba(15, 110, 86, 0.12);
+      color: #1D9E75;
+      border: 1px solid rgba(15, 110, 86, 0.3);
+    }
+
+    .accent-tag.enterprise {
+      background: rgba(133, 79, 11, 0.12);
+      color: #b45309;
+      border: 1px solid rgba(133, 79, 11, 0.3);
+    }
+
+    .project-title {
+      font-size: 26px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 18px;
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+    }
+
+    .project-narrative {
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      margin-bottom: 28px;
+    }
+
+    .project-narrative p {
+      margin-bottom: 14px;
+    }
+
+    .project-narrative p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Badge Pills */
+    .badges-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 32px;
+    }
+
+    .tech-badge {
+      display: inline-flex;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      padding: 5px 12px;
+      border-radius: 9999px;
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      color: var(--text-secondary);
+      letter-spacing: 0.02em;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .tech-badge:hover {
+      color: var(--text-primary);
+      border-color: var(--border-hover);
+    }
+
+    /* Actions Row */
+    .actions-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: auto;
+      padding-top: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-action-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--text-primary);
+      color: var(--bg) !important;
+      padding: 10px 22px;
+      border-radius: var(--radius-md);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    }
+
+    .btn-action-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+      opacity: 0.95;
+    }
+
+    .btn-action-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       background: transparent;
       border: 1px solid var(--border-hover);
       color: var(--text-primary);
-      padding: 8px 16px;
+      padding: 10px 22px;
       border-radius: var(--radius-md);
-      cursor: pointer;
       font-family: var(--font-mono);
-      font-size: 0.8rem;
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
       transition: all 0.2s ease;
     }
-    .btn-outline:hover { background: var(--border); }
 
-    /* The "Water Drop" Reveal Container */
-    .project-details-container {
-      width: 100%;
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
-      opacity: 0;
-      background: var(--bg-secondary);
-      border-radius: var(--radius-lg);
-      margin-top: 20px;
+    .btn-action-outline:hover {
+      background: var(--border);
+      border-color: var(--text-primary);
+      color: var(--text-primary);
     }
-    
-    .project-details-container.expanded {
-      max-height: 2000px; /* Arbitrary large number to allow full expansion */
-      opacity: 1;
-      padding: 32px;
-      border: 1px solid var(--border);
-    }
-    .credit-footer {
-      text-align: center;
-      padding: 80px 48px;
+
+    .status-pill-static {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 9999px;
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      font-family: var(--font-mono);
       font-size: 12px;
       color: var(--text-tertiary);
       letter-spacing: 0.02em;
+    }
+
+    .status-pill-static .lock-indicator {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--text-tertiary);
+    }
+
+    @media (max-width: 768px) {
+      .projects-container {
+        padding: 24px 16px 60px;
+      }
+      .projects-hero .hero-name {
+        font-size: 34px;
+      }
+      .project-showcase-card {
+        padding: 24px;
+      }
+      .project-title {
+        font-size: 21px;
+      }
+      .toggle-btn {
+        padding: 8px 16px;
+        font-size: 0.78rem;
+      }
     }
   </style>
 </head>
@@ -79,66 +318,207 @@
   <nav class="nav">
     <a href="{% url 'index' %}" class="nav-logo" style="text-decoration: none;">Siddharth Hemnani</a>
     <ul class="nav-links">
-      <li><a href="{% url 'projects' %}">projects</a></li>
+      <li><a href="{% url 'projects' %}" style="color: var(--text-primary); font-weight: 500;">projects</a></li>
       <li><a href="{% url 'faq' %}">germany faq</a></li>
+      <li><a href="{% url 'homelab' %}">homelab</a></li>
     </ul>
   </nav>
 
-  <div class="cards-section" style="margin-top: 25px;">
-    <h1 class="hero-name" style="font-size: 40px;">Engineering Architecture</h1>
+  <main class="projects-container">
+    
+    <!-- Centered Header Section -->
+    <header class="projects-hero">
+      <p class="hero-eyebrow">Engineering Systems & Research</p>
+      <h1 class="hero-name">Selected <span>Architectures</span></h1>
+      <p class="hero-desc">
+        A candid look under the hood at the algorithmic pipelines, bare-metal infrastructure, and production systems I build.
+      </p>
 
-    <div class="horizontal-track">
-      {% for project in projects %}
-      <div class="card project-card interactive">
-        <div class="card-content">
-          <h3 class="card-title" style="font-size: 1.4rem;">{{ project.title }}</h3>
-          <p style="font-size: 0.85rem; font-family: var(--font-mono); color: var(--text-tertiary); margin-bottom: 24px;">
-            > {{ project.tech_stack }}
-          </p>
-          
-          <div class="project-actions">
-            <button class="btn-outline" onclick="toggleDetails('details-{{ project.id }}')">Read More ↓</button>
-            <button class="btn-outline" style="color: #534AB7; border-color: #534AB7;">View Design ↗</button>
-          </div>
+      <!-- Segmented Pill Toggle -->
+      <div class="toggle-container">
+        <div class="segmented-control" role="tablist" aria-label="Project Scope">
+          <button class="toggle-btn active" id="btn-personal" onclick="switchCategory('personal')" role="tab" aria-selected="true" aria-controls="group-personal">
+            Personal & Research <span class="toggle-count">2</span>
+          </button>
+          <button class="toggle-btn" id="btn-enterprise" onclick="switchCategory('enterprise')" role="tab" aria-selected="false" aria-controls="group-enterprise">
+            Enterprise & Industry <span class="toggle-count">2</span>
+          </button>
         </div>
       </div>
-      {% endfor %}
-    </div>
+    </header>
 
-    {% for project in projects %}
-    <div id="details-{{ project.id }}" class="project-details-container">
-      <div class="markdown-content">
-        {{ project.content|markdown|safe }}
-      </div>
-    </div>
-    {% endfor %}
-
-  </div>
-
-  <script>
-    // Handles the water drop expansion
-    function toggleDetails(targetId) {
-      // Close all other open containers first for a clean UX
-      document.querySelectorAll('.project-details-container').forEach(container => {
-        if (container.id !== targetId) {
-          container.classList.remove('expanded');
-        }
-      });
-
-      // Toggle the targeted one
-      const target = document.getElementById(targetId);
-      target.classList.toggle('expanded');
+    <!-- GROUP 1: Personal & Research -->
+    <section id="group-personal" class="cards-grid" role="tabpanel" aria-labelledby="btn-personal">
       
-      // Scroll the page down slightly so the user sees the newly opened text
-      if (target.classList.contains('expanded')) {
-        setTimeout(() => {
-          target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }, 300);
-      }
-    }
-  </script>
+      <!-- Card 1: NSGA-II Topology-Aware RAG -->
+      <article class="project-showcase-card">
+        <div class="card-meta-top">
+          <span class="category-tag">Applied AI & Graph Theory</span>
+          <span class="accent-tag research">Interactive Case Study</span>
+        </div>
+
+        <h2 class="project-title">NSGA-II Topology-Aware RAG Selection</h2>
+
+        <div class="project-narrative">
+          <p>
+            Standard vector search repeatedly disappointed me. Whenever I asked complex architectural or algorithmic questions across dense technical papers, cosine similarity dutifully pulled three slight variations of the introductory abstract into the context window. The retriever was functionally blind to conceptual progression.
+          </p>
+          <p>
+            I reframed context retrieval as a true multi-objective optimization problem using NSGA-II. Instead of greedy top-<em>k</em> ranking, the retriever simultaneously maximizes query semantic relevance ($f_1$), aggressively penalizes intra-chunk redundancy ($f_2$), and maximizes graph commute distance across the document topology ($f_3$). By navigating the document citation and section graph via PyTorch Geometric, the algorithm traverses conceptual steps—delivering problem formulation, Pareto dominance, and crowding distance directly into an elite prompt context.
+          </p>
+        </div>
+
+        <div class="badges-list">
+          <span class="tech-badge">Genetic Algorithms</span>
+          <span class="tech-badge">Graph Commute Distance</span>
+          <span class="tech-badge">Pareto Front</span>
+          <span class="tech-badge">PyTorch Geometric</span>
+          <span class="tech-badge">LLM Synthesis</span>
+        </div>
+
+        <div class="actions-row">
+          <a href="{% url 'nsga2_rag_detail' %}" class="btn-action-primary">
+            Read Interactive Case Study →
+          </a>
+        </div>
+      </article>
+
+      <!-- Card 2: Bare-Metal Homelab & Cloudflare Ingress -->
+      <article class="project-showcase-card">
+        <div class="card-meta-top">
+          <span class="category-tag">Systems & Distributed Ops</span>
+          <span class="accent-tag infrastructure">Live Hardware</span>
+        </div>
+
+        <h2 class="project-title">Bare-Metal Homelab & Cloudflare Zero Trust Ingress</h2>
+
+        <div class="project-narrative">
+          <p>
+            I treat this entire portfolio and all my experimental tools as serious production infrastructure. Everything is hosted right on my desk from an Ubuntu laptop server in Paderborn, orchestrated with Coolify PaaS and automated continuous deployment triggers via GitHub webhooks.
+          </p>
+          <p>
+            To achieve bank-grade ingress without opening risky inbound ports on my home router, I routed all traffic through an outbound Cloudflare Zero Trust tunnel. Traefik reverse proxy handles containerized internal routing, while automated health-check daemons and encrypted persistent PostgreSQL volumes keep things durable 24/7.
+          </p>
+        </div>
+
+        <div class="badges-list">
+          <span class="tech-badge">Ubuntu Server</span>
+          <span class="tech-badge">Docker</span>
+          <span class="tech-badge">Coolify PaaS</span>
+          <span class="tech-badge">Cloudflare Zero Trust</span>
+          <span class="tech-badge">Homelab Ops</span>
+        </div>
+
+        <div class="actions-row">
+          <a href="{% url 'homelab' %}" class="btn-action-primary">
+            Inspect Homelab Architecture →
+          </a>
+        </div>
+      </article>
+
+    </section>
+
+    <!-- GROUP 2: Enterprise & Industry -->
+    <section id="group-enterprise" class="cards-grid" style="display: none;" role="tabpanel" aria-labelledby="btn-enterprise">
+      
+      <!-- Card 1: Prelead -->
+      <article class="project-showcase-card">
+        <div class="card-meta-top">
+          <span class="category-tag">Mobility & Public Infrastructure</span>
+          <span class="accent-tag enterprise">Industry Client</span>
+        </div>
+
+        <h2 class="project-title">Prelead: Dynamic Preference Profiling Engine</h2>
+
+        <div class="project-narrative">
+          <p>
+            At ad2b-solutions, we worked with a major European mobility and rail infrastructure provider to capture authentic user innovation priorities. I helped build the dynamic survey middleware and real-time PESTEL categorization dashboard so non-technical domain experts could classify user sentiment and feedback live during discovery sessions.
+          </p>
+          <p>
+            We validated concurrency and high-throughput stability under simulated spike conditions using Locust load-testing pipelines, hardening session persistence and query performance. (Detailed architectural blueprints and proprietary metrics remain reserved for interviews to respect client confidentiality).
+          </p>
+        </div>
+
+        <div class="badges-list">
+          <span class="tech-badge">Django Middleware</span>
+          <span class="tech-badge">Dynamic Categorization</span>
+          <span class="tech-badge">Locust Testing</span>
+        </div>
+
+        <div class="actions-row">
+          <a href="https://ad2b-solutions.com/" target="_blank" rel="noopener noreferrer" class="btn-action-outline">
+            Explore Methodology ↗
+          </a>
+        </div>
+      </article>
+
+      <!-- Card 2: Enterprise Security Suite -->
+      <article class="project-showcase-card">
+        <div class="card-meta-top">
+          <span class="category-tag">Internal Security & Identity</span>
+          <span class="accent-tag enterprise">Internal Enterprise</span>
+        </div>
+
+        <h2 class="project-title">Enterprise Security & Profile Management Suite</h2>
+
+        <div class="project-narrative">
+          <p>
+            Internal enterprise administrative services I helped construct to manage user access lifecycles, role-based access control (RBAC), and automated vulnerability scanner aggregation pipelines.
+          </p>
+          <p>
+            Engineered secure API bridges between legacy user databases and modern identity platforms, establishing robust audit logging, least-privilege credential issuance, and unified vulnerability remediation dashboards.
+          </p>
+        </div>
+
+        <div class="badges-list">
+          <span class="tech-badge">RBAC Security</span>
+          <span class="tech-badge">API Bridges</span>
+          <span class="tech-badge">Enterprise Tooling</span>
+        </div>
+
+        <div class="actions-row">
+          <span class="status-pill-static">
+            <span class="lock-indicator"></span> Internal Corporate IP • Non-Public
+          </span>
+        </div>
+      </article>
+
+    </section>
+
+  </main>
+
+  <div class="divider"></div>
+
   <footer class="credit-footer">
     <p style="margin-top: 12px; opacity: 0.5;">&copy; 2026 Siddharth Hemnani · M.Sc. Computer Science</p>
   </footer>
+
+  <script>
+    // Lightweight, zero-dependency pill segmented toggle
+    function switchCategory(targetCategory) {
+      const btnPersonal = document.getElementById('btn-personal');
+      const btnEnterprise = document.getElementById('btn-enterprise');
+      const groupPersonal = document.getElementById('group-personal');
+      const groupEnterprise = document.getElementById('group-enterprise');
+
+      if (targetCategory === 'personal') {
+        btnPersonal.classList.add('active');
+        btnPersonal.setAttribute('aria-selected', 'true');
+        btnEnterprise.classList.remove('active');
+        btnEnterprise.setAttribute('aria-selected', 'false');
+
+        groupEnterprise.style.display = 'none';
+        groupPersonal.style.display = 'grid';
+      } else {
+        btnEnterprise.classList.add('active');
+        btnEnterprise.setAttribute('aria-selected', 'true');
+        btnPersonal.classList.remove('active');
+        btnPersonal.setAttribute('aria-selected', 'false');
+
+        groupPersonal.style.display = 'none';
+        groupEnterprise.style.display = 'grid';
+      }
+    }
+  </script>
 </body>
 </html>
