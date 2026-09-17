@@ -1,0 +1,382 @@
+{
+  "pca_variance_ratio": [
+    0.119417205452919,
+    0.095204658806324
+  ],
+  "query": {
+    "x": -0.3163069188594818,
+    "y": -0.17732489109039307,
+    "text": "Explain multi-objective optimization, compare it with single-objective optimization, and use a concrete example to explain Pareto dominance and the Pareto front."
+  },
+  "chunks": [
+    {
+      "chunk_id": 0,
+      "x": -0.2435828000307083,
+      "y": 0.029373571276664734,
+      "word_count": 265,
+      "text_preview": "Multi-objective optimization or Pareto optimization (also known as multi-objective programming, vector optimization, multicriteria optimizat...",
+      "functional_cluster": "Introduction & Intuition"
+    },
+    {
+      "chunk_id": 1,
+      "x": -0.0021227928809821606,
+      "y": -0.18205766379833221,
+      "word_count": 183,
+      "text_preview": "Bicriteria optimization denotes the special case in which there are two objective functions. There is a direct relationship between multitas...",
+      "functional_cluster": "Introduction & Intuition"
+    },
+    {
+      "chunk_id": 2,
+      "x": -0.025412792339920998,
+      "y": -0.16937437653541565,
+      "word_count": 166,
+      "text_preview": "In multi-objective optimization, there does not typically exist a feasible solution that minimizes all objective functions simultaneously. T...",
+      "functional_cluster": "Introduction & Intuition"
+    },
+    {
+      "chunk_id": 3,
+      "x": 0.33614790439605713,
+      "y": -0.15651977062225342,
+      "word_count": 234,
+      "text_preview": "and the ideal objective vector as In other words, the components of the nadir and ideal objective vectors define the upper and lower bounds ...",
+      "functional_cluster": "Mathematical Formulation & Dominance"
+    },
+    {
+      "chunk_id": 4,
+      "x": 0.14487546682357788,
+      "y": -0.09662926197052002,
+      "word_count": 199,
+      "text_preview": "Another example involves the production possibilities frontier, which specifies what combinations of various types of goods can be produced ...",
+      "functional_cluster": "Mathematical Formulation & Dominance"
+    },
+    {
+      "chunk_id": 5,
+      "x": 0.2022738754749298,
+      "y": -0.1146637499332428,
+      "word_count": 235,
+      "text_preview": "Finance In finance, a common problem is to choose a portfolio when there are two conflicting objectives -- the desire to have the expected va...",
+      "functional_cluster": "Mathematical Formulation & Dominance"
+    },
+    {
+      "chunk_id": 6,
+      "x": -0.006216574460268021,
+      "y": 0.18717482686042786,
+      "word_count": 220,
+      "text_preview": "Often such problems are subject to linear equality constraints that prevent all objectives from being simultaneously perfectly met, especial...",
+      "functional_cluster": "Mathematical Formulation & Dominance"
+    },
+    {
+      "chunk_id": 7,
+      "x": -0.1399427056312561,
+      "y": 0.3275219202041626,
+      "word_count": 173,
+      "text_preview": "For example, when designing a paper mill, one can seek to decrease the amount of capital invested in a paper mill and enhance the quality of...",
+      "functional_cluster": "Mathematical Formulation & Dominance"
+    },
+    {
+      "chunk_id": 8,
+      "x": -0.07249658554792404,
+      "y": 0.34844279289245605,
+      "word_count": 198,
+      "text_preview": "Process optimization Multi-objective optimization has been increasingly employed in chemical engineering and manufacturing. In 2009, Fiandac...",
+      "functional_cluster": "Real-World Case Studies & Scalarization"
+    },
+    {
+      "chunk_id": 9,
+      "x": -0.11492263525724411,
+      "y": 0.2888258099555969,
+      "word_count": 162,
+      "text_preview": "In 2013, Abakarov et al. proposed an alternative technique to solve multi-objective optimization problems arising in food engineering. The A...",
+      "functional_cluster": "General Document Corpus"
+    },
+    {
+      "chunk_id": 10,
+      "x": 0.11483340710401535,
+      "y": 0.18692196905612946,
+      "word_count": 231,
+      "text_preview": "Radio resource management The purpose of radio resource management is to satisfy the data rates that are requested by the users of a cellula...",
+      "functional_cluster": "Real-World Case Studies & Scalarization"
+    },
+    {
+      "chunk_id": 11,
+      "x": -0.17793123424053192,
+      "y": 0.335058331489563,
+      "word_count": 252,
+      "text_preview": "Electric power systems Reconfiguration, by exchanging the functional links between the elements of the system, represents one of the most im...",
+      "functional_cluster": "General Document Corpus"
+    },
+    {
+      "chunk_id": 12,
+      "x": -0.22768591344356537,
+      "y": -0.0039465054869651794,
+      "word_count": 196,
+      "text_preview": "Solution As multiple Pareto optimal solutions for multi-objective optimization problems usually exist, what it means to solve such a problem...",
+      "functional_cluster": "General Document Corpus"
+    },
+    {
+      "chunk_id": 13,
+      "x": -0.009303661063313484,
+      "y": -0.0172978974878788,
+      "word_count": 171,
+      "text_preview": "The most preferred results can be found using different philosophies. Multi-objective optimization methods can be divided into four classes....",
+      "functional_cluster": "General Document Corpus"
+    },
+    {
+      "chunk_id": 14,
+      "x": 0.2783588767051697,
+      "y": -0.2600022852420807,
+      "word_count": 171,
+      "text_preview": "Utility function method The utility function method assumes the decision maker's utility function is available. A mapping u:Y→R{\\displaystyl...",
+      "functional_cluster": "General Document Corpus"
+    },
+    {
+      "chunk_id": 15,
+      "x": -0.1278153359889984,
+      "y": -0.008311350829899311,
+      "word_count": 170,
+      "text_preview": "Lexicographic method The lexicographic method assumes that the objectives can be ranked in the order of importance. We assume that the objec...",
+      "functional_cluster": "General Document Corpus"
+    },
+    {
+      "chunk_id": 16,
+      "x": 0.5704021453857422,
+      "y": 0.03793995827436447,
+      "word_count": 188,
+      "text_preview": "where θ{\\displaystyle \\theta } is a vector parameter, the set Xθ⊆X{\\displaystyle X_{\\theta }\\subseteq X} is a set depending on the parameter...",
+      "functional_cluster": "General Document Corpus"
+    },
+    {
+      "chunk_id": 17,
+      "x": 0.8211835622787476,
+      "y": 0.15455502271652222,
+      "word_count": 232,
+      "text_preview": "where u{\\displaystyle u} is the smoothing parameter and λ=(λ1,…,λk){\\displaystyle {\\boldsymbol {\\lambda }}=(\\lambda _{1},\\dots ,\\lambda _{k}...",
+      "functional_cluster": "General Document Corpus"
+    },
+    {
+      "chunk_id": 18,
+      "x": -0.006231401581317186,
+      "y": 0.024091821163892746,
+      "word_count": 172,
+      "text_preview": "Some of the above scalarizations involve invoking the minimax principle, where always the worst of the different objectives is optimized. A ...",
+      "functional_cluster": "General Document Corpus"
+    },
+    {
+      "chunk_id": 19,
+      "x": -0.2797684669494629,
+      "y": 0.2791152000427246,
+      "word_count": 165,
+      "text_preview": "Evolutionary multi-criterion optimization Evolutionary multi-criterion optimization (EMO) methods are population-based metaheuristics for op...",
+      "functional_cluster": "General Document Corpus"
+    },
+    {
+      "chunk_id": 20,
+      "x": -0.04503484442830086,
+      "y": 0.1435643881559372,
+      "word_count": 202,
+      "text_preview": "Indicator-based methods Indicator-based methods use a performance indicator for the quality of a Pareto-front approximation directly in the ...",
+      "functional_cluster": "General Document Corpus"
+    },
+    {
+      "chunk_id": 21,
+      "x": 0.07803496718406677,
+      "y": 0.05112786591053009,
+      "word_count": 168,
+      "text_preview": "Other metaheuristic and adaptive methods Some a posteriori methods use swarm intelligence, self-organization, or adaptive search strategies ...",
+      "functional_cluster": "Real-World Case Studies & Scalarization"
+    },
+    {
+      "chunk_id": 22,
+      "x": 0.0809406116604805,
+      "y": -0.3011448085308075,
+      "word_count": 243,
+      "text_preview": "Types of preference information There are different interactive methods involving different types of preference information. Three types can...",
+      "functional_cluster": "General Document Corpus"
+    },
+    {
+      "chunk_id": 23,
+      "x": -0.1861230731010437,
+      "y": 0.2740287780761719,
+      "word_count": 194,
+      "text_preview": "Hybrid methods Different hybrid methods exist, but here we consider hybridizing MCDM (multi-criteria decision-making) and EMO (evolutionary ...",
+      "functional_cluster": "General Document Corpus"
+    },
+    {
+      "chunk_id": 24,
+      "x": -0.16732794046401978,
+      "y": -0.35564476251602173,
+      "word_count": 159,
+      "text_preview": "Visualization of the Pareto front Visualization of the Pareto front is one of the a posteriori preference techniques of multi-objective opti...",
+      "functional_cluster": "General Document Corpus"
+    },
+    {
+      "chunk_id": 25,
+      "x": -0.21058478951454163,
+      "y": -0.402231365442276,
+      "word_count": 152,
+      "text_preview": "Visualization in bi-objective problems: tradeoff curve In the case of bi-objective problems, informing the decision maker concerning the Par...",
+      "functional_cluster": "General Document Corpus"
+    },
+    {
+      "chunk_id": 26,
+      "x": -0.268240362405777,
+      "y": -0.42259353399276733,
+      "word_count": 233,
+      "text_preview": "Visualization in high-order multi-objective optimization problems There are two generic ideas for visualizing the Pareto front in high-order...",
+      "functional_cluster": "Real-World Case Studies & Scalarization"
+    }
+  ],
+  "functional_clusters": {
+    "intro": {
+      "name": "Introduction & Intuition",
+      "indices": [
+        0,
+        1,
+        2
+      ],
+      "color": "#3B82F6",
+      "hull_coordinates": [
+        {
+          "x": 0.03222349286079407,
+          "y": -0.21113227307796478
+        },
+        {
+          "x": -0.27715742588043213,
+          "y": 0.05933595821261406
+        },
+        {
+          "x": 0.007134636864066124,
+          "y": -0.20044952630996704
+        }
+      ]
+    },
+    "math": {
+      "name": "Mathematical Formulation & Dominance",
+      "indices": [
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "color": "#8B5CF6",
+      "hull_coordinates": [
+        {
+          "x": 0.37247470021247864,
+          "y": -0.18307846784591675
+        },
+        {
+          "x": -0.16841165721416473,
+          "y": 0.36237186193466187
+        },
+        {
+          "x": 0.1495482474565506,
+          "y": -0.1413860023021698
+        },
+        {
+          "x": 0.22640155255794525,
+          "y": -0.1526486873626709
+        }
+      ]
+    },
+    "applied": {
+      "name": "Real-World Case Studies & Scalarization",
+      "indices": [
+        8,
+        10,
+        21,
+        26
+      ],
+      "color": "#10B981",
+      "hull_coordinates": [
+        {
+          "x": -0.07766218483448029,
+          "y": 0.3931453227996826
+        },
+        {
+          "x": -0.28832945227622986,
+          "y": -0.46286049485206604
+        },
+        {
+          "x": 0.1228606104850769,
+          "y": 0.05508534982800484
+        },
+        {
+          "x": 0.1472724825143814,
+          "y": 0.21811020374298096
+        }
+      ]
+    }
+  },
+  "retrieval_footprints": {
+    "dense_top_3": {
+      "label": "Dense Top-3 (Cluster Collapse)",
+      "indices": [
+        2,
+        26,
+        0
+      ],
+      "color": "#EF4444",
+      "points": [
+        {
+          "x": -0.025412792339920998,
+          "y": -0.16937437653541565
+        },
+        {
+          "x": -0.268240362405777,
+          "y": -0.42259353399276733
+        },
+        {
+          "x": -0.2435828000307083,
+          "y": 0.029373571276664734
+        }
+      ]
+    },
+    "mmr": {
+      "label": "MMR (lambda=0.5)",
+      "indices": [
+        2,
+        24,
+        8
+      ],
+      "color": "#F97316",
+      "points": [
+        {
+          "x": -0.025412792339920998,
+          "y": -0.16937437653541565
+        },
+        {
+          "x": -0.16732794046401978,
+          "y": -0.35564476251602173
+        },
+        {
+          "x": -0.07249658554792404,
+          "y": 0.34844279289245605
+        }
+      ]
+    },
+    "nsga2_3d_knee": {
+      "label": "NSGA-II 3D Knee (Manifold Traversal)",
+      "indices": [
+        8,
+        10,
+        26
+      ],
+      "color": "#10B981",
+      "points": [
+        {
+          "x": -0.07249658554792404,
+          "y": 0.34844279289245605
+        },
+        {
+          "x": 0.11483340710401535,
+          "y": 0.18692196905612946
+        },
+        {
+          "x": -0.268240362405777,
+          "y": -0.42259353399276733
+        }
+      ]
+    }
+  }
+}
