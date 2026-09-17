@@ -33,3 +33,6 @@ def faq_page(request):
 
 def homelab_page(request):
     return render(request, 'pfapp/homelab.html', {})
+
+def nsga2_rag_detail(request):
+    return render(request, 'pfapp/project_nsga2_rag.html', {})

@@ -22,6 +22,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
     path('projects/', views.projects_page, name='projects'),
+    path('projects/nsga2-rag/', views.nsga2_rag_detail, name='nsga2_rag_detail'),
     path('faq/', views.faq_page, name='faq'),
     path('homelab/', views.homelab_page, name='homelab'),
 ]
+
