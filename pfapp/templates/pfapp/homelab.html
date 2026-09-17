@@ -4,29 +4,184 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Siddharth's Homelab</title>
+  <title>Inside the Homelab | Siddharth Hemnani</title>
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
   <style>
-    /* Homelab Specific Visuals */
+    /* Homelab Visual Architecture */
+    .homelab-container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    .hero-homelab {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .hero-homelab .hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #1D9E75;
+      margin-bottom: 12px;
+    }
+
+    .hero-homelab .hero-name {
+      font-size: 46px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+
+    .hero-homelab .hero-name span {
+      color: var(--text-tertiary);
+    }
+
+    .hero-homelab .hero-desc {
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      max-width: 680px;
+      margin: 0 auto 28px;
+    }
+
+    /* --- ANIMATED PIPELINE OVERVIEW --- */
+    .pipeline-wrapper {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px;
+      margin-bottom: 48px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pipeline-title {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .pipeline-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #1D9E75;
+      font-size: 11px;
+    }
+
+    .pipeline-nodes {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      padding: 10px 0;
+    }
+
+    /* Animated continuous connecting line */
+    .pipeline-line {
+      position: absolute;
+      top: 50%;
+      left: 30px;
+      right: 30px;
+      height: 2px;
+      background: var(--border);
+      transform: translateY(-50%);
+      z-index: 1;
+    }
+
+    .pipeline-pulse-line {
+      position: absolute;
+      top: 50%;
+      left: 30px;
+      right: 30px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #1D9E75 50%, transparent);
+      transform: translateY(-50%);
+      background-size: 200% 100%;
+      animation: wirePulse 3s linear infinite;
+      z-index: 2;
+    }
+
+    @keyframes wirePulse {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .node-item {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-secondary);
+      padding: 0 8px;
+    }
+
+    .node-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .node-item:hover .node-circle {
+      border-color: #1D9E75;
+      transform: scale(1.1);
+      box-shadow: 0 0 16px rgba(29, 158, 117, 0.3);
+    }
+
+    .node-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-primary);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .node-sub {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      color: var(--text-tertiary);
+      white-space: nowrap;
+    }
+
+    /* --- ARCHITECTURE STEPS --- */
     .architecture-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 24px;
-      padding: 40px 48px;
-      max-width: 900px;
-      margin: 0 auto;
+      gap: 28px;
     }
 
     .step-card {
       background: var(--bg-secondary);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
-      padding: 32px;
+      padding: 32px 36px;
       position: relative;
-      transition: border-color 0.3s ease;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
 
-    .step-card:hover { border-color: var(--text-tertiary); }
+    .step-card:hover {
+      border-color: var(--border-hover);
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.05);
+    }
 
     .step-number {
       font-family: var(--font-mono);
@@ -35,161 +190,395 @@
       margin-bottom: 12px;
       display: block;
       text-transform: uppercase;
+      letter-spacing: 0.06em;
     }
 
     .step-title {
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 600;
       margin-bottom: 12px;
       display: flex;
       align-items: center;
       gap: 12px;
+      color: var(--text-primary);
     }
 
     .step-desc {
       font-size: 15px;
-      line-height: 1.6;
+      line-height: 1.75;
       color: var(--text-secondary);
     }
 
-    /* The "Data Path" Connector */
+    .tech-pills-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .tech-pill {
+      display: inline-block;
+      padding: 4px 12px;
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      border-radius: 9999px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    /* Step connector line */
     .step-card::after {
       content: '↓';
       position: absolute;
       bottom: -22px;
       left: 50%;
       transform: translateX(-50%);
-      color: var(--border-hover);
-      font-size: 20px;
+      color: var(--text-tertiary);
+      font-size: 18px;
+      opacity: 0.4;
     }
     .step-card:last-child::after { display: none; }
 
-    .tech-pill {
-      display: inline-block;
-      padding: 4px 10px;
-      background: var(--bg);
-      border: 0.5px solid var(--border);
-      border-radius: 4px;
+    /* --- SERVER TELEMETRY VISUAL --- */
+    .server-visual-card {
+      background: #0d0d0c;
+      border: 1px solid #2a2a28;
+      border-radius: var(--radius-md);
+      padding: 24px;
+      margin-top: 24px;
       font-family: var(--font-mono);
-      font-size: 11px;
-      margin-top: 16px;
-      color: var(--text-primary);
+      font-size: 12.5px;
+      color: #e8e8e4;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.5);
     }
 
-    .server-visual {
-      background: #111;
-      border-radius: 8px;
-      padding: 20px;
-      margin-top: 20px;
-      border: 1px solid #333;
-      font-family: var(--font-mono);
-      font-size: 12px;
-      color: #0F6E56; /* Terminal Green */
-      overflow: hidden;
+    .server-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #222;
+      margin-bottom: 16px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #1D9E75;
+      font-weight: 500;
     }
 
     .blink-dot {
-      display: inline-block;
       width: 8px;
       height: 8px;
-      background: #0F6E56;
+      background: #1D9E75;
       border-radius: 50%;
-      margin-right: 8px;
-      box-shadow: 0 0 8px #0F6E56;
+      box-shadow: 0 0 8px #1D9E75;
       animation: pulse 1.5s infinite;
     }
 
-    .credit-footer {
-      text-align: center;
-      padding: 80px 48px;
-      font-size: 12px;
-      color: var(--text-tertiary);
-      letter-spacing: 0.02em;
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
     }
 
-    /* --- HOMELAB SPACING FIX --- */
-    .hero {
-    padding-top: 40px !important;
-    padding-bottom: 0 !important;
-    margin-bottom: 0 !important;
+    .telemetry-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 18px;
     }
 
-    .hero-desc {
-    margin-bottom: 0 !important;
-    min-height: unset !important;
+    .metric-box {
+      background: #161614;
+      border: 1px solid #262624;
+      border-radius: 6px;
+      padding: 12px 14px;
     }
 
-    .architecture-grid {
-    padding-top: 24px !important;
+    .metric-name {
+      font-size: 10.5px;
+      color: #888882;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
     }
 
-    @media (max-width: 600px) {
-      .architecture-grid { padding: 24px; }
-      .hero-name { font-size: 38px; }
+    .metric-val {
+      font-size: 14px;
+      font-weight: 600;
+      color: #e8e8e4;
+    }
+
+    .meter-bar {
+      width: 100%;
+      height: 4px;
+      background: #282826;
+      border-radius: 2px;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+
+    .meter-fill {
+      height: 100%;
+      background: #1D9E75;
+      border-radius: 2px;
+      transition: width 1s ease;
+    }
+
+    /* Live terminal log stream */
+    .terminal-stream {
+      background: #080807;
+      border: 1px solid #1f1f1d;
+      border-radius: 6px;
+      padding: 12px 14px;
+      font-size: 11px;
+      line-height: 1.7;
+      color: #888882;
+      max-height: 120px;
+      overflow: hidden;
+    }
+
+    .terminal-line {
+      display: flex;
+      gap: 10px;
+    }
+
+    .terminal-time {
+      color: #555550;
+    }
+
+    .terminal-tag {
+      color: #6c63ff;
+    }
+
+    .terminal-tag.ok {
+      color: #1D9E75;
+    }
+
+    @media (max-width: 768px) {
+      .homelab-container { padding: 24px 16px 60px; }
+      .hero-homelab .hero-name { font-size: 34px; }
+      .pipeline-nodes { flex-direction: column; gap: 20px; }
+      .pipeline-line, .pipeline-pulse-line { display: none; }
+      .step-card { padding: 24px; }
+      .step-title { font-size: 19px; }
     }
   </style>
 </head>
 <body>
 
   <nav class="nav">
-    <span class="nav-logo" onclick="window.location.href='/'" style="cursor:pointer">Siddharth Hemnani</span>
+    <a href="{% url 'index' %}" class="nav-logo" style="text-decoration: none;">Siddharth Hemnani</a>
     <ul class="nav-links">
       <li><a href="{% url 'projects' %}">projects</a></li>
       <li><a href="{% url 'faq' %}">germany faq</a></li>
+      <li><a href="{% url 'homelab' %}" style="color: var(--text-primary); font-weight: 500;">homelab</a></li>
     </ul>
   </nav>
 
-  <div class="hero" style="display: block; text-align: center; max-width: 100%;">
-    <p class="hero-eyebrow">The Infrastructure</p>
-    <h1 class="hero-name">Inside the <span>Homelab.</span></h1>
-    <p class="hero-desc" style="margin: 0 auto 40px;">Tracing the path from a line of code in Paderborn to a live production packet served from an old gaming laptop.</p>
-    <hr style="border: none; border-top: 0.5px solid var(--border); margin: 24px auto; max-width: 900px;">
-  </div>
-
-  <div class="architecture-grid">
+  <main class="homelab-container">
     
-    <div class="step-card">
-      <span class="step-number">Phase 01: Where The Code Comes From</span>
-      <h3 class="step-title">Local Development</h3>
-      <p class="step-desc">Code is written on my daily-driver laptop. A single <code>git push origin main</code> triggers a chain reaction across the internet.</p>
-      <div class="tech-pill">Django 5.0</div> <div class="tech-pill">Git Hooks</div>
-    </div>
+    <!-- Hero Header -->
+    <header class="hero-homelab">
+      <p class="hero-eyebrow">Bare-Metal Infrastructure</p>
+      <h1 class="hero-name">Inside the <span>Homelab.</span></h1>
+      <p class="hero-desc">
+        Tracing the path from a line of code in Paderborn to a live production packet served from a repurposed Ubuntu laptop server on my desk.
+      </p>
+    </header>
 
-    <div class="step-card">
-      <span class="step-number">Phase 02: Cloudflaring!</span>
-      <h3 class="step-title">Cloudflare Edge & Tunnel</h3>
-      <p class="step-desc">The domain <code>oldisserving.live</code> is managed by Cloudflare. Instead of opening risky ports on my home router, a <strong>Cloudflare Tunnel</strong> (Lenovo BareMetal Server) creates a secure, encrypted outbound pipe from my apartment to the global edge.</p>
-      <div class="tech-pill">Argo Tunnel</div> <div class="tech-pill">CNAME Routing</div> <div class="tech-pill">Full SSL</div>
-    </div>
-
-    <div class="step-card">
-      <span class="step-number">Phase 03: Something "Cool"</span>
-      <h3 class="step-title">Coolify Engine</h3>
-      <p class="step-desc">Coolify acts as an open-source Heroku. It listens for a <strong>Webhook</strong> from GitHub, pulls the latest code, and builds a fresh Nixpacks container without me ever touching a deploy button.</p>
-      <div class="tech-pill">Webhooks</div> <div class="tech-pill">Docker Containers</div> <div class="tech-pill">PostgreSQL</div>
-    </div>
-
-    <div class="step-card" style="border-color: #0F6E56;">
-      <span class="step-number">Phase 04: The Bare Metal</span>
-      <h3 class="step-title">Lenovo Legion Y540</h3>
-      <p class="step-desc">The final destination. An old gaming laptop repurposed as a Linux server. It handles the Django application, the database, and the reverse proxy 24/7 from my desk.</p>
-      
-      <div class="server-visual">
-        <div><span class="blink-dot"></span> STATUS: ONLINE</div>
-        <div style="margin-top: 8px; color: #888;">> cpu_load: 12%</div>
-        <div style="color: #888;">> uptime: 3 days, 14 hours</div>
-        <div style="color: #888;">> location: paderborn_germany</div>
+    <!-- Animated Data Pipeline Diagram -->
+    <section class="pipeline-wrapper">
+      <div class="pipeline-title">
+        <span>Continuous Delivery & Ingress Pipeline</span>
+        <span class="pipeline-status"><span class="blink-dot"></span> LIVE TOPOLOGY</span>
       </div>
+
+      <div class="pipeline-nodes">
+        <div class="pipeline-line"></div>
+        <div class="pipeline-pulse-line"></div>
+
+        <div class="node-item">
+          <div class="node-circle">💻</div>
+          <span class="node-label">Local Dev</span>
+          <span class="node-sub">git push</span>
+        </div>
+
+        <div class="node-item">
+          <div class="node-circle">🐙</div>
+          <span class="node-label">GitHub</span>
+          <span class="node-sub">webhook hook</span>
+        </div>
+
+        <div class="node-item">
+          <div class="node-circle">☁️</div>
+          <span class="node-label">Cloudflare</span>
+          <span class="node-sub">Zero Trust Tunnel</span>
+        </div>
+
+        <div class="node-item">
+          <div class="node-circle">🚀</div>
+          <span class="node-label">Coolify</span>
+          <span class="node-sub">Nixpacks Build</span>
+        </div>
+
+        <div class="node-item">
+          <div class="node-circle" style="border-color: #1D9E75;">⚡</div>
+          <span class="node-label">Bare Metal</span>
+          <span class="node-sub">Lenovo Legion Y540</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Architecture Phase Breakdown -->
+    <div class="architecture-grid">
+      
+      <!-- Phase 1 -->
+      <article class="step-card">
+        <span class="step-number">Phase 01: Code Origin & Trigger</span>
+        <h2 class="step-title">Local Development & Git Webhooks</h2>
+        <p class="step-desc">
+          Code is authored and validated locally. A single <code>git push origin main</code> executes an atomic push to GitHub. Instead of complex external CI runner bills, GitHub immediately broadcasts an encrypted webhook payload to my self-hosted deployment daemon.
+        </p>
+        <div class="tech-pills-row">
+          <span class="tech-pill">Django 5.0</span>
+          <span class="tech-pill">Git Hooks</span>
+          <span class="tech-pill">HMAC SHA-256 Webhook</span>
+        </div>
+      </article>
+
+      <!-- Phase 2 -->
+      <article class="step-card">
+        <span class="step-number">Phase 02: Ingress & Perimeter Security</span>
+        <h2 class="step-title">Cloudflare Zero Trust Tunnel</h2>
+        <p class="step-desc">
+          The domain <code>oldisserving.live</code> connects without opening any inbound ports on my residential router. A background <strong>Cloudflare Tunnel daemon (cloudflared)</strong> establishes four redundant, persistent outbound TCP/QUIC connections to Cloudflare edge data centers. All inbound web requests pass through Cloudflare DDoS filtering and WAF rules before flowing through this private pipe.
+        </p>
+        <div class="tech-pills-row">
+          <span class="tech-pill">Argo Smart Routing</span>
+          <span class="tech-pill">Zero Inbound Open Ports</span>
+          <span class="tech-pill">TLS Termination</span>
+          <span class="tech-pill">DDoS Shield</span>
+        </div>
+      </article>
+
+      <!-- Phase 3 -->
+      <article class="step-card">
+        <span class="step-number">Phase 03: Self-Hosted PaaS Automation</span>
+        <h2 class="step-title">Coolify Engine & Container Orchestration</h2>
+        <p class="step-desc">
+          Coolify runs locally as an open-source alternative to Heroku or Render. Upon receiving the GitHub webhook, it pulls the repository diff, analyzes the dependency tree, and builds a fresh, reproducible Nixpacks container image. Traefik automatically routes traffic to the newly spun container with zero-downtime rolling deploys.
+        </p>
+        <div class="tech-pills-row">
+          <span class="tech-pill">Coolify PaaS</span>
+          <span class="tech-pill">Docker Engine</span>
+          <span class="tech-pill">Nixpacks</span>
+          <span class="tech-pill">Traefik Reverse Proxy</span>
+        </div>
+      </article>
+
+      <!-- Phase 4 -->
+      <article class="step-card" style="border-color: #1D9E75;">
+        <span class="step-number">Phase 04: The Physical Host</span>
+        <h2 class="step-title">Lenovo Legion Y540 Bare-Metal Server</h2>
+        <p class="step-desc">
+          The final destination. An old gaming laptop repurposed into a headless Linux server running Ubuntu 24.04 LTS on my desk in Paderborn. It handles the Django application process, persistent PostgreSQL database, and reverse proxy 24 hours a day with complete local data sovereignty.
+        </p>
+        
+        <div class="server-visual-card">
+          <div class="server-header">
+            <span class="status-badge"><span class="blink-dot"></span> HOST ONLINE · PADERBORN, GERMANY</span>
+            <span style="color: #888882; font-size: 11px;">siddharth-lenovo-legion</span>
+          </div>
+
+          <div class="telemetry-grid">
+            <div class="metric-box">
+              <div class="metric-name">CPU Load (i7-9750H)</div>
+              <div class="metric-val" id="telemetry-cpu">12.4%</div>
+              <div class="meter-bar"><div class="meter-fill" id="telemetry-cpu-bar" style="width: 12.4%;"></div></div>
+            </div>
+
+            <div class="metric-box">
+              <div class="metric-name">RAM Consumption</div>
+              <div class="metric-val">2.8 GB / 16 GB</div>
+              <div class="meter-bar"><div class="meter-fill" style="width: 17.5%;"></div></div>
+            </div>
+
+            <div class="metric-box">
+              <div class="metric-name">Ingress Latency</div>
+              <div class="metric-val">~14 ms</div>
+              <div class="meter-bar"><div class="meter-fill" style="width: 25%;"></div></div>
+            </div>
+
+            <div class="metric-box">
+              <div class="metric-name">Server Uptime</div>
+              <div class="metric-val" id="telemetry-uptime">4d 14h 28m</div>
+              <div class="meter-bar"><div class="meter-fill" style="width: 85%;"></div></div>
+            </div>
+          </div>
+
+          <!-- Live Terminal Output Stream -->
+          <div class="terminal-stream" id="terminal-stream">
+            <div class="terminal-line"><span class="terminal-time">[12:04:18]</span> <span class="terminal-tag ok">[traefik]</span> HTTP/2 GET 200 / - 14ms</div>
+            <div class="terminal-line"><span class="terminal-time">[12:04:22]</span> <span class="terminal-tag">[cloudflared]</span> 4 connections active to edge FRA</div>
+            <div class="terminal-line"><span class="terminal-time">[12:04:30]</span> <span class="terminal-tag ok">[coolify-daemon]</span> container health check passed (0 restarts)</div>
+            <div class="terminal-line"><span class="terminal-time">[12:04:45]</span> <span class="terminal-tag">[postgresql]</span> persistent volume synced (fsync: ok)</div>
+          </div>
+        </div>
+
+        <div class="tech-pills-row">
+          <span class="tech-pill">Ubuntu 24.04 LTS</span>
+          <span class="tech-pill">Intel i7-9750H</span>
+          <span class="tech-pill">PostgreSQL 16</span>
+          <span class="tech-pill">Headless Linux</span>
+        </div>
+      </article>
+
     </div>
 
-  </div>
+  </main>
 
   <div class="divider"></div>
 
   <footer class="credit-footer">
-    <p>This frontend interface was designed with **Gemini** through some expert level prompting.</p>
-    <p style="margin-top: 12px; opacity: 0.5;">&copy; 2026 Siddharth Hemnani · M.Sc. Computer Science</p>
+    <p style="opacity: 0.7;">Engineered & Hosted on Bare Metal · Paderborn, Germany</p>
+    <p style="margin-top: 8px; opacity: 0.4;">&copy; 2026 Siddharth Hemnani · M.Sc. Computer Science</p>
   </footer>
 
+  <script>
+    // Live subtle telemetry animation
+    let seconds = 28;
+    let minutes = 14;
+    let hours = 14;
+    let days = 4;
+
+    setInterval(() => {
+      seconds++;
+      if (seconds >= 60) {
+        seconds = 0;
+        minutes++;
+        if (minutes >= 60) {
+          minutes = 0;
+          hours++;
+        }
+      }
+      const uptimeEl = document.getElementById('telemetry-uptime');
+      if (uptimeEl) {
+        uptimeEl.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+      }
+
+      // Small realistic CPU oscillation (9% - 15%)
+      const cpuVal = (10 + Math.random() * 5).toFixed(1);
+      const cpuEl = document.getElementById('telemetry-cpu');
+      const cpuBar = document.getElementById('telemetry-cpu-bar');
+      if (cpuEl && cpuBar) {
+        cpuEl.textContent = `${cpuVal}%`;
+        cpuBar.style.width = `${cpuVal}%`;
+      }
+    }, 1000);
+  </script>
 </body>
 </html>

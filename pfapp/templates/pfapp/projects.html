@@ -6,6 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Engineering Architecture & Projects | Siddharth Hemnani</title>
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <!-- KaTeX for crisp mathematical notation -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+          onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
   <style>
     .projects-container {
       max-width: 1080px;
@@ -361,10 +366,10 @@
 
         <div class="project-narrative">
           <p>
-            Standard vector search repeatedly disappointed me. Whenever I asked complex architectural or algorithmic questions across dense technical papers, cosine similarity dutifully pulled three slight variations of the introductory abstract into the context window. The retriever was functionally blind to conceptual progression.
+            When testing standard dense vector search on multi-part technical queries, I noticed a frustrating failure mode: cosine similarity repeatedly pulled three slightly different rephrasings of the introductory abstract into the context window. The retriever was blind to conceptual progression.
           </p>
           <p>
-            I reframed context retrieval as a true multi-objective optimization problem using NSGA-II. Instead of greedy top-<em>k</em> ranking, the retriever simultaneously maximizes query semantic relevance ($f_1$), aggressively penalizes intra-chunk redundancy ($f_2$), and maximizes graph commute distance across the document topology ($f_3$). By navigating the document citation and section graph via PyTorch Geometric, the algorithm traverses conceptual steps—delivering problem formulation, Pareto dominance, and crowding distance directly into an elite prompt context.
+            I had a hunch that context selection could be framed as a multi-objective optimization problem using NSGA-II to simultaneously balance query semantic relevance (<i>f</i><sub>1</sub>), intra-chunk redundancy (<i>f</i><sub>2</sub>), and graph commute distance across the document topology (<i>f</i><sub>3</sub>). In my Phase 6 experiments on a benchmark document, I observed an initial positive signal where a 3D knee-point selection yielded higher information density and less internal fluff under LLM judge evaluation. While this is promising initial evidence, it remains an exploratory personal project tested on a singular query—testing across diverse queries and larger multi-document corpuses remains an open research topic.
           </p>
         </div>
 
