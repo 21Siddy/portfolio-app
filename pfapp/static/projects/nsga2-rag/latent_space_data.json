@@ -54,7 +54,7 @@
       "x": 0.2022738754749298,
       "y": -0.1146637499332428,
       "word_count": 235,
-      "text_preview": "Finance In finance, a common problem is to choose a portfolio when there are two conflicting objectives -- the desire to have the expected va...",
+      "text_preview": "Finance In finance, a common problem is to choose a portfolio when there are two conflicting objectives  -  the desire to have the expected va...",
       "functional_cluster": "Mathematical Formulation & Dominance"
     },
     {
@@ -309,12 +309,13 @@
     }
   },
   "retrieval_footprints": {
-    "dense_top_3": {
-      "label": "Dense Top-3 (Cluster Collapse)",
+    "dense_top_4": {
+      "label": "Dense Top-4 (Cluster Collapse)",
       "indices": [
         2,
         26,
-        0
+        0,
+        24
       ],
       "color": "#EF4444",
       "points": [
@@ -329,6 +330,10 @@
         {
           "x": -0.2435828000307083,
           "y": 0.029373571276664734
+        },
+        {
+          "x": -0.16732794046401978,
+          "y": -0.35564476251602173
         }
       ]
     },
@@ -337,7 +342,8 @@
       "indices": [
         2,
         24,
-        8
+        8,
+        19
       ],
       "color": "#F97316",
       "points": [
@@ -352,21 +358,30 @@
         {
           "x": -0.07249658554792404,
           "y": 0.34844279289245605
+        },
+        {
+          "x": -0.2797684669494629,
+          "y": 0.2791152000427246
         }
       ]
     },
     "nsga2_3d_knee": {
       "label": "NSGA-II 3D Knee (Manifold Traversal)",
       "indices": [
-        8,
+        2,
+        4,
         10,
         26
       ],
       "color": "#10B981",
       "points": [
         {
-          "x": -0.07249658554792404,
-          "y": 0.34844279289245605
+          "x": -0.025412792339920998,
+          "y": -0.16937437653541565
+        },
+        {
+          "x": 0.14487546682357788,
+          "y": -0.09662926197052002
         },
         {
           "x": 0.11483340710401535,

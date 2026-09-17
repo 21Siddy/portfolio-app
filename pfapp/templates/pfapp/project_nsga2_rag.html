@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Associative Retrieval: Solving Context Clustering via Graph NSGA-II | Siddharth Hemnani</title>
+  <title>Discrete Multi-Objective Optimization for Context Selection | Siddharth Hemnani</title>
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
   
   <!-- KaTeX for crisp mathematical notation -->
@@ -71,23 +71,18 @@
     }
 
     .case-title {
-      font-size: 40px;
+      font-size: 38px;
       font-weight: 600;
-      line-height: 1.18;
+      line-height: 1.2;
       letter-spacing: -0.02em;
       margin-bottom: 16px;
     }
 
-    .case-title span {
-      color: var(--text-tertiary);
-    }
-
     .case-subtitle {
-      font-size: 18px;
+      font-size: 17px;
       line-height: 1.6;
       color: var(--text-secondary);
-      font-style: italic;
-      max-width: 960px;
+      max-width: 980px;
       margin-bottom: 24px;
     }
 
@@ -163,7 +158,7 @@
     }
 
     .math-callout .formula-item {
-      margin-bottom: 20px;
+      margin-bottom: 22px;
     }
 
     .math-callout .formula-item:last-child {
@@ -290,7 +285,7 @@
       font-family: var(--font-mono);
       font-weight: 600;
       font-size: 12px;
-      min-width: 130px;
+      min-width: 140px;
       display: inline-block;
     }
 
@@ -413,105 +408,122 @@
       font-weight: 600;
     }
 
-    /* Qualitative Comparison Cards */
-    .comparison-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 20px;
-      margin-top: 24px;
+    /* Qualitative Comparison Layout */
+    .qual-comparison-container {
+      margin-top: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
     }
 
-    .comparison-card {
+    .qual-card {
       background: var(--bg);
       border: 1px solid var(--border);
       border-radius: var(--radius-md);
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
+      padding: 24px 28px;
     }
 
-    .comparison-card.q1-card { border-top: 3px solid #3b82f6; }
-    .comparison-card.q2-card { border-top: 3px solid #10b981; }
-    .comparison-card.q3-card { border-top: 3px solid #f59e0b; }
+    .qual-card.dense-card {
+      border-left: 4px solid #ef4444;
+    }
 
-    .comp-header {
-      margin-bottom: 14px;
+    .qual-card.nsga2-card {
+      border-left: 4px solid #10b981;
+    }
+
+    .qual-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
       padding-bottom: 12px;
       border-bottom: 1px solid var(--border);
     }
 
-    .comp-eyebrow {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      text-transform: uppercase;
-      color: var(--text-tertiary);
-      letter-spacing: 0.05em;
-      margin-bottom: 4px;
-    }
-
-    .comp-title {
-      font-size: 15px;
+    .qual-method-title {
+      font-size: 16px;
       font-weight: 600;
       color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    .comp-prompt {
-      font-size: 12.5px;
-      color: var(--text-secondary);
-      font-style: italic;
-      margin-top: 6px;
-      line-height: 1.5;
-    }
-
-    .comp-section-title {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      color: var(--text-tertiary);
-      margin: 12px 0 6px;
-    }
-
-    .chunk-chip-list {
+    .qual-chips {
       display: flex;
       gap: 6px;
       flex-wrap: wrap;
-      margin-bottom: 10px;
     }
 
-    .chunk-chip {
+    .qual-chip {
       font-family: var(--font-mono);
-      font-size: 11px;
-      padding: 2px 8px;
+      font-size: 11.5px;
+      padding: 3px 9px;
       border-radius: 4px;
       background: var(--bg-secondary);
       border: 1px solid var(--border);
       color: var(--text-primary);
     }
 
-    .comp-observation {
-      font-size: 13px;
-      line-height: 1.65;
-      color: var(--text-secondary);
-      flex-grow: 1;
+    .qual-topics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 18px;
     }
 
-    .comp-verdict {
-      font-family: var(--font-mono);
-      font-size: 11.5px;
-      padding: 10px 12px;
+    .qual-topic-box {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
       border-radius: 6px;
+      padding: 14px 16px;
+    }
+
+    .qual-topic-title {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+      color: var(--text-tertiary);
+      margin-bottom: 6px;
+    }
+
+    .qual-topic-desc {
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
+
+    .qual-excerpt-box {
+      background: var(--bg-secondary);
+      border: 1px dashed var(--border);
+      border-radius: 6px;
+      padding: 16px 20px;
+      font-size: 13.5px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+
+    .qual-verdict-box {
       margin-top: 14px;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 12px;
       line-height: 1.5;
     }
 
-    .comp-verdict.dense-win {
-      background: rgba(59, 130, 246, 0.08);
-      border: 1px solid rgba(59, 130, 246, 0.2);
-      color: #2563eb;
+    .qual-verdict-box.dense-verdict {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      color: #dc2626;
     }
 
-    .comp-verdict.nsga2-win {
+    .qual-verdict-box.nsga2-verdict {
       background: rgba(16, 185, 129, 0.08);
       border: 1px solid rgba(16, 185, 129, 0.2);
       color: #059669;
@@ -586,7 +598,7 @@
     }
 
     @media (max-width: 960px) {
-      .comparison-grid,
+      .qual-topics-grid,
       .takeaways-grid {
         grid-template-columns: 1fr;
       }
@@ -600,7 +612,7 @@
         font-size: 30px;
       }
       .case-subtitle {
-        font-size: 16px;
+        font-size: 15.5px;
       }
       .section-block {
         padding: 24px 20px;
@@ -626,94 +638,96 @@
     
     <div class="back-nav">
       <a href="{% url 'projects' %}" class="back-link">
-        ← Back to Projects
+        &larr; Back to Projects
       </a>
     </div>
 
-    <!-- Header / Hero -->
+    <!-- Header & Problem Context -->
     <header class="case-header">
       <div class="case-eyebrow">Empirical Information Retrieval & Optimization Research</div>
-      <h1 class="case-title">Associative Retrieval: <span>Solving Context Clustering via Graph NSGA-II</span></h1>
+      <h1 class="case-title">Discrete Multi-Objective Optimization for Context Selection</h1>
       <p class="case-subtitle">
-        An empirical study on why dense vector search concentrates on introductory passages, and how multi-objective optimization over document topology models human associative recall.
+        Balancing Query Relevance, Semantic Redundancy, and Topological Manifold Coverage (K=4 Context Budget)
       </p>
 
       <div class="meta-badges">
         <span class="meta-pill">Multi-Objective Optimization (NSGA-II)</span>
         <span class="meta-pill">Attributed Chunk Graph</span>
         <span class="meta-pill">Laplacian Commute Distance</span>
+        <span class="meta-pill">K=4 Context Budget</span>
         <span class="meta-pill">Qwen 3.5 9B Benchmark</span>
         <span class="meta-pill">Interactive Plotly Manifold</span>
       </div>
     </header>
 
-    <!-- SECTION 1: Problem Intuition & The Geometry of Vector Search -->
+    <!-- SECTION 1: Header & Problem Context -->
     <section class="section-block">
       <h2 class="section-heading">
         <span class="section-number">01</span>
-        The Geometric Reality of Vector Search: Why Clusters Form
+        Term-Concentration Bias in Vector Search
       </h2>
       <div class="narrative-body">
         <p>
-          When a practitioner asks an exploratory or multi-part technical question (such as asking for a conceptual definition, a formal mathematical mechanism, and an applied domain case study within a single prompt), standard dense embeddings exhibit an inherent stylistic and topical bias toward introductory paragraphs.
+          When a user asks a multi-part synthesis question, standard dense vector retrieval clusters around chunks with the highest density of query keywords.
         </p>
         <p>
-          This is not an accident or a glitch: the title, abstract, and introductory sections of any technical paper or reference document naturally pack the highest density of overview keywords. Consequently, greedy top-k cosine retrieval spends the entire context budget ($k=3$) in one physical, stylistic neighborhood of the document.
+          In technical documents, this concentrates retrieval on introductory and overview passages, selecting multiple rephrasings of the same concepts while skipping operational mechanisms and downstream case studies.
         </p>
         <p>
-          Dense retrieval is not "broken"; it is doing exactly what it was mathematically designed to do: finding the nearest neighbors in representation space. However, for complex synthesis, this greedy concentration starves the generator of downstream operational details, mathematical mechanics, and applied case studies located deeper in the document. The language model receives three redundant variations of the introductory summary, but none of the downstream grounding required to answer the complete query.
+          Standard dense retrieval is not malfunctioning; it executes Euclidean nearest-neighbor search exactly as mathematically specified. However, when selecting a subset of size $K=4$ under a finite context budget, greedy top-$K$ selection allocates all slots to a single topical neighborhood. The language model receives redundant introductory statements (such as general definitions and car purchase analogies) while remaining completely starved of concrete mathematical formulations and domain applications located deeper in the document.
         </p>
       </div>
     </section>
 
-    <!-- SECTION 2: The Cognitive Alignment: Human Recall as an Associative Walk -->
+    <!-- SECTION 2: The 3 Objectives (K=4 Formulation) -->
     <section class="section-block">
       <h2 class="section-heading">
         <span class="section-number">02</span>
-        The Cognitive Alignment: Human Recall as an Associative Walk
+        The 3 Objectives (K=4 Formulation)
       </h2>
       <div class="narrative-body">
         <p>
-          Flat nearest-neighbor search treats documents as disconnected bags of floating vectors. In contrast, human cognitive memory retrieves information through an associative walk across three distinct structural tiers:
-        </p>
-        <p>
-          <strong>1. The Anchor:</strong> An intuitive baseline definition that sets the conceptual premise (e.g., buying a car: minimizing purchase cost while maximizing comfort).<br>
-          <strong>2. The Engine:</strong> The core mathematical mechanism or contrast governing the concept (e.g., vector dominance conditions, ideal vs. nadir bounding vectors).<br>
-          <strong>3. The Grounding:</strong> Concrete domain applications located deeper in the corpus (e.g., cyclic pressure swing adsorption in chemical gas separation via MOGA, cellular radio network resource allocation via scalarization).
-        </p>
-        <p>
-          To model this cognitive walk algorithmically, we construct an <strong>Attributed Document Graph</strong> $G = (V, E)$. The nodes $V = \{c_0, c_1, \dots, c_{26}\}$ represent sequential paragraph chunks. The edges $E = E_{\text{seq}} \cup E_{\text{sem}}$ combine the natural sequential reading order $(i, i+1)$ with cross-chunk semantic nearest-neighbor bridges across distant sections.
-        </p>
-        <p>
-          We then formulate context subset selection for any candidate triplet $S = \{c_a, c_b, c_c\}$ as a constrained three-objective Pareto optimization problem:
+          To overcome term-concentration bias, we formulate context selection over a document chunk corpus $V = \{c_0, c_1, \dots, c_{26}\}$ as a combinatorial multi-objective optimization problem. For any candidate subset of size $K=4$, denoted $S = \{c_a, c_b, c_c, c_d\} \subset V$, the optimization balances three mathematically competing criteria:
         </p>
 
         <div class="math-callout">
           <div class="formula-item">
-            <div class="formula-title">Objective 1 (Relevance): Maximize query semantic alignment</div>
-            $$f_1(S) = R(S) = \frac{1}{K} \sum_{i \in S} \cos(q, e_i)$$
+            <div class="formula-title">f₁ Query Relevance (Max)</div>
+            <p style="font-size: 13.5px; color: var(--text-secondary); margin-bottom: 8px;">
+              Mean cosine similarity between the query vector $q$ and selected chunk embeddings:
+            </p>
+            $$f_1(S) = R(S) = \frac{1}{K} \sum_{i \in S} \cos(q, e_i) \quad (K=4)$$
           </div>
           <div class="formula-item">
-            <div class="formula-title">Objective 2 (Redundancy): Minimize pairwise internal semantic overlap</div>
-            $$f_2(S) = \operatorname{Red}(S) = \frac{2}{K(K-1)} \sum_{i < j \in S} \cos(e_i, e_j)$$
+            <div class="formula-title">f₂ Intra-Context Redundancy (Min)</div>
+            <p style="font-size: 13.5px; color: var(--text-secondary); margin-bottom: 8px;">
+              Mean pairwise cosine similarity across all $\binom{4}{2} = 6$ pairs in the 4-chunk subset:
+            </p>
+            $$f_2(S) = \operatorname{Red}(S) = \frac{2}{K(K-1)} \sum_{i < j \in S} \cos(e_i, e_j) = \frac{1}{6} \sum_{i < j \in S} \cos(e_i, e_j)$$
           </div>
           <div class="formula-item">
-            <div class="formula-title">Objective 3 (Graph Spread): Maximize topological commute distance across document graph</div>
-            $$f_3(S) = G(S) = \frac{2}{K(K-1)} \sum_{i < j \in S} \widehat{C}_{ij}$$
+            <div class="formula-title">f₃ Graph Commute Spread (Max)</div>
+            <p style="font-size: 13.5px; color: var(--text-secondary); margin-bottom: 8px;">
+              Mean commute-time distance over the continuous document graph (combining sequential reading backbone and continuous semantic affinity):
+            </p>
+            $$f_3(S) = G(S) = \frac{2}{K(K-1)} \sum_{i < j \in S} \widehat{C}_{ij} = \frac{1}{6} \sum_{i < j \in S} \widehat{C}_{ij}$$
           </div>
           <div class="formula-item">
-            <div class="formula-title">Hard Constraint: Query Relevance Floor</div>
+            <div class="formula-title">Hard Feasibility Constraint: Query Relevance Floor</div>
+            <p style="font-size: 13.5px; color: var(--text-secondary); margin-bottom: 8px;">
+              Ensures every individual chunk meets a minimum topical relevance threshold:
+            </p>
             $$g_1(S) = \tau - \min_{i \in S} \cos(q, e_i) \le 0 \quad (\tau = 0.30)$$
           </div>
         </div>
 
         <p>
-          The graph spread metric $f_3(S)$ uses the normalized commute distance $\widehat{C}_{ij}$ derived from the Moore-Penrose pseudo-inverse of the combinatorial graph Laplacian $L^{\dagger}$. Commute distance measures the expected number of random-walk steps required to travel from chunk $i$ to chunk $j$ and return. Maximizing this distance forces NSGA-II to traverse structural boundaries--spanning from introductory intuition, across mathematical formulation, to concrete empirical grounding.
+          The graph commute spread $f_3(S)$ leverages normalized commute-time distances $\widehat{C}_{ij}$ derived from the Moore-Penrose pseudoinverse of the combinatorial graph Laplacian $L^\dagger$. Commute time reflects the expected resistance distance of a random walk traversing the document graph. Maximizing $f_3(S)$ discourages local clustering and incentivizes the non-dominated selection to sample across distant functional sections.
         </p>
       </div>
     </section>
 
-    <!-- SECTION 3: Interactive 2D Latent Manifold Projection -->
+    <!-- SECTION 3: Interactive 2D Latent Manifold Projection (Plotly.js) -->
     <section class="section-block">
       <h2 class="section-heading">
         <span class="section-number">03</span>
@@ -721,7 +735,7 @@
       </h2>
       <div class="narrative-body">
         <p>
-          Below is an interactive 2D PCA projection of all 27 chunk embeddings from the benchmark corpus (accounting for 21.5% total explained variance: PC1 = 11.9%, PC2 = 9.5%). Inspect the spatial layout of the functional clusters and observe how the three retrieval strategies navigate the latent manifold.
+          The interactive canvas below visualizes the 2D PCA projection of all 27 chunk embeddings from the benchmark corpus (capturing 21.5% explained variance: PC1 = 11.9%, PC2 = 9.5%). Observe the spatial distribution of functional clusters and how each retrieval method selects its $K=4$ context subset.
         </p>
 
         <div class="plot-container">
@@ -729,8 +743,8 @@
             <span class="plot-title-label">2D Latent Space Projection (all-MiniLM-L6-v2)</span>
             <div class="plot-filter-group">
               <button class="filter-btn active" id="btn-show-all" onclick="filterFootprints('all')">Show All Footprints</button>
-              <button class="filter-btn" id="btn-show-dense" onclick="filterFootprints('dense')">Dense Top-3 Only</button>
-              <button class="filter-btn" id="btn-show-mmr" onclick="filterFootprints('mmr')">MMR (λ=0.5) Only</button>
+              <button class="filter-btn" id="btn-show-dense" onclick="filterFootprints('dense')">Dense Top-4 Only</button>
+              <button class="filter-btn" id="btn-show-mmr" onclick="filterFootprints('mmr')">MMR (&lambda;=0.5) Only</button>
               <button class="filter-btn" id="btn-show-nsga2" onclick="filterFootprints('nsga2')">NSGA-II 3D Knee Only</button>
               <button class="filter-btn" id="btn-reset-view" onclick="resetPlotView()">Reset View</button>
             </div>
@@ -739,50 +753,46 @@
           <div id="plotly-manifold-chart"></div>
 
           <p class="plot-legend-note">
-            • <strong>Red Contour [2, 26, 0]:</strong> Dense Top-3 collapses into the introductory neighborhood surrounding the query vector.<br>
-            • <strong>Orange Path [2, 24, 8]:</strong> Maximal Marginal Relevance sequentially steps away from the query cluster.<br>
-            • <strong>Green Spanning Triangle [8, 10, 26]:</strong> The NSGA-II 3D Knee solution spans across the entire document manifold, capturing introductory theory, mathematical scalarization, and applied chemical / telecommunications case studies.
+            &bull; <strong>Dense Top-4 (Red Contour [2, 26, 0, 24]):</strong> Shows term-concentration bias, clustering tightly in introductory and overview regions around Query Vector $q$.<br>
+            &bull; <strong>MMR (&lambda;=0.5) (Orange Boundary [2, 24, 8, 19]):</strong> Greedily steps away from the query neighborhood, trading off marginal similarity against diversity.<br>
+            &bull; <strong>NSGA-II 3D Knee (Green Manifold [2, 4, 10, 26]):</strong> Spans the entire manifold, jointly covering foundational theory (Chunk 2), macroeconomics PPF (Chunk 4), cellular radio resource management (Chunk 10), and decision maps (Chunk 26).
           </p>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 4: Attributed Graph Topology Explorer -->
+    <!-- SECTION 4: Document Topology Network Diagram -->
     <section class="section-block">
       <h2 class="section-heading">
         <span class="section-number">04</span>
-        Attributed Graph Topology Explorer
+        Document Topology Network Diagram
       </h2>
       <div class="narrative-body">
         <p>
-          The document graph combines sequential reading continuity with cross-chunk semantic bridges. Below is the structural topology of the 27 chunks, highlighting how Dense Top-3 clusters in a localized subgraph while NSGA-II traverses cross-sectional bridges.
+          The document graph couples the sequential reading flow of the source text with continuous cross-chunk semantic affinities. Below is the full topological visualization comparing how Dense Top-4 and NSGA-II 3D Knee traverse the chunk network.
         </p>
 
         <!-- How to Read This Graph Guide -->
         <div class="graph-guide-card">
           <div class="graph-guide-title">
-            <span>💡 How to Read This Graph</span>
+            <span>How to Read This Graph</span>
           </div>
           <ul class="guide-list">
             <li class="guide-item">
-              <span class="guide-bullet nodes">• Nodes (0 to 26):</span>
-              <span>Individual sequential paragraph chunks spanning the complete document.</span>
+              <span class="guide-bullet gray">&bull; Gray Solid Edges:</span>
+              <span>Sequential reading flow ($i \to i+1$) preserving chronological document structure.</span>
             </li>
             <li class="guide-item">
-              <span class="guide-bullet gray">• Gray Edges:</span>
-              <span>Natural sequential reading order $(i \to i+1)$ preserving narrative flow.</span>
+              <span class="guide-bullet cyan">&bull; Cyan Dashed Edges:</span>
+              <span>Continuous semantic affinities ($w_{ij} \ge 0.30$) bridging topically related passages across non-adjacent sections.</span>
             </li>
             <li class="guide-item">
-              <span class="guide-bullet cyan">• Cyan Dashed:</span>
-              <span>Top-4 cross-chunk semantic nearest-neighbor bridges connecting distant topical sections.</span>
+              <span class="guide-bullet red">&bull; Red Circles:</span>
+              <span>Dense Top-4 picks [2, 26, 0, 24], showing cluster concentration around high-frequency keyword nodes.</span>
             </li>
             <li class="guide-item">
-              <span class="guide-bullet red">• Red Circle:</span>
-              <span>Dense Top-3 cluster collapse ([0, 2, 26]), tightly bound to introductory nodes.</span>
-            </li>
-            <li class="guide-item">
-              <span class="guide-bullet green">• Green Triangle:</span>
-              <span>NSGA-II 3D Knee spanning manifold ([8, 10, 26]), traversing distant structural modules.</span>
+              <span class="guide-bullet green">&bull; Green Polygon:</span>
+              <span>NSGA-II 3D Knee picks [2, 4, 10, 26], spanning sequential and semantic graph shortcuts.</span>
             </li>
           </ul>
         </div>
@@ -790,21 +800,21 @@
         <div class="media-card">
           <img src="{% static 'projects/nsga2-rag/chunk_graph_topology.png' %}" alt="Attributed Document Chunk Graph Topology">
           <p class="media-caption">
-            Figure 1: Document chunk graph topology showing sequential backbone edges and semantic nearest-neighbor bridges.
+            Figure 1: Continuous document graph topology with sequential backbone edges and continuous semantic affinity shortcuts.
           </p>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 5: Rigorous Multi-Query Benchmark -->
+    <!-- SECTION 5: Multi-Query Scientific Benchmark Table -->
     <section class="section-block">
       <h2 class="section-heading">
         <span class="section-number">05</span>
-        Rigorous Multi-Query Scientific Benchmark
+        Multi-Query Scientific Benchmark Table
       </h2>
       <div class="narrative-body">
         <p>
-          We evaluated Dense Top-3, MMR ($\lambda=0.5$), and NSGA-II 3D Knee across three distinct query archetypes using an exact combinatorial evaluation and local LLM generation (Qwen 3.5 9B, temperature 0.0). Below are the empirical metrics and generation behaviors recorded in the scientific manifest.
+          We evaluated Dense Top-4, MMR ($\lambda=0.5$), and the NSGA-II 3D Knee configuration across three distinct query archetypes using Qwen 3.5 9B with an exact combinatorial search baseline ($C(27, 4) = 17,550$ candidate subsets). Below is the comprehensive empirical comparison:
         </p>
 
         <div class="media-card">
@@ -824,7 +834,7 @@
                 <th>Relevance ($f_1 \uparrow$)</th>
                 <th>Redundancy ($f_2 \downarrow$)</th>
                 <th>Graph Spread ($f_3 \uparrow$)</th>
-                <th>Retrieved Chunks</th>
+                <th>Selected Chunks</th>
               </tr>
             </thead>
             <tbody>
@@ -832,27 +842,27 @@
               <tr class="query-row-first">
                 <td rowspan="3">
                   <div class="query-title">Q1: Localized Factoid</div>
-                  <div class="query-desc">Formal Math Definition of Pareto Optimality</div>
+                  <div class="query-desc">Math Definition of Pareto Optimality</div>
                 </td>
-                <td><span class="method-tag dense">Dense Top-3</span></td>
-                <td class="dense-winner">0.554</td>
-                <td>0.611</td>
-                <td>0.427</td>
-                <td><strong>[2, 24, 18]</strong></td>
+                <td><span class="method-tag dense">Dense Top-4</span></td>
+                <td class="dense-winner">0.537</td>
+                <td>0.625</td>
+                <td>0.517</td>
+                <td><strong>[2, 24, 18, 12]</strong></td>
               </tr>
               <tr>
-                <td><span class="method-tag mmr">MMR (λ=0.5)</span></td>
-                <td>0.486</td>
-                <td>0.404</td>
-                <td>0.617</td>
-                <td>[2, 24, 14]</td>
+                <td><span class="method-tag mmr">MMR (&lambda;=0.5)</span></td>
+                <td>0.447</td>
+                <td class="winner-cell">0.369</td>
+                <td class="winner-cell">0.663</td>
+                <td>[2, 24, 14, 4]</td>
               </tr>
               <tr>
                 <td><span class="method-tag nsga2">NSGA-II 3D Knee</span></td>
-                <td>0.444</td>
-                <td class="winner-cell">0.356</td>
-                <td class="winner-cell">0.699</td>
-                <td>[3, 10, 24]</td>
+                <td>0.462</td>
+                <td>0.389</td>
+                <td>0.631</td>
+                <td>[2, 4, 10, 24]</td>
               </tr>
 
               <!-- Q2 -->
@@ -861,132 +871,148 @@
                   <div class="query-title">Q2: Multi-Part Comparative</div>
                   <div class="query-desc">MOO vs Single-Objective + Concrete Example</div>
                 </td>
-                <td><span class="method-tag dense">Dense Top-3</span></td>
-                <td class="dense-winner">0.662</td>
-                <td>0.635</td>
-                <td>0.391</td>
-                <td>[2, 26, 0]</td>
+                <td><span class="method-tag dense">Dense Top-4</span></td>
+                <td class="dense-winner">0.654</td>
+                <td>0.620</td>
+                <td>0.544</td>
+                <td>[2, 26, 0, 24]</td>
               </tr>
               <tr>
-                <td><span class="method-tag mmr">MMR (λ=0.5)</span></td>
-                <td>0.603</td>
-                <td>0.457</td>
-                <td>0.622</td>
-                <td>[2, 24, 8]</td>
+                <td><span class="method-tag mmr">MMR (&lambda;=0.5)</span></td>
+                <td>0.600</td>
+                <td>0.498</td>
+                <td>0.558</td>
+                <td>[2, 24, 8, 19]</td>
               </tr>
               <tr>
                 <td><span class="method-tag nsga2">NSGA-II 3D Knee</span></td>
-                <td>0.508</td>
-                <td class="winner-cell">0.316</td>
-                <td class="winner-cell">0.765</td>
-                <td><strong>[8, 10, 26]</strong></td>
+                <td>0.514</td>
+                <td class="winner-cell">0.385</td>
+                <td class="winner-cell">0.645</td>
+                <td><strong>[2, 4, 10, 26]</strong></td>
               </tr>
 
               <!-- Q3 -->
               <tr class="query-row-first">
                 <td rowspan="3">
-                  <div class="query-title">Q3: Broad / Conversational</div>
-                  <div class="query-desc">Intuitive Overview & Practical Applications</div>
+                  <div class="query-title">Q3: Conversational / Broad</div>
+                  <div class="query-desc">Intuition & Systems Overview</div>
                 </td>
-                <td><span class="method-tag dense">Dense Top-3</span></td>
-                <td class="dense-winner">0.643</td>
-                <td>0.706</td>
-                <td>0.287</td>
-                <td>[0, 12, 2]</td>
+                <td><span class="method-tag dense">Dense Top-4</span></td>
+                <td class="dense-winner">0.631</td>
+                <td>0.679</td>
+                <td>0.514</td>
+                <td>[0, 12, 2, 19]</td>
               </tr>
               <tr>
-                <td><span class="method-tag mmr">MMR (λ=0.5)</span></td>
-                <td>0.483</td>
-                <td class="winner-cell">0.290</td>
-                <td>0.631</td>
-                <td>[0, 17, 23]</td>
+                <td><span class="method-tag mmr">MMR (&lambda;=0.5)</span></td>
+                <td>0.491</td>
+                <td class="winner-cell">0.336</td>
+                <td class="winner-cell">0.694</td>
+                <td>[0, 17, 23, 24]</td>
               </tr>
               <tr>
                 <td><span class="method-tag nsga2">NSGA-II 3D Knee</span></td>
-                <td>0.507</td>
-                <td>0.351</td>
-                <td class="winner-cell">0.738</td>
-                <td><strong>[16, 23, 26]</strong></td>
+                <td>0.513</td>
+                <td>0.379</td>
+                <td>0.644</td>
+                <td><strong>[7, 10, 23, 26]</strong></td>
               </tr>
             </tbody>
           </table>
         </div>
+      </div>
+    </section>
 
-        <!-- Qualitative LLM Generation Comparison Cards -->
-        <div class="comparison-grid">
+    <!-- SECTION 6: Qualitative Generation Comparison (Q2 Output) -->
+    <section class="section-block">
+      <h2 class="section-heading">
+        <span class="section-number">06</span>
+        Qualitative Generation Comparison (Q2 Output)
+      </h2>
+      <div class="narrative-body">
+        <p>
+          Prompt: <em>"Explain multi-objective optimization, compare it with single-objective optimization, and use a concrete example to explain Pareto dominance and the Pareto front."</em>
+        </p>
+        <p>
+          To understand how context selection directly influences downstream generation, we examine the complete responses generated by Qwen 3.5 9B under Dense Top-4 versus NSGA-II 3D Knee context allocations:
+        </p>
+
+        <div class="qual-comparison-container">
           
-          <!-- Q1 Card -->
-          <div class="comparison-card q1-card">
-            <div class="comp-header">
-              <div class="comp-eyebrow">Archetype Q1</div>
-              <div class="comp-title">Localized Factoid Lookup</div>
-              <div class="comp-prompt">"What is the formal mathematical definition of Pareto optimality and dominance?"</div>
+          <!-- Dense Top-4 Card -->
+          <div class="qual-card dense-card">
+            <div class="qual-header">
+              <div class="qual-method-title">
+                <span class="method-tag dense">Dense Top-4</span>
+                <span>Context Subset: [0, 2, 24, 26]</span>
+              </div>
+              <div class="qual-chips">
+                <span class="qual-chip">Relevance: 0.654</span>
+                <span class="qual-chip">Redundancy: 0.620</span>
+                <span class="qual-chip">Graph Spread: 0.544</span>
+              </div>
             </div>
 
-            <div class="comp-section-title">Retrieved Footprints</div>
-            <div class="chunk-chip-list">
-              <span class="chunk-chip" style="color: #3b82f6;">Dense: [2, 24, 18]</span>
-              <span class="chunk-chip" style="color: #10b981;">NSGA-II: [3, 10, 24]</span>
+            <div class="qual-topics-grid">
+              <div class="qual-topic-box">
+                <div class="qual-topic-title">Context Representation</div>
+                <div class="qual-topic-desc">
+                  Heavily concentrated in introductory definitions (Chunks 0, 2) and high-order visualization methods (Chunks 24, 26). Two out of four context chunks focus specifically on Pareto front visualization.
+                </div>
+              </div>
+              <div class="qual-topic-box">
+                <div class="qual-topic-title">Generation Outcome</div>
+                <div class="qual-topic-desc">
+                  Focuses repeatedly on car cost vs comfort and vehicle fuel efficiency trade-offs. The model notes that single-objective optimization is not explicitly defined in the context, and spends significant length discussing bi-objective slices, Venn diagrams, and heatmaps rather than core domain mechanics.
+                </div>
+              </div>
             </div>
 
-            <div class="comp-section-title">Empirical Generation Behavior</div>
-            <div class="comp-observation">
-              Dense Top-3 pinpointed Chunk 2, which contained the exact mathematical definition ($x_1 \in X$ dominates $x_2 \in X$). In contrast, NSGA-II forced topological dispersion ($f_3 = 0.699$) and evicted Chunk 2 in favor of Chunks [3, 10, 24]. Lacking the exact definition passage, Qwen 3.5 was forced to refuse to answer ("no explicit formal mathematical definition provided").
+            <div class="qual-excerpt-box">
+              "Unlike single-objective problems (which are not explicitly defined in the text but implied by contrast), multi-objective problems involve situations where it is not guaranteed that a single solution can simultaneously optimize each objective because the objectives are often conflicting [Chunk 0]... For high-order problems: Bi-objective Slices introduced by W.S. Meisel... alternative techniques like combining Venn diagrams with multiple scatterplots [Chunk 26]."
             </div>
 
-            <div class="comp-verdict dense-win">
-              <strong>Empirical Winner: Dense Top-3</strong><br>
-              Graph spread degrades narrow factoid retrieval by evicting specific definitions.
-            </div>
-          </div>
-
-          <!-- Q2 Card -->
-          <div class="comparison-card q2-card">
-            <div class="comp-header">
-              <div class="comp-eyebrow">Archetype Q2</div>
-              <div class="comp-title">Multi-Part Comparative Synthesis</div>
-              <div class="comp-prompt">"Explain MOO, compare with single-objective, and use a concrete example..."</div>
-            </div>
-
-            <div class="comp-section-title">Retrieved Footprints</div>
-            <div class="chunk-chip-list">
-              <span class="chunk-chip" style="color: #ef4444;">Dense: [2, 26, 0]</span>
-              <span class="chunk-chip" style="color: #10b981;">NSGA-II: [8, 10, 26]</span>
-            </div>
-
-            <div class="comp-section-title">Empirical Generation Behavior</div>
-            <div class="comp-observation">
-              Dense Top-3 collapsed into introductory chunks [2, 26, 0] with high redundancy ($0.635$). The generator spent its tokens debating whether single-objective optimization was defined in the text. NSGA-II halved redundancy to $0.316$ (-50.2%) and doubled graph spread to $0.765$ (+95.7%), pulling concrete applications (MOGA chemical gas separation, cellular radio network scalarization).
-            </div>
-
-            <div class="comp-verdict nsga2-win">
-              <strong>Empirical Winner: NSGA-II 3D Knee</strong><br>
-              Delivers grounded, non-redundant operational context for complete multi-part answers.
+            <div class="qual-verdict-box dense-verdict">
+              High semantic redundancy ($f_2 = 0.620$) causes the generator to cycle through overlapping definitions and over-allocate text to visualization methods.
             </div>
           </div>
 
-          <!-- Q3 Card -->
-          <div class="comparison-card q3-card">
-            <div class="comp-header">
-              <div class="comp-eyebrow">Archetype Q3</div>
-              <div class="comp-title">Broad / Conversational Inquiry</div>
-              <div class="comp-prompt">"Could you explain this multi-objective optimization thingie? It sounds interesting."</div>
+          <!-- NSGA-II 3D Knee Card -->
+          <div class="qual-card nsga2-card">
+            <div class="qual-header">
+              <div class="qual-method-title">
+                <span class="method-tag nsga2">NSGA-II 3D Knee</span>
+                <span>Context Subset: [2, 4, 10, 26]</span>
+              </div>
+              <div class="qual-chips">
+                <span class="qual-chip">Relevance: 0.514</span>
+                <span class="qual-chip">Redundancy: 0.385</span>
+                <span class="qual-chip">Graph Spread: 0.645</span>
+              </div>
             </div>
 
-            <div class="comp-section-title">Retrieved Footprints</div>
-            <div class="chunk-chip-list">
-              <span class="chunk-chip" style="color: #ef4444;">Dense: [0, 12, 2]</span>
-              <span class="chunk-chip" style="color: #10b981;">NSGA-II: [16, 23, 26]</span>
+            <div class="qual-topics-grid">
+              <div class="qual-topic-box">
+                <div class="qual-topic-title">Context Representation</div>
+                <div class="qual-topic-desc">
+                  Balanced across theoretical definition (Chunk 2), macroeconomics Production Possibilities Frontier (Chunk 4), Cellular Radio Resource Management (Chunk 10), and decision maps (Chunk 26).
+                </div>
+              </div>
+              <div class="qual-topic-box">
+                <div class="qual-topic-title">Generation Outcome</div>
+                <div class="qual-topic-desc">
+                  Introduces the formal mathematical definition of dominance, illustrates trade-offs using the classic Production Possibilities Frontier (PPF), provides an engineering deep dive into cellular data rates, latency, and throughput vs user fairness, and covers decision map visualization without repetition.
+                </div>
+              </div>
             </div>
 
-            <div class="comp-section-title">Empirical Generation Behavior</div>
-            <div class="comp-observation">
-              Dense Top-3 exhibited severe cluster collapse ($f_2 = 0.706$), retrieving three overlapping introductory paragraphs. NSGA-II traversed the document manifold to select smooth Chebyshev scalarization (Chunk 16), hybrid MCDM-EMO algorithms (Chunk 23), and interactive decision maps (Chunk 26), enabling a rich, multidimensional technical summary.
+            <div class="qual-excerpt-box">
+              "Concrete Example: Production Possibilities Frontier... A society utilizes certain amounts of resources to produce various types of goods. Producing more of one good requires producing less of another... Additional Context: Radio Resource Management in cellular networks... Network operators aim to balance total network data throughput against user fairness. High throughput often comes at the cost of lower fairness for individual users..."
             </div>
 
-            <div class="comp-verdict nsga2-win">
-              <strong>Empirical Winner: NSGA-II 3D Knee</strong><br>
-              Traverses beyond high-level summaries to surface algorithmic mechanics and visualization.
+            <div class="qual-verdict-box nsga2-verdict">
+              Low redundancy ($f_2 = 0.385$, a 37.9% reduction) and elevated graph spread ($f_3 = 0.645$) provide diverse, non-overlapping anchors for an authoritative, comprehensive synthesis.
             </div>
           </div>
 
@@ -994,49 +1020,49 @@
       </div>
     </section>
 
-    <!-- SECTION 6: The Scientific Takeaway: An Honest Trade-Off Analysis -->
+    <!-- SECTION 7: Empirical Takeaways & Honest Limitations -->
     <section class="section-block">
       <h2 class="section-heading">
-        <span class="section-number">06</span>
-        The Scientific Takeaway: An Honest Trade-Off Analysis
+        <span class="section-number">07</span>
+        Empirical Takeaways & Honest Limitations
       </h2>
       <div class="narrative-body">
         <p>
-          The benchmark data demonstrates that no single retrieval strategy dominates across all query modalities. Replacing synthetic strawman claims with empirical evidence leads to three primary conclusions:
+          A rigorous scientific benchmark must distinguish where multi-objective optimization delivers clear value from where classical dense vector search remains optimal:
         </p>
 
         <div class="takeaways-grid">
           
           <div class="takeaway-card">
-            <span class="takeaway-badge blue">When Dense Top-K Wins</span>
-            <h3>Narrow Targeted Factoids</h3>
+            <span class="takeaway-badge blue">Search Space & Efficiency</span>
+            <h3>Combinatorial Efficiency</h3>
             <p>
-              For narrow factoid lookups (Archetype Q1), Dense Top-3 is unequivocally superior ($f_1 = 0.554$). It successfully pulled the exact formal definition passage in Chunk 2.
+              Out of $\binom{27}{4} = 17,550$ possible subsets in the $K=4$ configuration, NSGA-II evaluated exactly 3,000 candidate subsets (population size 60 across 50 generations).
             </p>
             <p>
-              Forcing graph spread with NSGA-II evicted the definition chunk ($f_1 = 0.444$, Chunks [3, 10, 24]), causing Qwen 3.5 to correctly refuse to answer ("no explicit formal mathematical definition provided"). Graph spread optimization should not be applied to targeted factoid queries.
-            </p>
-          </div>
-
-          <div class="takeaway-card">
-            <span class="takeaway-badge green">When NSGA-II Excels</span>
-            <h3>Comparative & Multi-Part Synthesis</h3>
-            <p>
-              On comparative and open-ended queries (Archetypes Q2 and Q3), Dense retrieval suffers severe cluster collapse into repetitive introductory passages ([2, 26, 0] and [0, 12, 2]) with excessive redundancy ($f_2 \approx 0.635 - 0.706$).
-            </p>
-            <p>
-              NSGA-II cut internal redundancy in half (-50.2% on Q2) and nearly doubled graph spread (+95.7%), pulling concrete applications (MOGA chemical separation, cellular radio allocation) that allowed the LLM to deliver a complete, grounded answer.
+              By evaluating approximately 17.1% of the total combinatorial space, the algorithm consistently identified the non-dominated Pareto knee that matches the global Pareto front on multi-part queries.
             </p>
           </div>
 
           <div class="takeaway-card">
-            <span class="takeaway-badge amber">Engineering Limitations</span>
-            <h3>Computational Latency & Scaling</h3>
+            <span class="takeaway-badge green">Empirical Modality</span>
+            <h3>When Dense Retrieval Wins</h3>
             <p>
-              Computing combinatorial graph Laplacians, pseudo-inverses ($L^{\dagger}$), and pairwise commute distances on the fly is computationally prohibitive for million-document corpora within sub-50ms query latency budgets.
+              For targeted factoid questions (such as Q1 asking for a specific mathematical definition), Dense Top-4 achieves the highest relevance (0.537).
             </p>
             <p>
-              Practical deployment requires offline precomputation of structural diffusion matrices, hierarchical graph partitioning, or two-stage reranking over an initial top-50 candidate pool.
+              Enforcing topological spread on single-fact queries introduces unneeded tangential context. When the user's intent is narrow and localized, dense nearest-neighbor retrieval is both computationally faster and topically superior.
+            </p>
+          </div>
+
+          <div class="takeaway-card">
+            <span class="takeaway-badge amber">Production Engineering</span>
+            <h3>Scalability Note</h3>
+            <p>
+              While effective for exploratory search on complex documents, computing graph Laplacians and commute times on the fly is computationally expensive for massive corpora within interactive latency budgets.
+            </p>
+            <p>
+              Real-time production pipelines would require precomputed graph diffusion matrices, hierarchical clustering, or a two-stage architecture that reranks an initial pool of 30 to 50 dense candidates.
             </p>
           </div>
 
@@ -1049,12 +1075,12 @@
   <div class="divider"></div>
 
   <footer class="credit-footer">
-    <p>&copy; 2026 Siddharth Hemnani · M.Sc. Computer Science</p>
+    <p>&copy; 2026 Siddharth Hemnani &middot; M.Sc. Computer Science</p>
   </footer>
 
   <!-- Plotly.js Latent Manifold Projection Engine -->
   <script>
-    // Embedded latent space data matching latent_space_data.json
+    // Embedded latent space data matching pfapp/static/projects/nsga2-rag/latent_space_data.json
     const latentData = {
       pca_variance_ratio: [0.119417205452919, 0.095204658806324],
       query: {
@@ -1092,25 +1118,25 @@
         { chunk_id: 26, x: -0.26824, y: -0.42259, word_count: 233, cluster: "Real-World Case Studies & Scalarization", preview: "Visualization in high-order multi-objective optimization problems There are two generic ideas: decision maps and slices..." }
       ],
       footprints: {
-        dense: {
-          name: "Dense Top-3 [2, 26, 0] (Cluster Collapse)",
-          indices: [2, 26, 0, 2],
+        dense_top_4: {
+          name: "Dense Top-4 [2, 26, 0, 24] (Cluster Collapse)",
+          indices: [0, 2, 24, 26, 0],
           color: "#ef4444",
           fillcolor: "rgba(239, 68, 68, 0.14)",
           dash: "solid",
           width: 2.5
         },
         mmr: {
-          name: "MMR (λ=0.5) [2, 24, 8] (Sequential Diversity)",
-          indices: [2, 24, 8],
+          name: "MMR (λ=0.5) [2, 24, 8, 19] (Diversity)",
+          indices: [2, 24, 19, 8, 2],
           color: "#f97316",
-          fillcolor: "none",
+          fillcolor: "rgba(249, 115, 22, 0.10)",
           dash: "dash",
           width: 2.5
         },
-        nsga2: {
-          name: "NSGA-II 3D Knee [8, 10, 26] (Manifold Traversal)",
-          indices: [8, 10, 26, 8],
+        nsga2_3d_knee: {
+          name: "NSGA-II 3D Knee [2, 4, 10, 26] (Manifold Traversal)",
+          indices: [2, 4, 10, 26, 2],
           color: "#10b981",
           fillcolor: "rgba(16, 185, 129, 0.16)",
           dash: "solid",
@@ -1128,21 +1154,21 @@
       // Define functional clusters
       const clusterDefs = [
         {
-          name: "Introduction & Intuition (Chunks 0-2)",
+          name: "Introduction & Intuition (Chunks 0, 1, 2)",
           filter: c => c.cluster === "Introduction & Intuition",
           color: "#6366f1",
           symbol: "circle",
           size: 11
         },
         {
-          name: "Math & Dominance (Chunks 3-7)",
+          name: "Math & Dominance (Chunks 3 to 7)",
           filter: c => c.cluster === "Mathematical Formulation & Dominance",
           color: "#ec4899",
           symbol: "circle",
           size: 11
         },
         {
-          name: "Applied Cases & Scalarization (Chunks 8, 10, 21, 26)",
+          name: "Real-World Cases & Scalarization (Chunks 8, 10, 21, 26)",
           filter: c => c.cluster === "Real-World Case Studies & Scalarization",
           color: "#10b981",
           symbol: "circle",
@@ -1197,7 +1223,7 @@
         });
       });
 
-      // Query Vector Marker
+      // Query Vector Marker at (-0.316, -0.177)
       traces.push({
         x: [latentData.query.x],
         y: [latentData.query.y],
@@ -1227,35 +1253,37 @@
       });
 
       // Retrieval Footprint Traces
-      // 1. Dense Top-3 (Cluster Collapse)
-      const densePts = latentData.footprints.dense.indices.map(idx => latentData.chunks[idx]);
+      // 1. Dense Top-4: Red contour spanning Chunks [2, 26, 0, 24]
+      const densePts = latentData.footprints.dense_top_4.indices.map(idx => latentData.chunks[idx]);
       traces.push({
         x: densePts.map(p => p.x),
         y: densePts.map(p => p.y),
         mode: 'lines+markers',
         fill: 'toself',
-        fillcolor: latentData.footprints.dense.fillcolor,
+        fillcolor: latentData.footprints.dense_top_4.fillcolor,
         line: {
-          color: latentData.footprints.dense.color,
-          width: latentData.footprints.dense.width,
-          dash: latentData.footprints.dense.dash
+          color: latentData.footprints.dense_top_4.color,
+          width: latentData.footprints.dense_top_4.width,
+          dash: latentData.footprints.dense_top_4.dash
         },
         marker: {
           size: 9,
-          color: latentData.footprints.dense.color,
+          color: latentData.footprints.dense_top_4.color,
           symbol: 'circle'
         },
-        name: latentData.footprints.dense.name,
+        name: latentData.footprints.dense_top_4.name,
         type: 'scatter',
         hoverinfo: 'name'
       });
 
-      // 2. MMR (lambda=0.5) (Sequential Diversity)
+      // 2. MMR (lambda=0.5): Orange boundary spanning Chunks [2, 24, 8, 19]
       const mmrPts = latentData.footprints.mmr.indices.map(idx => latentData.chunks[idx]);
       traces.push({
         x: mmrPts.map(p => p.x),
         y: mmrPts.map(p => p.y),
         mode: 'lines+markers',
+        fill: 'toself',
+        fillcolor: latentData.footprints.mmr.fillcolor,
         line: {
           color: latentData.footprints.mmr.color,
           width: latentData.footprints.mmr.width,
@@ -1271,25 +1299,25 @@
         hoverinfo: 'name'
       });
 
-      // 3. NSGA-II 3D Knee (Manifold Traversal)
-      const nsgaPts = latentData.footprints.nsga2.indices.map(idx => latentData.chunks[idx]);
+      // 3. NSGA-II 3D Knee: Green manifold spanning Chunks [2, 4, 10, 26]
+      const nsgaPts = latentData.footprints.nsga2_3d_knee.indices.map(idx => latentData.chunks[idx]);
       traces.push({
         x: nsgaPts.map(p => p.x),
         y: nsgaPts.map(p => p.y),
         mode: 'lines+markers',
         fill: 'toself',
-        fillcolor: latentData.footprints.nsga2.fillcolor,
+        fillcolor: latentData.footprints.nsga2_3d_knee.fillcolor,
         line: {
-          color: latentData.footprints.nsga2.color,
-          width: latentData.footprints.nsga2.width,
-          dash: latentData.footprints.nsga2.dash
+          color: latentData.footprints.nsga2_3d_knee.color,
+          width: latentData.footprints.nsga2_3d_knee.width,
+          dash: latentData.footprints.nsga2_3d_knee.dash
         },
         marker: {
           size: 11,
-          color: latentData.footprints.nsga2.color,
+          color: latentData.footprints.nsga2_3d_knee.color,
           symbol: 'diamond'
         },
-        name: latentData.footprints.nsga2.name,
+        name: latentData.footprints.nsga2_3d_knee.name,
         type: 'scatter',
         hoverinfo: 'name'
       });
@@ -1386,7 +1414,7 @@
       // 2: Applied cluster
       // 3: General corpus
       // 4: Query vector
-      // 5: Dense Top-3
+      // 5: Dense Top-4
       // 6: MMR
       // 7: NSGA-II 3D Knee
 
