@@ -26,6 +26,7 @@ urlpatterns = [
     path('colony/', views.colony_playground, name='colony_playground'),
     path('projects/colony/', views.colony_playground, name='colony_project_detail'),
     path('api/colony/record-match/', views.colony_record_match, name='colony_record_match'),
+    path('api/colony/record-challenge/', views.colony_record_challenge, name='colony_record_challenge'),
     path('faq/', views.faq_page, name='faq'),
     path('homelab/', views.homelab_page, name='homelab'),
 ]

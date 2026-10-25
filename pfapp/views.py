@@ -72,6 +72,7 @@ def colony_playground(request):
         'total_matches': total_matches,
         'player_wins': player_wins,
         'ai_wins': ai_wins,
+        'leaderboard': leaderboard,
     }
     return render(request, 'pfapp/colony.html', context)
 
@@ -137,3 +138,60 @@ def colony_record_match(request):
         return JsonResponse({'error': 'Server error storing match record'}, status=500)
 
 
+
+def colony_record_challenge(request):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+    try:
+        data = json.loads(request.body.decode('utf-8'))
+        model_name = str(data.get('model_name', 'Custom Model'))[:80].strip() or 'Custom Model'
+        author_name = str(data.get('author_name', 'Challenger'))[:80].strip() or 'Challenger'
+        challenger_wins = min(max(int(data.get('challenger_wins', 0)), 0), 2)
+        champion_wins = min(max(int(data.get('champion_wins', 0)), 0), 2)
+
+        if challenger_wins == 2:
+            assigned_elo = 1860
+        elif challenger_wins == 1 and champion_wins == 1:
+            assigned_elo = 1750
+        elif challenger_wins == 1:
+            assigned_elo = 1680
+        else:
+            assigned_elo = 1520
+
+        entry, created = ColonyLeaderboardEntry.objects.get_or_create(
+            team_name=author_name,
+            defaults={
+                'model_name': model_name,
+                'affiliation': 'Community Challenger',
+                'level': 'Custom ONNX',
+                'elo_rating': assigned_elo,
+                'matches_played': 2,
+                'wins': challenger_wins,
+                'losses': champion_wins,
+                'is_siddharth': False,
+            }
+        )
+        if not created:
+            entry.model_name = model_name
+            entry.matches_played += 2
+            entry.wins += challenger_wins
+            entry.losses += champion_wins
+            entry.elo_rating = int((entry.elo_rating + assigned_elo) / 2)
+            entry.save()
+
+        all_entries = list(ColonyLeaderboardEntry.objects.all().order_by('-elo_rating'))
+        for idx, item in enumerate(all_entries, 1):
+            if item.rank != idx:
+                item.rank = idx
+                item.save(update_fields=['rank'])
+
+        return JsonResponse({
+            'success': True,
+            'elo_rating': entry.elo_rating,
+            'rank': entry.rank,
+            'team_name': entry.team_name,
+            'model_name': entry.model_name,
+        }, status=201)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)

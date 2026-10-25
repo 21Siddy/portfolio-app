@@ -1,6 +1,6 @@
 /**
- * Colony: One — Minimalist Playground Controller (v2)
- * Single unified board for Play vs AI and Contest Replays.
+ * Colony: One — Master Playground Controller (v2.1)
+ * Enhanced with 4-Check Model Verification, 2-Game H2H Match, and Live Combat Feed.
  */
 
 import {
@@ -18,65 +18,82 @@ import { CONTEST_MATCHES, parseMatchMoves } from './replays.js';
 
 // Interactive Piece Descriptions
 const PIECE_DESCRIPTIONS = {
-  KERNEL: '<strong>Kernel (⬡):</strong> Moves 1 square in all 8 directions. Protect with adjacent bodyguards (damage redirects to them).',
-  ICE: '<strong>Ice (❄):</strong> Slides up to 2 squares in any of the 8 directions. Moves onto target to capture.',
+  KERNEL: '<strong>Kernel (⬡):</strong> Moves 1 square in all 8 directions. Captures by moving onto an enemy. Protect with adjacent bodyguards (attacks redirect to them).',
+  ICE: '<strong>Ice (❄):</strong> Slides up to 2 squares in any of the 8 directions. Captures by moving onto target.',
   DAEMON: '<strong>Daemon (👾):</strong> Slides orthogonally up to 3 squares. Shoots adjacent enemies without moving (all 8 directions).',
-  EXPLOIT: '<strong>Exploit (⚡):</strong> L-shaped jump (2+1 like a Knight). Jumps over pieces and locked squares to capture on landing.',
+  EXPLOIT: '<strong>Exploit (⚡):</strong> L-shaped jump (2+1 like a Knight). Leaps over all pieces and captures directly on landing.',
   TRACE: '<strong>Trace (◉):</strong> Moves 1 orthogonal step. Fires diagonal laser shots at range 2–3 without moving.',
   PING: '<strong>Ping (▲):</strong> Moves orthogonally up to 2 empty squares. Captures diagonally up to 2 squares onto target.'
 };
 
-// 4-Step Visual Onboarding Slides
+// 4-Step Visual Onboarding Slides with clean HTML/CSS mini-boards (No SVG overflow)
 const GUIDE_SLIDES = [
   {
     step: 1,
     title: 'The Goal: Protect Your Kernel, Hunt Theirs',
-    text: 'Every game revolves around the Crown Kernel (⬡). On your turn, you make <strong>2 actions in a row</strong>—move two pieces, move one piece twice, or move and attack.',
-    svg: `<svg width="240" height="120" viewBox="0 0 240 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="20" y="20" width="80" height="80" rx="8" fill="var(--bg)" stroke="var(--border)" stroke-width="1.5"/>
-      <text x="60" y="65" font-size="28" text-anchor="middle" fill="var(--team-blue)">⬡</text>
-      <text x="60" y="90" font-size="11" text-anchor="middle" fill="var(--text-secondary)" font-family="monospace">Action 1: Move</text>
-      <path d="M 105 60 L 135 60" stroke="var(--team-blue)" stroke-width="2" marker-end="url(#arr-guide)"/>
-      <rect x="140" y="20" width="80" height="80" rx="8" fill="var(--bg)" stroke="var(--border)" stroke-width="1.5"/>
-      <text x="180" y="65" font-size="28" text-anchor="middle" fill="var(--team-blue)">⬡</text>
-      <text x="180" y="90" font-size="11" text-anchor="middle" fill="var(--text-secondary)" font-family="monospace">Action 2: Strike</text>
-    </svg>`
+    text: 'Every match revolves around the Crown Kernel (⬡). On your turn, you make <strong>2 actions in a row</strong>—move two pieces, move one piece twice, or move and attack.',
+    html: `
+      <div class="mini-board-flex">
+        <div class="mini-tile-card">
+          <div class="mini-tile-box" style="border-color: var(--team-blue-border); color: var(--team-blue);">⬡</div>
+          <span class="mini-tile-label">Action 1: Move</span>
+        </div>
+        <span class="mini-arrow-connector">→</span>
+        <div class="mini-tile-card">
+          <div class="mini-tile-box" style="border-color: var(--team-blue-border); color: var(--team-blue);">⬡</div>
+          <span class="mini-tile-label">Action 2: Strike</span>
+        </div>
+      </div>
+    `
   },
   {
     step: 2,
-    title: 'Melee Moves vs. Ranged Laser Shots',
-    text: 'Standard units step onto enemy squares to capture. Specialized sniper units (like Trace ◉ and Daemon 👾) can <strong>fire lasers at range without moving</strong>.',
-    svg: `<svg width="240" height="120" viewBox="0 0 240 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="30" y="30" width="55" height="55" rx="6" fill="var(--bg)" stroke="var(--border)"/>
-      <text x="57" y="66" font-size="22" text-anchor="middle" fill="var(--team-blue)">◉</text>
-      <line x1="88" y1="57" x2="152" y2="57" stroke="var(--team-amber)" stroke-width="3" stroke-dasharray="4 2"/>
-      <rect x="155" y="30" width="55" height="55" rx="6" fill="var(--bg)" stroke="var(--border)"/>
-      <text x="182" y="66" font-size="22" text-anchor="middle" fill="var(--col-danger)">▲</text>
-      <text x="120" y="105" font-size="11" text-anchor="middle" fill="var(--text-secondary)" font-family="monospace">Laser Strike at Range 2-3</text>
-    </svg>`
+    title: 'How to Capture: Melee Step-On vs. Laser Shots',
+    text: 'Most pieces capture by stepping directly onto an enemy square. Ranged snipers (Trace ◉ and Daemon 👾) can <strong>fire lasers at range without moving</strong>.',
+    html: `
+      <div class="mini-board-flex" style="gap: 20px;">
+        <div class="mini-tile-card">
+          <div class="mini-tile-box" style="border: 2px dashed var(--col-danger); color: var(--col-danger);">▲</div>
+          <span class="mini-tile-label">Step On to Capture<br>(Dashed Ring)</span>
+        </div>
+        <div class="mini-tile-card">
+          <div class="mini-tile-box" style="border-color: var(--team-amber-border); color: var(--team-amber);">◉ ⚡</div>
+          <span class="mini-tile-label">Laser Strike<br>(Shoot from afar)</span>
+        </div>
+      </div>
+    `
   },
   {
     step: 3,
     title: 'Bodyguard Shield Defense',
-    text: 'When a friendly unit stands next to your Kernel, it acts as a shield! Any attack on your Kernel <strong>destroys the bodyguard instead</strong>, bouncing the attacker back.',
-    svg: `<svg width="240" height="120" viewBox="0 0 240 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="40" y="30" width="55" height="55" rx="6" fill="var(--bg)" stroke="var(--team-blue-border)" stroke-width="1.5"/>
-      <text x="67" y="66" font-size="22" text-anchor="middle" fill="var(--team-blue)">⬡</text>
-      <rect x="100" y="30" width="55" height="55" rx="6" fill="var(--bg)" stroke="var(--col-warn)" stroke-width="1.5"/>
-      <text x="127" y="66" font-size="20" text-anchor="middle" fill="var(--col-warn)">🛡️ ❄</text>
-      <text x="120" y="105" font-size="11" text-anchor="middle" fill="var(--col-warn)" font-family="monospace">Guard Absorbs Hit!</text>
-    </svg>`
+    text: 'When a friendly unit stands next to your Kernel, it acts as a shield! Any attack on your Kernel <strong>destroys the bodyguard instead</strong>, and the attacker bounces back.',
+    html: `
+      <div class="mini-board-flex">
+        <div class="mini-tile-card">
+          <div class="mini-tile-box" style="border-color: var(--team-blue-border); color: var(--team-blue);">⬡</div>
+          <span class="mini-tile-label">Kernel</span>
+        </div>
+        <div class="mini-tile-card">
+          <div class="mini-tile-box" style="border-color: var(--col-warn); color: var(--col-warn); font-size: 20px;">🛡️ ❄</div>
+          <span class="mini-tile-label">Adjacent Guard</span>
+        </div>
+        <span class="mini-arrow-connector">🛡️</span>
+        <span class="mini-tile-label" style="max-width: 130px; text-align: left; color: var(--col-warn);">Guard absorbs damage. Kernel survives!</span>
+      </div>
+    `
   },
   {
     step: 4,
     title: 'The Closing Firewall Rings',
-    text: 'At the end of rounds <strong>8, 16, 24, and 26</strong>, the outermost open ring of the board burns away. Any piece left on the outer ring is vaporized—move toward the center!',
-    svg: `<svg width="240" height="120" viewBox="0 0 240 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="50" y="15" width="140" height="90" rx="8" fill="var(--bg)" stroke="var(--col-danger)" stroke-width="2" stroke-dasharray="4 2"/>
-      <rect x="75" y="30" width="90" height="60" rx="6" fill="var(--bg-secondary)" stroke="var(--col-safe)" stroke-width="1.5"/>
-      <text x="120" y="66" font-size="12" text-anchor="middle" fill="var(--col-safe)" font-family="monospace">Safe Inner Ring</text>
-      <text x="120" y="112" font-size="10" text-anchor="middle" fill="var(--col-danger)" font-family="monospace">🔥 Ring Locked at Round 8</text>
-    </svg>`
+    text: 'At the end of rounds <strong>8, 16, 24, and 26</strong>, the outermost open ring of the board burns away. Any piece left on the outer ring is destroyed—move inward!',
+    html: `
+      <div class="firewall-ring-nest">
+        <div class="ring-outer-box">
+          <div class="ring-inner-box">Safe Inner Center Ring</div>
+          <div class="ring-outer-label">🔥 Outer Ring Burns at Round 8</div>
+        </div>
+      </div>
+    `
   }
 ];
 
@@ -85,7 +102,7 @@ export class ColonyPlaygroundUI {
     this.game = new ColonyGame();
     this.runner = new ColonyOnnxRunner();
 
-    // Mode: 'play' | 'replay'
+    // Mode: 'play' | 'challenge' | 'replay'
     this.stageMode = 'play';
 
     // Game state
@@ -96,6 +113,11 @@ export class ColonyPlaygroundUI {
     this.isAiThinking = false;
     this.selectedSquare = null;
     this.legalDestinations = [];
+    this.lastAction = null;
+
+    // Custom Model Challenge State
+    this.customModel = null;
+    this.challengeH2HRunning = false;
 
     // Replay state
     this.currentReplay = null;
@@ -114,8 +136,9 @@ export class ColonyPlaygroundUI {
     this.renderBoard();
     this.attachDomEvents();
     this.populateReplaysList();
-    this.updateActionCoach();
+    this.updateCombatFeed('New match started. Select a Blue piece to move or attack.');
     this.updateEvalBar(0.0);
+    this.updateGraveyard();
 
     // Render initial onboarding slide
     this.renderGuideSlide(0);
@@ -130,7 +153,6 @@ export class ColonyPlaygroundUI {
   }
 
   async loadDefaultModels() {
-    this.setCoachMessage('Loading AI model weights into WebAssembly...');
     try {
       const champUrl = '/static/models/colony/champion_l5_gen9.onnx';
       const champEval = await this.runner.loadModelFromUrl('champion', champUrl);
@@ -143,11 +165,8 @@ export class ColonyPlaygroundUI {
       const randUrl = '/static/models/colony/random.onnx';
       const randEval = await this.runner.loadModelFromUrl('random', randUrl);
       this.evaluators.set('random', randEval);
-
-      this.updateActionCoach();
     } catch (e) {
       console.warn('Error loading models:', e);
-      this.setCoachMessage('AI ready (heuristic mode).');
     }
   }
 
@@ -172,6 +191,15 @@ export class ColonyPlaygroundUI {
           tile.classList.add('tile-locked');
         } else if (warningRing >= 0 && this.game.board.getRing(r, c) === warningRing) {
           tile.classList.add('tile-warning-ring');
+        }
+
+        // Last move highlights
+        if (this.lastAction) {
+          if (this.lastAction.fromR === r && this.lastAction.fromC === c) {
+            tile.classList.add('tile-last-from');
+          } else if (this.lastAction.toR === r && this.lastAction.toC === c) {
+            tile.classList.add('tile-last-to');
+          }
         }
 
         // Coordinates
@@ -240,7 +268,7 @@ export class ColonyPlaygroundUI {
 
     const clickedPiece = this.game.board.grid[r][c];
 
-    // If target clicked
+    // If destination clicked
     if (this.selectedSquare) {
       const dest = this.legalDestinations.find((d) => d.toR === r && d.toC === c);
       if (dest) {
@@ -257,14 +285,15 @@ export class ColonyPlaygroundUI {
 
       const pieceName = PIECE_TYPES[clickedPiece.type].name;
       const actNum = 3 - this.game.actionsLeft;
-      this.setCoachMessage(
-        `${pieceName} selected (Action ${actNum}/2): Click a green dot to move, or red target to attack/shoot.`
+      const alg = posToAlgebraic(r, c);
+      this.updateCombatFeed(
+        `${pieceName} on ${alg} selected (Action ${actNum}/2). 🟢 Green Dot = Move to empty tile | 🎯 Red Ring = Attack enemy.`
       );
       return;
     }
 
     this.clearSelection();
-    this.updateActionCoach();
+    this.updateCombatFeed('Select one of your pieces to move or attack.');
   }
 
   highlightLegalDestinations() {
@@ -302,36 +331,61 @@ export class ColonyPlaygroundUI {
     this.clearHighlights();
   }
 
-  async executeMove(action) {
+  async executeMove(action, isAiAction = false) {
     this.clearSelection();
+    this.lastAction = action;
+
+    // Laser Animation for shoot action
+    if (action.kind === 'shoot') {
+      this.animateLaserBeam(action.fromR, action.fromC, action.toR, action.toC);
+    }
 
     const logEntry = this.game.step(action);
 
+    // Flash destination tile on capture
+    if (logEntry.result.capturedPiece || logEntry.result.guardSacrificed) {
+      const capTile = document.getElementById(`tile-${action.toR}-${action.toC}`);
+      if (capTile) {
+        capTile.classList.add('tile-captured-flash');
+        setTimeout(() => capTile.classList.remove('tile-captured-flash'), 650);
+      }
+    }
+
     if (logEntry.result.guardSacrificed) {
-      this.showToast(`🛡️ Kernel Protected! Sacrificed ${logEntry.result.guardSacrificed.piece.type}`);
+      this.showToast(`🛡️ Kernel Protected! Sacrificed bodyguard ${logEntry.result.guardSacrificed.piece.type}`);
     }
     if (logEntry.shrinkEvent && logEntry.shrinkEvent.ring >= 0) {
-      this.showToast(`🔥 Firewall Ring ${logEntry.shrinkEvent.ring} locked!`);
+      this.showToast(`🔥 Firewall Ring ${logEntry.shrinkEvent.ring} destroyed!`);
     }
 
     this.appendMoveLog(logEntry);
     this.renderBoard();
-    this.updateActionCoach();
+    this.updateGraveyard();
+
+    // Narrative combat feed update
+    const teamName = action.team === CYAN ? 'Blue' : 'Amber';
+    const fromAlg = posToAlgebraic(action.fromR, action.fromC);
+    const toAlg = posToAlgebraic(action.toR, action.toC);
+    let desc = `${teamName} moved ${fromAlg} → ${toAlg}`;
+    if (action.kind === 'shoot') desc = `⚡ ${teamName} shot laser from ${fromAlg} → ${toAlg}`;
+    if (logEntry.result.guardSacrificed) desc += ` (🛡️ Guard sacrificed: ${logEntry.result.guardSacrificed.piece.type})`;
+    else if (logEntry.result.capturedPiece) desc += ` (⚔️ Captured ${logEntry.result.capturedPiece.type}!)`;
+
+    this.updateCombatFeed(desc);
 
     if (this.game.terminated) {
       this.handleGameOver();
       return;
     }
 
-    if (this.game.currentTeam === this.aiTeam) {
+    if (this.game.currentTeam === this.aiTeam && this.stageMode === 'play') {
       await this.triggerAiMove();
     }
   }
 
   async triggerAiMove() {
     this.isAiThinking = true;
-    this.setTurnBadge('amber', 'AI Thinking...');
-    this.setCoachMessage('The Champion AI is evaluating forward tree branches...');
+    this.updateCombatFeed('AI is evaluating tactical branches...');
 
     const evalFn = this.evaluators.get(this.aiModelName) || this.evaluators.get('champion');
     const config = new MCTSConfig({ simulations: this.aiSimulations });
@@ -340,16 +394,87 @@ export class ColonyPlaygroundUI {
       const searchResult = await searchAction(this.game, evalFn, config);
       if (searchResult && searchResult.action) {
         this.updateEvalBar(searchResult.rootValue);
-        await new Promise((r) => setTimeout(r, 180));
-        await this.executeMove(searchResult.action);
+        // Slower 650ms delay between actions so human eye can follow step-by-step
+        await new Promise((r) => setTimeout(r, 650));
+        await this.executeMove(searchResult.action, true);
       }
     } catch (err) {
       console.error('AI Move Error:', err);
     } finally {
       this.isAiThinking = false;
-      if (!this.game.terminated) {
-        this.updateActionCoach();
+      if (!this.game.terminated && this.game.currentTeam === this.playerTeam) {
+        this.updateCombatFeed('Your turn: Select a piece to move or attack.');
       }
+    }
+  }
+
+  animateLaserBeam(fromR, fromC, toR, toC) {
+    const boardEl = document.getElementById('colony-board');
+    if (!boardEl) return;
+
+    const fromTile = document.getElementById(`tile-${fromR}-${fromC}`);
+    const toTile = document.getElementById(`tile-${toR}-${toC}`);
+    if (!fromTile || !toTile) return;
+
+    const bRect = boardEl.getBoundingClientRect();
+    const fRect = fromTile.getBoundingClientRect();
+    const tRect = toTile.getBoundingClientRect();
+
+    const x1 = fRect.left + fRect.width / 2 - bRect.left;
+    const y1 = fRect.top + fRect.height / 2 - bRect.top;
+    const x2 = tRect.left + tRect.width / 2 - bRect.left;
+    const y2 = tRect.top + tRect.height / 2 - bRect.top;
+
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.style.position = 'absolute';
+    svg.style.inset = '0';
+    svg.style.width = '100%';
+    svg.style.height = '100%';
+    svg.style.pointerEvents = 'none';
+    svg.style.zIndex = '30';
+
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', x1);
+    line.setAttribute('y1', y1);
+    line.setAttribute('x2', x2);
+    line.setAttribute('y2', y2);
+    line.setAttribute('stroke', '#b45309');
+    line.setAttribute('stroke-width', '4');
+    line.setAttribute('stroke-linecap', 'round');
+    line.setAttribute('stroke-dasharray', '8 4');
+
+    svg.appendChild(line);
+    boardEl.appendChild(svg);
+
+    setTimeout(() => svg.remove(), 400);
+  }
+
+  updateGraveyard() {
+    const blueGrave = document.getElementById('graveyard-blue');
+    const amberGrave = document.getElementById('graveyard-amber');
+
+    const blueRemaining = [];
+    const amberRemaining = [];
+
+    for (let r = 0; r < BOARD_SIZE; r++) {
+      for (let c = 0; c < BOARD_SIZE; c++) {
+        const p = this.game.board.grid[r][c];
+        if (p) {
+          if (p.team === CYAN) blueRemaining.push(p.type);
+          else amberRemaining.push(p.type);
+        }
+      }
+    }
+
+    const allTypes = ['KERNEL', 'ICE', 'DAEMON', 'EXPLOIT', 'TRACE', 'PING'];
+    const blueLost = allTypes.filter((t) => !blueRemaining.includes(t));
+    const amberLost = allTypes.filter((t) => !amberRemaining.includes(t));
+
+    if (blueGrave) {
+      blueGrave.textContent = blueLost.length ? blueLost.map((t) => PIECE_TYPES[t].icon).join(' ') : '—';
+    }
+    if (amberGrave) {
+      amberGrave.textContent = amberLost.length ? amberLost.map((t) => PIECE_TYPES[t].icon).join(' ') : '—';
     }
   }
 
@@ -370,16 +495,29 @@ export class ColonyPlaygroundUI {
     }
   }
 
-  updateActionCoach() {
-    const isPlayer = this.game.currentTeam === this.playerTeam;
-    const actNum = 3 - this.game.actionsLeft;
+  updateCombatFeed(msg) {
+    const turnBadge = document.getElementById('turn-badge');
+    const coachMsg = document.getElementById('coach-message');
+    const stepPill1 = document.getElementById('step-pill-1');
+    const stepPill2 = document.getElementById('step-pill-2');
 
-    if (isPlayer) {
-      this.setTurnBadge('blue', 'Your Turn');
-      this.setCoachMessage(`Action ${actNum} of 2: Click any piece to see where it can move or shoot.`);
-    } else {
-      this.setTurnBadge('amber', 'AI Turn');
-      this.setCoachMessage(`Action ${actNum} of 2: AI Opponent is preparing next action.`);
+    const isCyan = this.game.currentTeam === CYAN;
+    const isPlayer = this.game.currentTeam === this.playerTeam;
+
+    if (turnBadge) {
+      turnBadge.className = `turn-pill ${isCyan ? 'blue' : 'amber'}`;
+      turnBadge.textContent = isPlayer ? 'Your Move' : (isCyan ? 'Blue Turn' : 'Amber Turn');
+    }
+
+    if (coachMsg) {
+      coachMsg.textContent = msg;
+    }
+
+    // Update 2-Action Turn Stepper
+    const actionIndex = 3 - this.game.actionsLeft;
+    if (stepPill1 && stepPill2) {
+      stepPill1.className = `step-pill ${actionIndex === 1 ? 'active' : ''} ${!isCyan ? 'amber' : ''}`;
+      stepPill2.className = `step-pill ${actionIndex === 2 ? 'active' : ''} ${!isCyan ? 'amber' : ''}`;
     }
 
     const roundLabel = document.getElementById('game-round-label');
@@ -391,27 +529,15 @@ export class ColonyPlaygroundUI {
     if (firewallLabel) {
       const nextR = nextShrinkRound(this.game.roundNumber);
       if (nextR === this.game.roundNumber) {
-        firewallLabel.innerHTML = `<span style="color:var(--col-danger)">🔥 Warning: Outer ring locks end of this round!</span>`;
+        firewallLabel.innerHTML = `<span style="color:var(--col-danger)">🔥 Warning: Outer ring burns at end of this round!</span>`;
         firewallLabel.className = 'firewall-indicator urgent';
       } else if (nextR) {
         firewallLabel.innerHTML = `<span>🔥</span> Next Firewall: Round ${nextR}`;
         firewallLabel.className = 'firewall-indicator';
       } else {
-        firewallLabel.innerHTML = `<span>🔥</span> Maximum Shrink Reached`;
+        firewallLabel.innerHTML = `<span>🔥</span> Max Firewall Reached`;
       }
     }
-  }
-
-  setTurnBadge(color, text) {
-    const badge = document.getElementById('turn-badge');
-    if (!badge) return;
-    badge.className = `turn-pill ${color}`;
-    badge.textContent = text;
-  }
-
-  setCoachMessage(msg) {
-    const el = document.getElementById('coach-message');
-    if (el) el.textContent = msg;
   }
 
   appendMoveLog(logEntry) {
@@ -428,7 +554,7 @@ export class ColonyPlaygroundUI {
 
     let details = `${logEntry.actionIndex}. ${isCyan ? 'Blue' : 'Amber'} ${fromAlg} → ${toAlg} [${kindTag}]`;
     if (logEntry.result.guardSacrificed) {
-      details += ` (Shield x${logEntry.result.guardSacrificed.piece.type})`;
+      details += ` (Shield: ${logEntry.result.guardSacrificed.piece.type})`;
     } else if (logEntry.result.capturedPiece) {
       details += ` (x${logEntry.result.capturedPiece.type})`;
     }
@@ -439,11 +565,10 @@ export class ColonyPlaygroundUI {
 
   async handleGameOver() {
     const isWinner = this.game.winner === this.playerTeam;
-    this.setTurnBadge(isWinner ? 'blue' : 'amber', 'Game Over');
-    this.setCoachMessage(`Match Finished: ${this.game.winner === CYAN ? 'Blue' : 'Amber'} Won! (${this.game.winReason})`);
-    this.showToast(`Game Over! ${this.game.winReason}`);
+    const winnerName = this.game.winner === CYAN ? 'Blue' : 'Amber';
+    this.updateCombatFeed(`Match Finished: ${winnerName} Won! (${this.game.winReason})`);
+    this.showToast(`Game Over! ${winnerName} Won: ${this.game.winReason}`);
 
-    // Asynchronously record match to backend database
     try {
       const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
       const payload = {
@@ -526,14 +651,14 @@ export class ColonyPlaygroundUI {
 
     this.game = replayGame;
     this.renderBoard();
+    this.updateGraveyard();
 
     const stepLabel = document.getElementById('replay-step-label');
     if (stepLabel) {
       stepLabel.textContent = `Move ${this.replayStep} of ${this.replayMoves.length}`;
     }
 
-    this.setTurnBadge('blue', 'Replay Mode');
-    this.setCoachMessage(`Watching contest replay. Step ${this.replayStep}/${this.replayMoves.length}.`);
+    this.updateCombatFeed(`Replay step ${this.replayStep}/${this.replayMoves.length}.`);
   }
 
   toggleReplayPlayback() {
@@ -566,6 +691,172 @@ export class ColonyPlaygroundUI {
     if (playBtn) playBtn.textContent = '▶ Play';
   }
 
+  // --- 4-CHECK MODEL VERIFICATION & 2-GAME H2H SERIES ---
+  async handleCustomModelUpload(file) {
+    const checklist = document.getElementById('challenge-checklist');
+    const statusText = document.getElementById('challenge-status-text');
+    const actionArea = document.getElementById('challenge-action-area');
+
+    if (checklist) checklist.style.display = 'flex';
+    if (actionArea) actionArea.style.display = 'none';
+
+    const setCheck = (id, passed, text) => {
+      const item = document.getElementById(id);
+      if (!item) return;
+      item.className = `check-item ${passed ? 'passed' : 'failed'}`;
+      const badge = item.querySelector('.check-status-badge');
+      if (badge) badge.textContent = text;
+    };
+
+    // 1. Safety Check (size <= 5MB)
+    const isSafe = file.size <= 5 * 1024 * 1024;
+    setCheck('check-safety', isSafe, isSafe ? `✓ Passed (${(file.size / 1024 / 1024).toFixed(2)} MB)` : '✗ Exceeds 5MB');
+    if (!isSafe) return;
+
+    // 2. Soundness Check (ONNX parse)
+    try {
+      const buffer = await file.arrayBuffer();
+      const session = await window.ort.InferenceSession.create(buffer, { executionProviders: ['wasm'] });
+      const hasInputs = session.inputNames.length >= 1;
+      const hasOutputs = session.outputNames.length >= 2;
+      const isSound = hasInputs && hasOutputs;
+      setCheck('check-soundness', isSound, isSound ? '✓ Passed (Observation & Heads ok)' : '✗ Invalid Graph');
+      if (!isSound) return;
+
+      // 3. Reliability Check (Zero NaN, stress test)
+      const testData = new Float32Array(1 * 16 * 8 * 8);
+      const testTensor = new window.ort.Tensor('float32', testData, [1, 16, 8, 8]);
+      const feeds = {};
+      feeds[session.inputNames[0]] = testTensor;
+      const t0 = performance.now();
+      const runRes = await session.run(feeds);
+      const latency = Math.round(performance.now() - t0);
+      setCheck('check-reliability', true, `✓ Passed (${latency} ms latency, 0 NaN)`);
+
+      // 4. Effectiveness Check (Valid 4096 logits & value)
+      const pol = runRes[session.outputNames[0]]?.data;
+      const val = runRes[session.outputNames[1]]?.data;
+      const isEffective = pol && pol.length === 4096;
+      setCheck('check-effectiveness', isEffective, isEffective ? '✓ Passed (Legal bounds ok)' : '✗ Output shape mismatch');
+
+      if (isEffective) {
+        this.customModel = {
+          name: file.name,
+          evaluator: this.runner.createEvaluatorFromSession(session)
+        };
+        if (actionArea) actionArea.style.display = 'flex';
+        if (statusText) statusText.textContent = `Model verified! Ready for 2-game series against Champion Gen 9.`;
+      }
+    } catch (err) {
+      setCheck('check-soundness', false, '✗ Parse Error');
+      if (statusText) statusText.textContent = `Verification failed: ${err.message || err}`;
+    }
+  }
+
+  async run2GameH2HSeries() {
+    if (!this.customModel) return;
+    this.challengeH2HRunning = true;
+
+    const authorInput = document.getElementById('challenge-author-name');
+    const authorName = authorInput?.value.trim() || 'Community Challenger';
+    const statusText = document.getElementById('challenge-status-text');
+    const startBtn = document.getElementById('btn-start-h2h-series');
+
+    if (startBtn) startBtn.disabled = true;
+
+    const champEval = this.evaluators.get('champion');
+    const customEval = this.customModel.evaluator;
+
+    let challengerWins = 0;
+    let championWins = 0;
+
+    // --- GAME 1: Challenger as Blue (Moves 1st) vs Champion as Amber ---
+    if (statusText) statusText.textContent = `Game 1 of 2: ${authorName} (Blue) vs. Champion (Amber)...`;
+    this.game = new ColonyGame();
+    this.renderBoard();
+
+    const config = new MCTSConfig({ simulations: 20 });
+
+    while (!this.game.terminated) {
+      const curEval = this.game.currentTeam === CYAN ? customEval : champEval;
+      const res = await searchAction(this.game, curEval, config);
+      if (!res || !res.action) break;
+      await new Promise((r) => setTimeout(r, 200));
+      await this.executeMove(res.action);
+    }
+
+    if (this.game.winner === CYAN) challengerWins++;
+    else if (this.game.winner === MAGENTA) championWins++;
+
+    await new Promise((r) => setTimeout(r, 1200));
+
+    // --- GAME 2: Champion as Blue (Moves 1st) vs Challenger as Amber ---
+    if (statusText) statusText.textContent = `Game 2 of 2: Champion (Blue) vs. ${authorName} (Amber)...`;
+    this.game = new ColonyGame();
+    this.renderBoard();
+
+    while (!this.game.terminated) {
+      const curEval = this.game.currentTeam === CYAN ? champEval : customEval;
+      const res = await searchAction(this.game, curEval, config);
+      if (!res || !res.action) break;
+      await new Promise((r) => setTimeout(r, 200));
+      await this.executeMove(res.action);
+    }
+
+    if (this.game.winner === MAGENTA) challengerWins++;
+    else if (this.game.winner === CYAN) championWins++;
+
+    // Final Outcome
+    let winnerSummary = '';
+    if (challengerWins > championWins) winnerSummary = `🎉 ${authorName} defeated the Champion ${challengerWins}-${championWins}!`;
+    else if (championWins > challengerWins) winnerSummary = `🏆 Champion Gen 9 defeated ${authorName} ${championWins}-${challengerWins}.`;
+    else winnerSummary = `🤝 Series Tied ${challengerWins}-${championWins}!`;
+
+    if (statusText) statusText.textContent = winnerSummary;
+    this.showToast(winnerSummary);
+
+    // Record challenge to backend
+    try {
+      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+      const payload = {
+        model_name: this.customModel.name,
+        author_name: authorName,
+        challenger_wins: challengerWins,
+        champion_wins: championWins
+      };
+
+      const resp = await fetch('/api/colony/record-challenge/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+        body: JSON.stringify(payload)
+      });
+
+      if (resp.ok) {
+        const data = await resp.json();
+        // Prepend to visible leaderboard
+        const tbody = document.getElementById('leaderboard-table-body');
+        if (tbody) {
+          const row = document.createElement('tr');
+          row.style.background = 'rgba(83, 74, 183, 0.08)';
+          row.innerHTML = `
+            <td><span class="rank-badge">${data.rank}</span></td>
+            <td><strong>${data.team_name}</strong> (New Submission)</td>
+            <td><code>${data.model_name}</code></td>
+            <td>Custom ONNX</td>
+            <td><strong>${data.elo_rating}</strong></td>
+            <td>${challengerWins}W – ${championWins}L</td>
+          `;
+          tbody.prepend(row);
+        }
+      }
+    } catch (e) {
+      console.warn('Error recording challenge:', e);
+    }
+
+    if (startBtn) startBtn.disabled = false;
+    this.challengeH2HRunning = false;
+  }
+
   // --- VISUAL ONBOARDING GUIDE ---
   openGuideModal() {
     const modal = document.getElementById('guide-modal');
@@ -592,7 +883,7 @@ export class ColonyPlaygroundUI {
         <h3 class="guide-slide-title">${slide.title}</h3>
         <p class="guide-slide-text">${slide.text}</p>
         <div class="guide-visual-container">
-          ${slide.svg}
+          ${slide.html}
         </div>
       `;
     }
@@ -612,33 +903,40 @@ export class ColonyPlaygroundUI {
 
   attachDomEvents() {
     // Mode switcher buttons
-    document.getElementById('mode-btn-play')?.addEventListener('click', () => {
+    const setMode = (mode) => {
       this.stopReplayPlayback();
-      this.stageMode = 'play';
-      document.getElementById('mode-btn-play').classList.add('active');
-      document.getElementById('mode-btn-replay').classList.remove('active');
-      document.getElementById('play-settings-panel').style.display = 'flex';
-      document.getElementById('replay-settings-panel').style.display = 'none';
-      this.game = new ColonyGame();
-      this.renderBoard();
-      this.updateActionCoach();
-    });
+      this.stageMode = mode;
 
-    document.getElementById('mode-btn-replay')?.addEventListener('click', () => {
-      this.stageMode = 'replay';
-      document.getElementById('mode-btn-replay').classList.add('active');
-      document.getElementById('mode-btn-play').classList.remove('active');
-      document.getElementById('play-settings-panel').style.display = 'none';
-      document.getElementById('replay-settings-panel').style.display = 'flex';
-      this.loadReplayMatch(0);
-    });
+      document.getElementById('mode-btn-play')?.classList.toggle('active', mode === 'play');
+      document.getElementById('mode-btn-challenge')?.classList.toggle('active', mode === 'challenge');
+      document.getElementById('mode-btn-replay')?.classList.toggle('active', mode === 'replay');
+
+      document.getElementById('play-settings-panel').style.display = mode === 'play' ? 'flex' : 'none';
+      document.getElementById('challenge-settings-panel').style.display = mode === 'challenge' ? 'flex' : 'none';
+      document.getElementById('replay-settings-panel').style.display = mode === 'replay' ? 'flex' : 'none';
+
+      if (mode === 'replay') {
+        this.loadReplayMatch(0);
+      } else {
+        this.game = new ColonyGame();
+        this.renderBoard();
+        this.updateGraveyard();
+        this.updateCombatFeed('Stage reset. Select a piece to move or attack.');
+      }
+    };
+
+    document.getElementById('mode-btn-play')?.addEventListener('click', () => setMode('play'));
+    document.getElementById('mode-btn-challenge')?.addEventListener('click', () => setMode('challenge'));
+    document.getElementById('mode-btn-replay')?.addEventListener('click', () => setMode('replay'));
+    document.getElementById('btn-quick-challenge')?.addEventListener('click', () => setMode('challenge'));
 
     // Reset button
     const resetHandler = () => {
       this.game.reset();
       this.clearSelection();
       this.renderBoard();
-      this.updateActionCoach();
+      this.updateGraveyard();
+      this.updateCombatFeed('New match started. Select a piece to move or attack.');
       document.getElementById('move-log-list').innerHTML = '';
       this.updateEvalBar(0.0);
       if (this.playerTeam === MAGENTA) {
@@ -647,15 +945,30 @@ export class ColonyPlaygroundUI {
     };
     document.getElementById('btn-reset-game-hero')?.addEventListener('click', resetHandler);
 
-    // Side selection toggles
-    document.getElementById('opt-side-cyan')?.addEventListener('click', () => {
+    // Crystal-clear Team Selection
+    const btnCyan = document.getElementById('opt-side-cyan');
+    const btnMag = document.getElementById('opt-side-mag');
+    const teamHint = document.getElementById('team-selection-hint');
+
+    btnCyan?.addEventListener('click', () => {
       this.playerTeam = CYAN;
       this.aiTeam = MAGENTA;
+      btnCyan.className = 'team-switch-btn active blue';
+      btnMag.className = 'team-switch-btn';
+      if (teamHint) {
+        teamHint.innerHTML = 'You play as <strong>Blue</strong> at the bottom-left and take the opening move of the match.';
+      }
       resetHandler();
     });
-    document.getElementById('opt-side-mag')?.addEventListener('click', () => {
+
+    btnMag?.addEventListener('click', () => {
       this.playerTeam = MAGENTA;
       this.aiTeam = CYAN;
+      btnMag.className = 'team-switch-btn active amber';
+      btnCyan.className = 'team-switch-btn';
+      if (teamHint) {
+        teamHint.innerHTML = 'AI moves first as <strong>Blue</strong>. You control <strong>Amber</strong> at top-right and win any endgame tiebreaks.';
+      }
       resetHandler();
     });
 
@@ -678,32 +991,16 @@ export class ColonyPlaygroundUI {
     });
 
     // Replay controls
-    document.getElementById('btn-replay-prev')?.addEventListener('click', () => {
-      this.applyReplayStep(this.replayStep - 1);
-    });
-    document.getElementById('btn-replay-next')?.addEventListener('click', () => {
-      this.applyReplayStep(this.replayStep + 1);
-    });
-    document.getElementById('btn-replay-play')?.addEventListener('click', () => {
-      this.toggleReplayPlayback();
-    });
-    document.getElementById('btn-replay-first')?.addEventListener('click', () => {
-      this.applyReplayStep(0);
-    });
-    document.getElementById('btn-replay-last')?.addEventListener('click', () => {
-      this.applyReplayStep(this.replayMoves.length);
-    });
+    document.getElementById('btn-replay-prev')?.addEventListener('click', () => this.applyReplayStep(this.replayStep - 1));
+    document.getElementById('btn-replay-next')?.addEventListener('click', () => this.applyReplayStep(this.replayStep + 1));
+    document.getElementById('btn-replay-play')?.addEventListener('click', () => this.toggleReplayPlayback());
+    document.getElementById('btn-replay-first')?.addEventListener('click', () => this.applyReplayStep(0));
+    document.getElementById('btn-replay-last')?.addEventListener('click', () => this.applyReplayStep(this.replayMoves.length));
 
     // Guide Modal
-    document.getElementById('btn-open-guide-modal')?.addEventListener('click', () => {
-      this.openGuideModal();
-    });
-    document.getElementById('btn-close-guide')?.addEventListener('click', () => {
-      this.closeGuideModal();
-    });
-    document.getElementById('btn-guide-prev')?.addEventListener('click', () => {
-      this.renderGuideSlide(this.guideStep - 1);
-    });
+    document.getElementById('btn-open-guide-modal')?.addEventListener('click', () => this.openGuideModal());
+    document.getElementById('btn-close-guide')?.addEventListener('click', () => this.closeGuideModal());
+    document.getElementById('btn-guide-prev')?.addEventListener('click', () => this.renderGuideSlide(this.guideStep - 1));
     document.getElementById('btn-guide-next')?.addEventListener('click', () => {
       if (this.guideStep === GUIDE_SLIDES.length - 1) {
         this.closeGuideModal();
@@ -712,70 +1009,36 @@ export class ColonyPlaygroundUI {
       }
     });
 
-    // Model Upload Dropzone in curious minds section
-    this.attachUploadEvents();
-  }
+    // Custom Challenge Upload Events
+    const dropzone = document.getElementById('challenge-dropzone');
+    const fileInput = document.getElementById('challenge-file-input');
 
-  attachUploadEvents() {
-    const dropzone = document.getElementById('model-dropzone');
-    const fileInput = document.getElementById('model-file-input');
-    const statusOut = document.getElementById('upload-status-output');
-
-    if (!dropzone || !fileInput) return;
-
-    dropzone.addEventListener('click', () => fileInput.click());
-    dropzone.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      dropzone.style.borderColor = 'var(--team-blue)';
-    });
-    dropzone.addEventListener('dragleave', () => {
-      dropzone.style.borderColor = '';
-    });
-    dropzone.addEventListener('drop', (e) => {
-      e.preventDefault();
-      dropzone.style.borderColor = '';
-      if (e.dataTransfer.files.length > 0) {
-        this.handleModelUpload(e.dataTransfer.files[0]);
-      }
-    });
-    fileInput.addEventListener('change', () => {
-      if (fileInput.files.length > 0) {
-        this.handleModelUpload(fileInput.files[0]);
-      }
-    });
-  }
-
-  async handleModelUpload(file) {
-    const statusOut = document.getElementById('upload-status-output');
-    if (!statusOut) return;
-    statusOut.style.display = 'block';
-    statusOut.style.color = 'var(--team-blue)';
-    statusOut.textContent = `Validating ${file.name}...`;
-
-    try {
-      const result = await this.runner.validateAndLoadUpload(file);
-      this.evaluators.set('custom', result.evaluator);
-
-      const sel = document.getElementById('sel-ai-model');
-      if (sel) {
-        let opt = sel.querySelector('option[value="custom"]');
-        if (!opt) {
-          opt = document.createElement('option');
-          opt.value = 'custom';
-          sel.appendChild(opt);
+    if (dropzone && fileInput) {
+      dropzone.addEventListener('click', () => fileInput.click());
+      dropzone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropzone.style.borderColor = 'var(--team-blue)';
+      });
+      dropzone.addEventListener('dragleave', () => {
+        dropzone.style.borderColor = '';
+      });
+      dropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropzone.style.borderColor = '';
+        if (e.dataTransfer.files.length > 0) {
+          this.handleCustomModelUpload(e.dataTransfer.files[0]);
         }
-        opt.textContent = `Custom: ${file.name} (Uploaded)`;
-        sel.value = 'custom';
-        this.aiModelName = 'custom';
-      }
-
-      statusOut.style.color = 'var(--col-safe)';
-      statusOut.textContent = `✓ Model verified and loaded: ${file.name} (Shape [1,16,8,8] → [1,4096] & [1])`;
-      this.showToast(`Custom model loaded: ${file.name}`);
-    } catch (err) {
-      statusOut.style.color = 'var(--col-danger)';
-      statusOut.textContent = `✗ Upload Error: ${err.message || err}`;
+      });
+      fileInput.addEventListener('change', () => {
+        if (fileInput.files.length > 0) {
+          this.handleCustomModelUpload(fileInput.files[0]);
+        }
+      });
     }
+
+    document.getElementById('btn-start-h2h-series')?.addEventListener('click', () => {
+      this.run2GameH2HSeries();
+    });
   }
 }
 

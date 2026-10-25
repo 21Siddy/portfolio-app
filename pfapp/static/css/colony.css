@@ -1,5 +1,5 @@
 /* ==========================================================================
-   COLONY: ONE — MINIMALIST PLAYGROUND STYLES (v2)
+   COLONY: ONE — MINIMALIST PLAYGROUND STYLES (v2.1)
    Harmonized with portfolio-wide Warm Paper / Matte Slate design system.
    ========================================================================== */
 
@@ -147,7 +147,13 @@
   transform: translateY(-1px);
 }
 
-/* --- DYNAMIC ACTION COACH BANNER --- */
+.btn-guide-pill.accent-challenge {
+  background: var(--team-blue-bg);
+  color: var(--team-blue);
+  border-color: var(--team-blue-border);
+}
+
+/* --- DYNAMIC ACTION & COMBAT FEED BANNER --- */
 .action-coach-banner {
   background: var(--bg-secondary);
   border: 1px solid var(--border);
@@ -165,6 +171,38 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* 2-Step Action Indicator */
+.turn-stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  padding: 3px 6px;
+}
+
+.step-pill {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  color: var(--text-tertiary);
+  transition: all 0.2s;
+}
+
+.step-pill.active {
+  background: var(--team-blue);
+  color: #fff;
+  font-weight: 600;
+}
+
+.step-pill.active.amber {
+  background: var(--team-amber);
+  color: #fff;
 }
 
 .turn-pill {
@@ -190,9 +228,12 @@
 }
 
 .coach-message {
-  font-size: 14px;
+  font-size: 13.5px;
   color: var(--text-primary);
   font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .coach-meta-group {
@@ -291,6 +332,26 @@
   }
 }
 
+/* Last Move Origin & Destination Trails */
+.tile-last-from {
+  box-shadow: inset 0 0 0 2px rgba(180, 83, 9, 0.4);
+  background-color: rgba(180, 83, 9, 0.08) !important;
+}
+
+.tile-last-to {
+  box-shadow: inset 0 0 0 2.5px var(--team-amber);
+  background-color: rgba(180, 83, 9, 0.16) !important;
+}
+
+.tile-captured-flash {
+  animation: captureFlash 0.6s ease-out;
+}
+
+@keyframes captureFlash {
+  0% { background-color: rgba(194, 65, 12, 0.6) !important; }
+  100% { background-color: inherit; }
+}
+
 /* Tile States */
 .tile-locked {
   background-color: var(--bg) !important;
@@ -332,11 +393,12 @@
 }
 
 .marker-capture {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   background: transparent;
-  border: 2px dashed var(--col-danger);
+  border: 2.5px dashed var(--col-danger);
   border-radius: 50%;
+  box-shadow: 0 0 8px rgba(194, 65, 12, 0.3);
 }
 
 /* Coordinate Tags */
@@ -410,9 +472,31 @@
   font-weight: 700;
 }
 
+/* Captured Graveyard Tray */
+.graveyard-tray {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: 10px;
+  padding: 6px 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.graveyard-pieces {
+  display: inline-flex;
+  gap: 4px;
+  font-size: 13px;
+}
+
 /* Subtle Evaluation Bar Under Board */
 .eval-bar-wrapper {
-  margin-top: 14px;
+  margin-top: 12px;
   width: 100%;
 }
 
@@ -504,10 +588,16 @@
 .settings-group {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
 .setting-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.setting-row-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -515,18 +605,63 @@
 
 .setting-label {
   font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.setting-hint {
+  font-size: 11.5px;
   color: var(--text-secondary);
+  line-height: 1.4;
 }
 
 .setting-select {
   background: var(--bg);
   border: 1px solid var(--border);
   color: var(--text-primary);
-  padding: 6px 12px;
+  padding: 7px 12px;
   border-radius: 6px;
   font-family: var(--font-mono);
   font-size: 12px;
   outline: none;
+}
+
+/* Segmented Team Switcher */
+.team-switcher-bar {
+  display: flex;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 2px;
+  gap: 4px;
+}
+
+.team-switch-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 5px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.team-switch-btn.active.blue {
+  background: var(--team-blue-bg);
+  color: var(--team-blue);
+  border: 0.5px solid var(--team-blue-border);
+  font-weight: 600;
+}
+
+.team-switch-btn.active.amber {
+  background: var(--team-amber-bg);
+  color: var(--team-amber);
+  border: 0.5px solid var(--team-amber-border);
+  font-weight: 600;
 }
 
 /* Replay Scrubber Controls */
@@ -616,7 +751,7 @@
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 8px;
-  height: 160px;
+  height: 140px;
   overflow-y: auto;
   padding: 10px;
   display: flex;
@@ -639,6 +774,41 @@
 .log-item.amber {
   border-left: 2px solid var(--team-amber);
   color: var(--text-secondary);
+}
+
+/* --- 4-POINT AUTOMATED VALIDATION CHECKLIST --- */
+.validation-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+}
+
+.check-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text-secondary);
+}
+
+.check-item.passed {
+  color: var(--col-safe);
+}
+
+.check-item.failed {
+  color: var(--col-danger);
+}
+
+.check-status-badge {
+  font-size: 10.5px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--bg-secondary);
 }
 
 /* --- STEP-BY-STEP VISUAL ONBOARDING MODAL --- */
@@ -711,16 +881,94 @@
   color: var(--text-secondary);
 }
 
-/* Visual graphic container inside modal */
+/* Visual graphic container inside modal: Clean flex layout */
 .guide-visual-container {
   background: var(--bg-secondary);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  padding: 20px;
+  padding: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 160px;
+  min-height: 170px;
+}
+
+/* HTML/CSS Mini-Board Card Elements */
+.mini-board-flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.mini-tile-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.mini-tile-box {
+  width: 58px;
+  height: 58px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  position: relative;
+}
+
+.mini-tile-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.mini-arrow-connector {
+  font-size: 18px;
+  color: var(--text-tertiary);
+}
+
+/* Firewall Ring Nest */
+.firewall-ring-nest {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.ring-outer-box {
+  width: 220px;
+  padding: 12px;
+  border: 2px dashed var(--col-danger);
+  border-radius: 8px;
+  background: var(--bg);
+  text-align: center;
+}
+
+.ring-inner-box {
+  background: var(--bg-secondary);
+  border: 1.5px solid var(--col-safe);
+  border-radius: 6px;
+  padding: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--col-safe);
+  font-weight: 600;
+}
+
+.ring-outer-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--col-danger);
+  margin-top: 6px;
+  font-weight: 500;
 }
 
 .guide-modal-footer {
@@ -748,16 +996,91 @@
   transform: scale(1.2);
 }
 
+/* --- LEADERBOARD BENCHMARK TABLE --- */
+.leaderboard-section {
+  max-width: 900px;
+  margin: 56px auto 0;
+}
+
+.section-title-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.leaderboard-table-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow-x: auto;
+}
+
+.benchmark-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+}
+
+.benchmark-table th {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-tertiary);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.benchmark-table td {
+  padding: 14px 18px;
+  border-bottom: 0.5px solid var(--border);
+  color: var(--text-secondary);
+}
+
+.benchmark-table tr:last-child td {
+  border-bottom: none;
+}
+
+.benchmark-table tr.highlight-champion {
+  background: var(--team-blue-bg);
+}
+
+.benchmark-table tr.highlight-champion td {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.rank-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--border);
+  color: var(--text-primary);
+}
+
+.rank-badge.gold {
+  background: #facc15;
+  color: #000;
+}
+
 /* --- PLAIN-ENGLISH ACCORDION SECTION BELOW THE FOLD --- */
 .curious-minds-section {
   max-width: 900px;
-  margin: 64px auto 0;
+  margin: 56px auto 0;
 }
 
 .curious-heading {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 600;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   color: var(--text-primary);
   display: flex;
   align-items: center;
@@ -767,7 +1090,7 @@
 .curious-accordion-group {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
 }
 
 .curious-card {
@@ -783,8 +1106,8 @@
 }
 
 .curious-summary {
-  padding: 20px 24px;
-  font-size: 16px;
+  padding: 18px 24px;
+  font-size: 15.5px;
   font-weight: 600;
   color: var(--text-primary);
   cursor: pointer;
@@ -812,7 +1135,7 @@
 }
 
 .curious-body {
-  padding: 0 24px 24px;
+  padding: 0 24px 22px;
   font-size: 14.5px;
   line-height: 1.7;
   color: var(--text-secondary);
@@ -832,23 +1155,22 @@
 
 .curious-body code {
   font-family: var(--font-mono);
-  font-size: 12.5px;
+  font-size: 12px;
   background: var(--bg);
   padding: 2px 6px;
   border-radius: 4px;
   border: 0.5px solid var(--border);
 }
 
-/* Upload Dropzone inside Accordion */
+/* Upload Dropzone inside Panel & Accordion */
 .custom-model-dropzone {
   border: 1.5px dashed var(--border-hover);
   border-radius: 8px;
-  padding: 24px;
+  padding: 20px;
   text-align: center;
   cursor: pointer;
   background: var(--bg);
   transition: all 0.2s;
-  margin-top: 14px;
 }
 
 .custom-model-dropzone:hover {
