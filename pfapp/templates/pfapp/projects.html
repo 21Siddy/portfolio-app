@@ -343,7 +343,7 @@
       <div class="toggle-container">
         <div class="segmented-control" role="tablist" aria-label="Project Scope">
           <button class="toggle-btn active" id="btn-personal" onclick="switchCategory('personal')" role="tab" aria-selected="true" aria-controls="group-personal">
-            Personal & Research <span class="toggle-count">2</span>
+            Personal & Research <span class="toggle-count">3</span>
           </button>
           <button class="toggle-btn" id="btn-enterprise" onclick="switchCategory('enterprise')" role="tab" aria-selected="false" aria-controls="group-enterprise">
             Enterprise & Industry <span class="toggle-count">2</span>
@@ -355,6 +355,40 @@
     <!-- GROUP 1: Personal & Research -->
     <section id="group-personal" class="cards-grid" role="tabpanel" aria-labelledby="btn-personal">
       
+      <!-- Card 0: Colony: One Cloudfight Champion -->
+      <article class="project-showcase-card">
+        <div class="card-meta-top">
+          <span class="category-tag">Reinforcement Learning & Game Theory</span>
+          <span class="accent-tag" style="background: rgba(0, 255, 255, 0.12); color: #00ffff; border: 1px solid rgba(0, 255, 255, 0.3);">Interactive AI Playground</span>
+        </div>
+
+        <h2 class="project-title">Colony: One — Cloudfight Coding Contest Champion AI & Head-to-Head Arena</h2>
+
+        <div class="project-narrative">
+          <p>
+            At the Cloudfight Coding Contest, the main objective in Level 4 and 5 was engineering a neural network policy-value model for <i>Colony: One</i> that battles other teams head-to-head in continuous live matchmaking. The game features 2-action turns, bodyguard shield sacrifices, progressive firewall shrinkage, and bare-kernel endgames under AlphaZero PUCT MCTS referee search.
+          </p>
+          <p>
+            I engineered the Generation 9 Champion ONNX model implementing PUCT exploration trap pruning on low budgets (N=100), 1-ply Static Exchange Evaluation (SEE), 2-action threat repulsion, and terminal doom bypass. This interactive playground allows visitors to play directly against the Level 5 champion model, upload custom ONNX models, or simulate head-to-head tournaments with live Elo and 95% confidence interval calculations running client-side via WebAssembly.
+          </p>
+        </div>
+
+        <div class="badges-list">
+          <span class="tech-badge">AlphaZero MCTS</span>
+          <span class="tech-badge">ONNX Runtime Web</span>
+          <span class="tech-badge">WebAssembly</span>
+          <span class="tech-badge">Game AI</span>
+          <span class="tech-badge">Elo / Glicko-2</span>
+          <span class="tech-badge">Django</span>
+        </div>
+
+        <div class="actions-row">
+          <a href="{% url 'colony_playground' %}" class="btn-action-primary" style="background: #00ffff; color: #000 !important; font-weight: 700;">
+            Launch Colony AI Playground →
+          </a>
+        </div>
+      </article>
+
       <!-- Card 1: NSGA-II Topology-Aware RAG -->
       <article class="project-showcase-card">
         <div class="card-meta-top">
