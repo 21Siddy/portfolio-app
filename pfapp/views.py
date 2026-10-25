@@ -57,15 +57,16 @@ def colony_playground(request):
         ai_wins = 106
         recent_matches = []
         leaderboard = [
-            {'rank': 1, 'team_name': 'Ai-DHD (Siddharth, Sashreek & Vedant)', 'model_name': 'Ai-DHD Gen 9 (MCTS-PUCT)', 'affiliation': 'Paderborn University', 'level': 'Level 5', 'elo_rating': 1892, 'matches_played': 42, 'wins': 38, 'losses': 4, 'win_rate_pct': 90.5, 'is_siddharth': True},
-            {'rank': 2, 'team_name': 'CyberVortex AI', 'model_name': 'ResNet-Policy v4', 'affiliation': 'TU Munich', 'level': 'Level 5', 'elo_rating': 1815, 'matches_played': 39, 'wins': 32, 'losses': 7, 'win_rate_pct': 82.1, 'is_siddharth': False},
-            {'rank': 3, 'team_name': 'ZeroExploit', 'model_name': 'AlphaColony-L5', 'affiliation': 'ETH Zürich', 'level': 'Level 5', 'elo_rating': 1784, 'matches_played': 35, 'wins': 27, 'losses': 8, 'win_rate_pct': 77.1, 'is_siddharth': False},
-            {'rank': 4, 'team_name': 'NeuralColony_L5', 'model_name': 'TransformerPolicy_v3', 'affiliation': 'Vienna Tech', 'level': 'Level 5', 'elo_rating': 1740, 'matches_played': 31, 'wins': 23, 'losses': 8, 'win_rate_pct': 74.2, 'is_siddharth': False},
-            {'rank': 5, 'team_name': 'TraceSniper', 'model_name': 'TraceDefense_L4', 'affiliation': 'RWTH Aachen', 'level': 'Level 4', 'elo_rating': 1678, 'matches_played': 28, 'wins': 19, 'losses': 9, 'win_rate_pct': 67.9, 'is_siddharth': False},
-            {'rank': 6, 'team_name': 'DeepDaemon_Bot', 'model_name': 'DaemonHeavy_v2', 'affiliation': 'Cloudfight Lab', 'level': 'Level 4', 'elo_rating': 1620, 'matches_played': 25, 'wins': 16, 'losses': 9, 'win_rate_pct': 64.0, 'is_siddharth': False},
-            {'rank': 7, 'team_name': 'PingMaster_99', 'model_name': 'FastPingSweep', 'affiliation': 'TU Berlin', 'level': 'Level 4', 'elo_rating': 1585, 'matches_played': 22, 'wins': 13, 'losses': 9, 'win_rate_pct': 59.1, 'is_siddharth': False},
-            {'rank': 8, 'team_name': 'KernelGuard_L3', 'model_name': 'HeuristicGreedy_v1', 'affiliation': 'Linz CCC', 'level': 'Level 3', 'elo_rating': 1510, 'matches_played': 18, 'wins': 9, 'losses': 9, 'win_rate_pct': 50.0, 'is_siddharth': False},
-            {'rank': 9, 'team_name': 'RandomBaseline', 'model_name': 'random.onnx', 'affiliation': 'Official Baseline', 'level': 'Level 3', 'elo_rating': 1340, 'matches_played': 50, 'wins': 5, 'losses': 45, 'win_rate_pct': 10.0, 'is_siddharth': False},
+            {'rank': 1, 'team_name': 'Fiesty', 'model_name': 'Fiesty-DQN (Deep Q-Network)', 'affiliation': 'DQN Research Colleague', 'level': 'Level 5', 'elo_rating': 1908, 'matches_played': 2, 'wins': 2, 'losses': 0, 'win_rate_pct': 100.0, 'is_siddharth': False},
+            {'rank': 2, 'team_name': 'Ai-DHD (Siddharth, Sashreek & Vedant)', 'model_name': 'Ai-DHD Gen 9 (MCTS-PUCT)', 'affiliation': 'Paderborn University', 'level': 'Level 5', 'elo_rating': 1892, 'matches_played': 42, 'wins': 38, 'losses': 4, 'win_rate_pct': 90.5, 'is_siddharth': True},
+            {'rank': 3, 'team_name': 'CyberVortex AI', 'model_name': 'ResNet-Policy v4', 'affiliation': 'TU Munich', 'level': 'Level 5', 'elo_rating': 1815, 'matches_played': 39, 'wins': 32, 'losses': 7, 'win_rate_pct': 82.1, 'is_siddharth': False},
+            {'rank': 4, 'team_name': 'ZeroExploit', 'model_name': 'AlphaColony-L5', 'affiliation': 'ETH Zürich', 'level': 'Level 5', 'elo_rating': 1784, 'matches_played': 35, 'wins': 27, 'losses': 8, 'win_rate_pct': 77.1, 'is_siddharth': False},
+            {'rank': 5, 'team_name': 'NeuralColony_L5', 'model_name': 'TransformerPolicy_v3', 'affiliation': 'Vienna Tech', 'level': 'Level 5', 'elo_rating': 1740, 'matches_played': 31, 'wins': 23, 'losses': 8, 'win_rate_pct': 74.2, 'is_siddharth': False},
+            {'rank': 6, 'team_name': 'TraceSniper', 'model_name': 'TraceDefense_L4', 'affiliation': 'RWTH Aachen', 'level': 'Level 4', 'elo_rating': 1678, 'matches_played': 28, 'wins': 19, 'losses': 9, 'win_rate_pct': 67.9, 'is_siddharth': False},
+            {'rank': 7, 'team_name': 'DeepDaemon_Bot', 'model_name': 'DaemonHeavy_v2', 'affiliation': 'Cloudfight Lab', 'level': 'Level 4', 'elo_rating': 1620, 'matches_played': 25, 'wins': 16, 'losses': 9, 'win_rate_pct': 64.0, 'is_siddharth': False},
+            {'rank': 8, 'team_name': 'PingMaster_99', 'model_name': 'FastPingSweep', 'affiliation': 'TU Berlin', 'level': 'Level 4', 'elo_rating': 1585, 'matches_played': 22, 'wins': 13, 'losses': 9, 'win_rate_pct': 59.1, 'is_siddharth': False},
+            {'rank': 9, 'team_name': 'KernelGuard_L3', 'model_name': 'HeuristicGreedy_v1', 'affiliation': 'Linz CCC', 'level': 'Level 3', 'elo_rating': 1510, 'matches_played': 18, 'wins': 9, 'losses': 9, 'win_rate_pct': 50.0, 'is_siddharth': False},
+            {'rank': 10, 'team_name': 'RandomBaseline', 'model_name': 'random.onnx', 'affiliation': 'Official Baseline', 'level': 'Level 3', 'elo_rating': 1340, 'matches_played': 50, 'wins': 5, 'losses': 45, 'win_rate_pct': 10.0, 'is_siddharth': False},
         ]
 
     context = {
@@ -146,17 +147,17 @@ def colony_record_challenge(request):
 
     try:
         data = json.loads(request.body.decode('utf-8'))
-        model_name = str(data.get('model_name', 'Custom Model'))[:80].strip() or 'Custom Model'
-        author_name = str(data.get('team_name') or data.get('author_name', 'Challenger'))[:80].strip() or 'Challenger'
-        affiliation = str(data.get('affiliation', 'Independent'))[:80].strip() or 'Independent'
-        challenger_wins = min(max(int(data.get('challenger_wins', 0)), 0), 2)
-        champion_wins = min(max(int(data.get('champion_wins', 0)), 0), 2)
-        total_rounds = min(max(int(data.get('total_rounds', 1)), 1), 60)
+        model_name = str(data.get('model_name') or 'Custom Model')[:80].strip() or 'Custom Model'
+        author_name = str(data.get('team_name') or data.get('author_name') or 'Challenger')[:80].strip() or 'Challenger'
+        affiliation = str(data.get('affiliation') or 'Independent')[:80].strip() or 'Independent'
+        challenger_wins = min(max(int(data.get('challenger_wins') or 0), 0), 2)
+        champion_wins = min(max(int(data.get('champion_wins') or 0), 0), 2)
+        total_rounds = min(max(int(data.get('total_rounds') or 16), 1), 60)
 
         # Granular Elo calculation with survival round bonus
         survival_bonus = min(total_rounds, 30)
         if challenger_wins == 2:
-            assigned_elo = 1860 + survival_bonus
+            assigned_elo = 1895 + survival_bonus
         elif challenger_wins == 1 and champion_wins == 1:
             assigned_elo = 1720 + survival_bonus
         elif challenger_wins == 1 and champion_wins == 0:
@@ -183,17 +184,36 @@ def colony_record_challenge(request):
             entry.model_name = model_name
             if affiliation and affiliation != 'Independent':
                 entry.affiliation = affiliation
-            entry.matches_played += 2
+            entry.matches_played += max(challenger_wins + champion_wins, 2)
             entry.wins += challenger_wins
             entry.losses += champion_wins
-            entry.elo_rating = int((entry.elo_rating + assigned_elo) / 2)
+            if challenger_wins == 2:
+                entry.elo_rating = max(entry.elo_rating, assigned_elo)
+            else:
+                entry.elo_rating = int((entry.elo_rating + assigned_elo) / 2)
             entry.save()
 
-        all_entries = list(ColonyLeaderboardEntry.objects.all().order_by('-elo_rating'))
+        all_entries = list(ColonyLeaderboardEntry.objects.all().order_by('-elo_rating', '-wins'))
         for idx, item in enumerate(all_entries, 1):
             if item.rank != idx:
                 item.rank = idx
                 item.save(update_fields=['rank'])
+
+        leaderboard_payload = [
+            {
+                'rank': item.rank,
+                'team_name': item.team_name,
+                'model_name': item.model_name,
+                'affiliation': item.affiliation or '—',
+                'level': item.level,
+                'elo_rating': item.elo_rating,
+                'wins': item.wins,
+                'losses': item.losses,
+                'is_siddharth': item.is_siddharth,
+                'is_new': (item.id == entry.id),
+            }
+            for item in all_entries[:15]
+        ]
 
         return JsonResponse({
             'success': True,
@@ -204,6 +224,7 @@ def colony_record_challenge(request):
             'affiliation': entry.affiliation,
             'wins': entry.wins,
             'losses': entry.losses,
+            'leaderboard': leaderboard_payload,
         }, status=201)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)

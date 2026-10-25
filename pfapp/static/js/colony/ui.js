@@ -363,7 +363,7 @@ export class ColonyPlaygroundUI {
     this.updateGraveyard();
 
     // Narrative combat feed update
-    const teamName = action.team === CYAN ? 'Blue' : 'Amber';
+    const teamName = logEntry.team === CYAN ? 'Blue' : 'Amber';
     const fromAlg = posToAlgebraic(action.fromR, action.fromC);
     const toAlg = posToAlgebraic(action.toR, action.toC);
     let desc = `${teamName} moved ${fromAlg} → ${toAlg}`;
@@ -374,7 +374,9 @@ export class ColonyPlaygroundUI {
     this.updateCombatFeed(desc);
 
     if (this.game.terminated) {
-      this.handleGameOver();
+      if (!this.challengeH2HRunning) {
+        this.handleGameOver();
+      }
       return;
     }
 
@@ -713,14 +715,15 @@ export class ColonyPlaygroundUI {
     setCheck('check-safety', isSafe, isSafe ? `✓ Passed (${(file.size / 1024 / 1024).toFixed(2)} MB)` : '✗ Exceeds 5MB');
     if (!isSafe) return;
 
-    // 2. Soundness Check (ONNX parse)
+    // 2. Soundness Check (ONNX parse - supports both AlphaZero policy+value and DQN Q-networks)
     try {
       const buffer = await file.arrayBuffer();
       const session = await window.ort.InferenceSession.create(buffer, { executionProviders: ['wasm'] });
       const hasInputs = session.inputNames.length >= 1;
-      const hasOutputs = session.outputNames.length >= 2;
+      const hasOutputs = session.outputNames.length >= 1;
+      const isDQN = session.outputNames.length === 1;
       const isSound = hasInputs && hasOutputs;
-      setCheck('check-soundness', isSound, isSound ? '✓ Passed (Observation & Heads ok)' : '✗ Invalid Graph');
+      setCheck('check-soundness', isSound, isSound ? (isDQN ? '✓ Passed (DQN Q-Network [1,4096])' : '✓ Passed (Observation & Heads ok)') : '✗ Invalid Graph');
       if (!isSound) return;
 
       // 3. Reliability Check (Zero NaN, stress test)
@@ -733,11 +736,14 @@ export class ColonyPlaygroundUI {
       const latency = Math.round(performance.now() - t0);
       setCheck('check-reliability', true, `✓ Passed (${latency} ms latency, 0 NaN)`);
 
-      // 4. Effectiveness Check (Valid 4096 logits & value)
-      const pol = runRes[session.outputNames[0]]?.data;
-      const val = runRes[session.outputNames[1]]?.data;
+      // 4. Effectiveness Check (Valid 4096 logits / Q-values)
+      let pol = runRes[session.outputNames[0]]?.data;
+      let val = session.outputNames.length > 1 ? runRes[session.outputNames[1]]?.data : null;
+      if (pol && pol.length !== 4096 && val && val.length === 4096) {
+        pol = val;
+      }
       const isEffective = pol && pol.length === 4096;
-      setCheck('check-effectiveness', isEffective, isEffective ? '✓ Passed (Legal bounds ok)' : '✗ Output shape mismatch');
+      setCheck('check-effectiveness', isEffective, isEffective ? `✓ Passed (${isDQN ? 'DQN Action Q-Values [4096]' : 'Legal Bounds Ok'})` : '✗ Output shape mismatch');
 
       if (isEffective) {
         this.customModel = {
@@ -749,7 +755,7 @@ export class ColonyPlaygroundUI {
           modelInput.value = file.name.replace(/\.onnx$/i, '');
         }
         if (actionArea) actionArea.style.display = 'flex';
-        if (statusText) statusText.textContent = `Model verified! Register your challenger details below and battle Team Ai-DHD.`;
+        if (statusText) statusText.textContent = `Model verified (${isDQN ? 'DQN Architecture' : 'AlphaZero Actor-Critic'})! Register details below and battle Team Ai-DHD.`;
       }
     } catch (err) {
       setCheck('check-soundness', false, '✗ Parse Error');
@@ -797,7 +803,7 @@ export class ColonyPlaygroundUI {
 
     if (this.game.winner === CYAN) challengerWins++;
     else if (this.game.winner === MAGENTA) championWins++;
-    totalRounds += this.game.round;
+    totalRounds += (this.game.roundNumber || 1);
 
     await new Promise((r) => setTimeout(r, 1200));
 
@@ -816,7 +822,7 @@ export class ColonyPlaygroundUI {
 
     if (this.game.winner === MAGENTA) challengerWins++;
     else if (this.game.winner === CYAN) championWins++;
-    totalRounds += this.game.round;
+    totalRounds += (this.game.roundNumber || 1);
 
     // Final Outcome
     let winnerSummary = '';
@@ -837,7 +843,7 @@ export class ColonyPlaygroundUI {
         affiliation: affiliation,
         challenger_wins: challengerWins,
         champion_wins: championWins,
-        total_rounds: totalRounds
+        total_rounds: totalRounds || 16
       };
 
       const resp = await fetch('/api/colony/record-challenge/', {
@@ -848,9 +854,34 @@ export class ColonyPlaygroundUI {
 
       if (resp.ok) {
         const data = await resp.json();
-        // Insert into visible leaderboard table
         const tbody = document.getElementById('leaderboard-table-body');
-        if (tbody) {
+        if (tbody && Array.isArray(data.leaderboard)) {
+          tbody.innerHTML = data.leaderboard.map((item, idx) => {
+            const isGold = idx === 0 ? 'gold' : '';
+            const rowClass = item.is_siddharth ? 'highlight-champion' : '';
+            const rowStyle = item.is_new ? 'background: rgba(83, 74, 183, 0.10);' : '';
+            const champHtml = item.is_siddharth ? `
+              <span class="champ-pill">CHAMPION</span>
+              <div class="leaderboard-member-links">
+                <a href="https://www.linkedin.com/in/siddharth-hemnani-02a030226/" target="_blank" rel="noopener noreferrer">Siddharth</a> ·
+                <a href="https://www.linkedin.com/in/sashreek-dhaimodkar-b67843234/" target="_blank" rel="noopener noreferrer">Sashreek</a> ·
+                <a href="https://www.linkedin.com/in/vedant-vallakati/" target="_blank" rel="noopener noreferrer">Vedant</a>
+              </div>
+            ` : '';
+            const newBadge = item.is_new ? ` <span style="font-size: 10px; margin-left: 4px; padding: 1px 5px; border-radius: 4px; background: rgba(83, 74, 183, 0.18); color: var(--team-blue); font-weight: 600;">NEW</span>` : '';
+            return `
+              <tr class="${rowClass}" style="${rowStyle}">
+                <td><span class="rank-badge ${isGold}">${item.rank}</span></td>
+                <td><strong class="team-cell-name">${item.team_name}</strong>${newBadge}${champHtml}</td>
+                <td><code>${item.model_name}</code></td>
+                <td>${item.affiliation || '—'}</td>
+                <td>${item.level}</td>
+                <td><strong>${item.elo_rating}</strong></td>
+                <td>${item.wins}W – ${item.losses}L</td>
+              </tr>
+            `;
+          }).join('');
+        } else if (tbody) {
           const row = document.createElement('tr');
           row.style.background = 'rgba(83, 74, 183, 0.08)';
           row.innerHTML = `
@@ -864,6 +895,13 @@ export class ColonyPlaygroundUI {
           `;
           tbody.prepend(row);
         }
+        const lbAnchor = document.getElementById('leaderboard-anchor');
+        if (lbAnchor) {
+          lbAnchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      } else {
+        const errData = await resp.json().catch(() => ({}));
+        console.error('Failed to record challenge:', errData);
       }
     } catch (e) {
       console.warn('Error recording challenge:', e);

@@ -204,7 +204,7 @@
           <div id="challenge-dropzone" class="custom-model-dropzone">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 6px; color: var(--team-blue);"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
             <div style="font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 2px;">Drop or click to upload .onnx model</div>
-            <div style="font-size: 11px; color: var(--text-tertiary);">Must follow [batch, 16, 8, 8] contract (&le; 5 MiB)</div>
+            <div style="font-size: 11px; color: var(--text-tertiary);">Supports AlphaZero &amp; DQN [batch, 16, 8, 8] models (&le; 5 MiB)</div>
             <input type="file" id="challenge-file-input" accept=".onnx" style="display: none;">
           </div>
 
@@ -215,7 +215,7 @@
               <span class="check-status-badge">Waiting...</span>
             </div>
             <div id="check-soundness" class="check-item">
-              <span>2. Soundness ([1,16,8,8] &rarr; Policy/Value)</span>
+              <span>2. Soundness ([1,16,8,8] &rarr; Policy / Q-Values)</span>
               <span class="check-status-badge">Waiting...</span>
             </div>
             <div id="check-reliability" class="check-item">

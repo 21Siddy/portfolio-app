@@ -86,8 +86,8 @@ export class ColonyOnnxRunner {
     if (inputNames.length < 1) {
       throw new Error('Model must have at least 1 input tensor for observation (batch, 16, 8, 8).');
     }
-    if (outputNames.length < 2) {
-      throw new Error('Model must have at least 2 output tensors: policy (batch, 4096) and value (batch).');
+    if (outputNames.length < 1) {
+      throw new Error('Model must have at least 1 output tensor: policy/Q-values (batch, 4096).');
     }
 
     // 5. Dry-run inference with canonical observation tensor [1, 16, 8, 8]
@@ -103,17 +103,19 @@ export class ColonyOnnxRunner {
       throw new Error(`Dry-run inference failed: ${err.message || err}`);
     }
 
-    // Verify output tensors
-    const polTensor = testResults[outputNames[0]];
-    const valTensor = testResults[outputNames[1]];
+    // Verify output tensors (supports both AlphaZero policy+value and DQN Q-values)
+    const isDQN = outputNames.length === 1;
+    let polTensor = testResults[outputNames[0]];
+    let valTensor = !isDQN ? testResults[outputNames[1]] : null;
 
     if (!polTensor || polTensor.data.length !== 4096) {
       // Sometimes outputs are in reversed order, check second
       if (valTensor && valTensor.data.length === 4096) {
-        // Swap names
         outputNames.reverse();
+        polTensor = testResults[outputNames[0]];
+        valTensor = testResults[outputNames[1]];
       } else {
-        throw new Error(`Policy output shape mismatch: Expected 4096 logits, received ${polTensor ? polTensor.data.length : 'none'}.`);
+        throw new Error(`Policy/Q-values output shape mismatch: Expected 4096 logits, received ${polTensor ? polTensor.data.length : 'none'}.`);
       }
     }
 
@@ -126,7 +128,8 @@ export class ColonyOnnxRunner {
       sizeBytes: file.size,
       inputName: inputNames[0],
       policyOutputName: outputNames[0],
-      valueOutputName: outputNames[1],
+      valueOutputName: isDQN ? null : outputNames[1],
+      isDQN: isDQN,
       evaluator: this.createEvaluatorFromSession(session)
     };
   }
@@ -134,7 +137,7 @@ export class ColonyOnnxRunner {
   createEvaluatorFromSession(session) {
     const inputName = session.inputNames[0];
     let polName = session.outputNames[0];
-    let valName = session.outputNames[1];
+    let valName = session.outputNames.length > 1 ? session.outputNames[1] : null;
 
     return async (observationPlanes) => {
       // observationPlanes: Float32Array(16 * 8 * 8)
@@ -144,7 +147,7 @@ export class ColonyOnnxRunner {
 
       const results = await session.run(feeds);
       let pol = results[polName]?.data;
-      let val = results[valName]?.data;
+      let val = valName ? results[valName]?.data : null;
 
       // Swap if needed
       if (pol && pol.length !== 4096 && val && val.length === 4096) {
@@ -156,6 +159,13 @@ export class ColonyOnnxRunner {
       let valueFloat = 0.0;
       if (val && val.length > 0) {
         valueFloat = Math.max(-1.0, Math.min(1.0, val[0]));
+      } else if (pol && pol.length > 0) {
+        // DQN: estimate state value from max Q-value bounded via tanh
+        let maxQ = -Infinity;
+        for (let i = 0; i < pol.length; i++) {
+          if (pol[i] > maxQ) maxQ = pol[i];
+        }
+        valueFloat = Math.max(-1.0, Math.min(1.0, Math.tanh(maxQ / 10.0)));
       }
 
       return {

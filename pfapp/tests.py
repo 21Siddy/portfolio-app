@@ -1,5 +1,6 @@
 from django.test import SimpleTestCase, Client, override_settings
 from django.urls import reverse
+from pathlib import Path
 import json
 
 TEST_STORAGES = {
@@ -100,6 +101,16 @@ class ColonyViewTests(SimpleTestCase):
         self.assertNotIn('Kernel-76', content)
         self.assertIn('Ai-DHD Gen 9 Champion', content)
 
+        # Check for visible leaderboard with Fiesty and Affiliation
+        self.assertIn('Contest &amp; Challenge Leaderboard', content)
+        self.assertIn('Fiesty', content)
+        self.assertIn('Affiliation', content)
+        self.assertIn('btn-submit-to-leaderboard', content)
+
+        # Ensure spoofable manual-result buttons are absent
+        self.assertNotIn('btn-toggle-manual-entry', content)
+        self.assertNotIn('btn-submit-direct-result', content)
+
         # Check that raw $ LaTeX math is completely eliminated
         self.assertNotIn('$4096 \\times 4096$', content)
         self.assertNotIn('$+1.0$', content)
@@ -111,15 +122,18 @@ class ColonyViewTests(SimpleTestCase):
         self.assertIn('Test .ONNX', content)
         self.assertIn('Replays', content)
 
-        # Check for visible leaderboard with Affiliation column & submit button
-        self.assertIn('Contest &amp; Challenge Leaderboard', content)
-        self.assertIn('Affiliation', content)
-        self.assertIn('btn-submit-to-leaderboard', content)
-
         # Check for 3 challenger registration fields
         self.assertIn('id="challenge-author-name"', content)
         self.assertIn('id="challenge-model-name"', content)
         self.assertIn('id="challenge-affiliation"', content)
+
+    def test_ui_js_uses_roundNumber_not_undefined_round(self):
+        ui_js_path = Path(__file__).resolve().parent / 'static' / 'js' / 'colony' / 'ui.js'
+        ui_js_text = ui_js_path.read_text(encoding='utf-8')
+        self.assertNotIn('this.game.round;', ui_js_text)
+        self.assertIn('this.game.roundNumber', ui_js_text)
+        self.assertNotIn('action.team', ui_js_text)
+        self.assertIn('logEntry.team', ui_js_text)
 
     def test_projects_page_showcases_team_aidhd(self):
         response = self.client.get(reverse('projects'))
@@ -141,20 +155,23 @@ class ColonyViewTests(SimpleTestCase):
         content = response.content.decode('utf-8')
         self.assertIn('Team Ai-DHD Cloudfight champion model', content)
 
-    def test_colony_record_challenge_endpoint(self):
+    def test_colony_record_challenge_endpoint_and_null_rounds_safety(self):
         payload = {
-            'model_name': 'TestModel_v1',
-            'team_name': 'TestTeam',
-            'author_name': 'TestChallenger',
-            'affiliation': 'RWTH Aachen',
-            'challenger_wins': 1,
-            'champion_wins': 1,
-            'total_rounds': 18
+            'model_name': 'Fiesty-DQN',
+            'team_name': 'Fiesty',
+            'author_name': 'Fiesty',
+            'affiliation': 'DQN Research Colleague',
+            'challenger_wins': 2,
+            'champion_wins': 0,
+            'total_rounds': None
         }
-        # In SimpleTestCase without DB, endpoint gracefully catches DB error or returns status
         response = self.client.post(
             reverse('colony_record_challenge'),
             data=json.dumps(payload),
             content_type='application/json'
         )
         self.assertIn(response.status_code, [201, 500])
+        if response.status_code == 500:
+            # Must only fail due to SimpleTestCase disallowing DB queries, never TypeError on NoneType
+            err = response.json().get('error', '')
+            self.assertNotIn('NoneType', err)
