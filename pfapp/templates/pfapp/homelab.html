@@ -7,369 +7,424 @@
   <title>Inside the Homelab | Siddharth Hemnani</title>
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
   <style>
-    /* Homelab Visual Architecture */
-    .homelab-container {
-      max-width: 960px;
+    /* --- CHANNEL COLOR SYSTEM --- */
+    :root {
+      --ch-ingress: #0F6E56;
+      --ch-ingress-bg: rgba(15, 110, 86, 0.08);
+      --ch-ingress-border: rgba(15, 110, 86, 0.4);
+
+      --ch-git: #534AB7;
+      --ch-git-bg: rgba(83, 74, 183, 0.08);
+      --ch-git-border: rgba(83, 74, 183, 0.4);
+
+      --ch-admin: #b45309;
+      --ch-admin-bg: rgba(180, 83, 9, 0.08);
+      --ch-admin-border: rgba(180, 83, 9, 0.4);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --ch-ingress: #1D9E75;
+        --ch-ingress-bg: rgba(29, 158, 117, 0.14);
+        --ch-ingress-border: rgba(29, 158, 117, 0.5);
+
+        --ch-git: #9d94ff;
+        --ch-git-bg: rgba(157, 148, 255, 0.14);
+        --ch-git-border: rgba(157, 148, 255, 0.5);
+
+        --ch-admin: #f59e0b;
+        --ch-admin-bg: rgba(245, 158, 11, 0.14);
+        --ch-admin-border: rgba(245, 158, 11, 0.5);
+      }
+    }
+
+    /* --- PAGE CONTAINER --- */
+    .homelab-page {
+      max-width: 1140px;
       margin: 0 auto;
       padding: 40px 24px 80px;
     }
 
+    /* --- HERO --- */
     .hero-homelab {
       text-align: center;
-      margin-bottom: 40px;
+      margin-bottom: 32px;
     }
 
-    .hero-homelab .hero-eyebrow {
+    .hero-eyebrow {
       font-family: var(--font-mono);
-      font-size: 12px;
+      font-size: 11.5px;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: #1D9E75;
+      color: var(--ch-ingress);
       margin-bottom: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    .hero-homelab .hero-name {
-      font-size: 46px;
+    .hero-eyebrow .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--ch-ingress);
+      box-shadow: 0 0 8px var(--ch-ingress);
+    }
+
+    .hero-title {
+      font-size: 42px;
       font-weight: 600;
-      letter-spacing: -0.02em;
-      margin-bottom: 16px;
+      letter-spacing: -0.025em;
+      line-height: 1.15;
+      margin-bottom: 14px;
+      color: var(--text-primary);
     }
 
-    .hero-homelab .hero-name span {
+    .hero-title span {
       color: var(--text-tertiary);
     }
 
-    .hero-homelab .hero-desc {
-      font-size: 16px;
-      line-height: 1.7;
+    .hero-desc {
+      font-size: 15.5px;
+      line-height: 1.65;
       color: var(--text-secondary);
       max-width: 680px;
-      margin: 0 auto 28px;
+      margin: 0 auto;
     }
 
-    /* --- ANIMATED PIPELINE OVERVIEW --- */
-    .pipeline-wrapper {
+    /* --- ARCHITECTURE SCHEMATIC SECTION --- */
+    .schematic-wrapper {
       background: var(--bg-secondary);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
-      padding: 28px 24px;
-      margin-bottom: 48px;
-      position: relative;
-      overflow: hidden;
+      padding: 24px 24px 28px;
+      margin-bottom: 44px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.03);
     }
 
-    .pipeline-title {
+    .schematic-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .schematic-title-group h2 {
+      font-size: 19px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 3px;
+    }
+
+    .schematic-title-group p {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    /* Segmented Channel Buttons */
+    .channel-nav {
+      display: inline-flex;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+      padding: 4px;
+      gap: 3px;
+    }
+
+    .channel-btn {
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .channel-btn .btn-indicator {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--text-tertiary);
+      transition: background 0.2s;
+    }
+
+    .channel-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .channel-btn.active {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+      border: 0.5px solid var(--border);
+    }
+
+    .channel-btn[data-path="all"].active .btn-indicator { background: var(--text-primary); }
+    .channel-btn[data-path="ingress"].active .btn-indicator { background: var(--ch-ingress); }
+    .channel-btn[data-path="git"].active .btn-indicator { background: var(--ch-git); }
+    .channel-btn[data-path="admin"].active .btn-indicator { background: var(--ch-admin); }
+
+    /* Flow Breadcrumb Ribbon */
+    .flow-summary-ribbon {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 10px 16px;
+      margin-bottom: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 12.5px;
+    }
+
+    .flow-summary-title {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .flow-pipeline-track {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      flex-wrap: wrap;
+    }
+
+    .track-step {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: var(--text-primary);
+    }
+
+    .track-arrow {
+      color: var(--text-tertiary);
+      font-size: 9px;
+    }
+
+    /* --- THE SVG DRAWING CANVAS --- */
+    .diagram-canvas-container {
+      width: 100%;
+      overflow-x: auto;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 10px;
+    }
+
+    .architecture-svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      min-width: 980px;
+    }
+
+    /* SVG Zone Enclosures */
+    .svg-zone-box {
+      fill: var(--bg-secondary);
+      stroke: var(--border);
+      stroke-width: 1;
+      stroke-dasharray: 4 4;
+    }
+
+    .svg-host-box {
+      fill: var(--bg-secondary);
+      stroke: var(--border);
+      stroke-width: 1.5;
+    }
+
+    .svg-zone-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      fill: var(--text-tertiary);
+    }
+
+    .svg-host-tag {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      fill: var(--ch-ingress);
+    }
+
+    /* SVG Node Boxes */
+    .svg-node-rect {
+      fill: var(--bg);
+      stroke: var(--border);
+      stroke-width: 1.2;
+      transition: all 0.25s ease;
+    }
+
+    .svg-node-title {
+      font-family: var(--font);
+      font-size: 13.5px;
+      font-weight: 600;
+      fill: var(--text-primary);
+    }
+
+    .svg-node-role {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      fill: var(--text-secondary);
+    }
+
+    .svg-node-badge {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      fill: var(--text-tertiary);
+    }
+
+    /* SVG Connector Cables */
+    .svg-wire {
+      fill: none;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: stroke-opacity 0.25s ease, stroke-width 0.25s ease;
+    }
+
+    .svg-wire.wire-ingress { stroke: var(--ch-ingress); }
+    .svg-wire.wire-git { stroke: var(--ch-git); }
+    .svg-wire.wire-admin { stroke: var(--ch-admin); }
+
+    /* Animated Electrical Pulse Dashes */
+    @keyframes wireDashMove {
+      to {
+        stroke-dashoffset: -28;
+      }
+    }
+
+    .svg-wire.active-pulse {
+      stroke-dasharray: 7 5;
+      stroke-dashoffset: 0;
+      animation: wireDashMove 0.85s linear infinite;
+    }
+
+    /* Wire Label Pills */
+    .svg-wire-label-bg {
+      fill: var(--bg);
+      stroke: var(--border);
+      stroke-width: 0.8;
+      rx: 4;
+      ry: 4;
+    }
+
+    .svg-wire-label-text {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      font-weight: 500;
+      text-anchor: middle;
+      dominant-baseline: middle;
+      fill: var(--text-secondary);
+    }
+
+    .svg-wire-label-text.ingress { fill: var(--ch-ingress); }
+    .svg-wire-label-text.git { fill: var(--ch-git); }
+    .svg-wire-label-text.admin { fill: var(--ch-admin); }
+
+    /* Dimming of inactive channels in SVG */
+    .dimmed-element {
+      opacity: 0.16 !important;
+      transition: opacity 0.25s ease;
+    }
+
+    .highlighted-node rect {
+      stroke-width: 2 !important;
+    }
+
+    .highlighted-node[data-ingress="true"] rect { stroke: var(--ch-ingress) !important; filter: drop-shadow(0 0 6px var(--ch-ingress-bg)); }
+    .highlighted-node[data-git="true"] rect { stroke: var(--ch-git) !important; filter: drop-shadow(0 0 6px var(--ch-git-bg)); }
+    .highlighted-node[data-admin="true"] rect { stroke: var(--ch-admin) !important; filter: drop-shadow(0 0 6px var(--ch-admin-bg)); }
+
+    /* --- GROUNDED TECHNICAL WRITE-UP --- */
+    .technical-writeup {
+      margin-top: 16px;
+    }
+
+    .writeup-heading {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+      letter-spacing: -0.01em;
+    }
+
+    .writeup-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .writeup-entry {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.2s ease;
+    }
+
+    .writeup-entry:hover {
+      border-color: var(--border-hover);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+    }
+
+    .writeup-num {
       font-family: var(--font-mono);
       font-size: 11px;
       letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--text-tertiary);
-      margin-bottom: 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      margin-bottom: 8px;
     }
 
-    .pipeline-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      color: #1D9E75;
-      font-size: 11px;
-    }
-
-    .pipeline-nodes {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: relative;
-      padding: 10px 0;
-    }
-
-    /* Animated continuous connecting line */
-    .pipeline-line {
-      position: absolute;
-      top: 50%;
-      left: 30px;
-      right: 30px;
-      height: 2px;
-      background: var(--border);
-      transform: translateY(-50%);
-      z-index: 1;
-    }
-
-    .pipeline-pulse-line {
-      position: absolute;
-      top: 50%;
-      left: 30px;
-      right: 30px;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, #1D9E75 50%, transparent);
-      transform: translateY(-50%);
-      background-size: 200% 100%;
-      animation: wirePulse 3s linear infinite;
-      z-index: 2;
-    }
-
-    @keyframes wirePulse {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
-
-    .node-item {
-      position: relative;
-      z-index: 3;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      background: var(--bg-secondary);
-      padding: 0 8px;
-    }
-
-    .node-circle {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: var(--bg);
-      border: 1.5px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .writeup-entry h3 {
       font-size: 16px;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    }
-
-    .node-item:hover .node-circle {
-      border-color: #1D9E75;
-      transform: scale(1.1);
-      box-shadow: 0 0 16px rgba(29, 158, 117, 0.3);
-    }
-
-    .node-label {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--text-primary);
-      font-weight: 500;
-      white-space: nowrap;
-    }
-
-    .node-sub {
-      font-family: var(--font-mono);
-      font-size: 9.5px;
-      color: var(--text-tertiary);
-      white-space: nowrap;
-    }
-
-    /* --- ARCHITECTURE STEPS --- */
-    .architecture-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 28px;
-    }
-
-    .step-card {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 32px 36px;
-      position: relative;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .step-card:hover {
-      border-color: var(--border-hover);
-      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.05);
-    }
-
-    .step-number {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--text-tertiary);
-      margin-bottom: 12px;
-      display: block;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-
-    .step-title {
-      font-size: 22px;
       font-weight: 600;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
       color: var(--text-primary);
+      margin-bottom: 12px;
+      line-height: 1.3;
     }
 
-    .step-desc {
-      font-size: 15px;
-      line-height: 1.75;
+    .writeup-entry p {
+      font-size: 13.5px;
+      line-height: 1.65;
       color: var(--text-secondary);
     }
 
-    .tech-pills-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 20px;
+    .writeup-entry strong {
+      color: var(--text-primary);
     }
 
-    .tech-pill {
-      display: inline-block;
-      padding: 4px 12px;
-      background: var(--bg);
-      border: 0.5px solid var(--border);
-      border-radius: 9999px;
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--text-secondary);
-    }
-
-    /* Step connector line */
-    .step-card::after {
-      content: '↓';
-      position: absolute;
-      bottom: -22px;
-      left: 50%;
-      transform: translateX(-50%);
-      color: var(--text-tertiary);
-      font-size: 18px;
-      opacity: 0.4;
-    }
-    .step-card:last-child::after { display: none; }
-
-    /* --- SERVER TELEMETRY VISUAL --- */
-    .server-visual-card {
-      background: #0d0d0c;
-      border: 1px solid #2a2a28;
-      border-radius: var(--radius-md);
-      padding: 24px;
-      margin-top: 24px;
-      font-family: var(--font-mono);
-      font-size: 12.5px;
-      color: #e8e8e4;
-      box-shadow: inset 0 2px 8px rgba(0,0,0,0.5);
-    }
-
-    .server-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 14px;
-      border-bottom: 1px solid #222;
-      margin-bottom: 16px;
-    }
-
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      color: #1D9E75;
-      font-weight: 500;
-    }
-
-    .blink-dot {
-      width: 8px;
-      height: 8px;
-      background: #1D9E75;
-      border-radius: 50%;
-      box-shadow: 0 0 8px #1D9E75;
-      animation: pulse 1.5s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.85); }
-    }
-
-    .telemetry-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 16px;
-      margin-bottom: 18px;
-    }
-
-    .metric-box {
-      background: #161614;
-      border: 1px solid #262624;
-      border-radius: 6px;
-      padding: 12px 14px;
-    }
-
-    .metric-name {
-      font-size: 10.5px;
-      color: #888882;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 4px;
-    }
-
-    .metric-val {
-      font-size: 14px;
-      font-weight: 600;
-      color: #e8e8e4;
-    }
-
-    .meter-bar {
-      width: 100%;
-      height: 4px;
-      background: #282826;
-      border-radius: 2px;
-      margin-top: 8px;
-      overflow: hidden;
-    }
-
-    .meter-fill {
-      height: 100%;
-      background: #1D9E75;
-      border-radius: 2px;
-      transition: width 1s ease;
-    }
-
-    /* Live terminal log stream */
-    .terminal-stream {
-      background: #080807;
-      border: 1px solid #1f1f1d;
-      border-radius: 6px;
-      padding: 12px 14px;
-      font-size: 11px;
-      line-height: 1.7;
-      color: #888882;
-      max-height: 120px;
-      overflow: hidden;
-    }
-
-    .terminal-line {
-      display: flex;
-      gap: 10px;
-    }
-
-    .terminal-time {
-      color: #555550;
-    }
-
-    .terminal-tag {
-      color: #6c63ff;
-    }
-
-    .terminal-tag.ok {
-      color: #1D9E75;
-    }
-
-    @media (max-width: 768px) {
-      .homelab-container { padding: 24px 16px 60px; }
-      .hero-homelab .hero-name { font-size: 34px; }
-      .pipeline-nodes { flex-direction: column; gap: 20px; }
-      .pipeline-line, .pipeline-pulse-line { display: none; }
-      .step-card { padding: 24px; }
-      .step-title { font-size: 19px; }
+    /* --- RESPONSIVE ADJUSTMENTS --- */
+    @media (max-width: 960px) {
+      .hero-title { font-size: 34px; }
+      .writeup-cards-grid { grid-template-columns: 1fr; }
+      .schematic-header { flex-direction: column; align-items: flex-start; }
+      .channel-nav { width: 100%; justify-content: space-between; }
     }
   </style>
 </head>
 <body>
 
+  <!-- Site Navigation -->
   <nav class="nav">
     <a href="{% url 'index' %}" class="nav-logo" style="text-decoration: none;">Siddharth Hemnani</a>
     <ul class="nav-links">
@@ -379,206 +434,397 @@
     </ul>
   </nav>
 
-  <main class="homelab-container">
-    
-    <!-- Hero Header -->
+  <main class="homelab-page">
+
+    <!-- Hero Introduction -->
     <header class="hero-homelab">
-      <p class="hero-eyebrow">Bare-Metal Infrastructure</p>
-      <h1 class="hero-name">Inside the <span>Homelab.</span></h1>
+      <div class="hero-eyebrow">
+        <span class="pulse-dot"></span>
+        <span>Bare-Metal Infrastructure</span>
+      </div>
+      <h1 class="hero-title">Inside the <span>Homelab.</span></h1>
       <p class="hero-desc">
-        Tracing the path from a line of code in Paderborn to a live production packet served from a repurposed Ubuntu laptop server on my desk.
+        A single-glance look at how this portfolio is hosted on a quiet, bare-metal laptop server in Paderborn—serving live traffic with zero inbound open ports.
       </p>
     </header>
 
-    <!-- Animated Data Pipeline Diagram -->
-    <section class="pipeline-wrapper">
-      <div class="pipeline-title">
-        <span>Continuous Delivery & Ingress Pipeline</span>
-        <span class="pipeline-status"><span class="blink-dot"></span> LIVE TOPOLOGY</span>
+    <!-- Architecture Schematic Section -->
+    <section class="schematic-wrapper" aria-label="Homelab Architecture Schematic">
+      
+      <div class="schematic-header">
+        <div class="schematic-title-group">
+          <h2>Topology &amp; Channels</h2>
+          <p>Click a channel to trace its end-to-end path through the infrastructure.</p>
+        </div>
+
+        <!-- Channel Filter Controls -->
+        <div class="channel-nav" role="tablist" aria-label="Traffic Channel Filter">
+          <button type="button" class="channel-btn active" data-path="all" role="tab" aria-selected="true">
+            <span class="btn-indicator"></span>
+            All Channels
+          </button>
+          <button type="button" class="channel-btn" data-path="ingress" role="tab" aria-selected="false">
+            <span class="btn-indicator"></span>
+            Visitor Ingress
+          </button>
+          <button type="button" class="channel-btn" data-path="git" role="tab" aria-selected="false">
+            <span class="btn-indicator"></span>
+            Git Auto-Deploy
+          </button>
+          <button type="button" class="channel-btn" data-path="admin" role="tab" aria-selected="false">
+            <span class="btn-indicator"></span>
+            Remote Admin
+          </button>
+        </div>
       </div>
 
-      <div class="pipeline-nodes">
-        <div class="pipeline-line"></div>
-        <div class="pipeline-pulse-line"></div>
-
-        <div class="node-item">
-          <div class="node-circle">💻</div>
-          <span class="node-label">Local Dev</span>
-          <span class="node-sub">git push</span>
+      <!-- Flow Summary Banner -->
+      <div class="flow-summary-ribbon" id="flow-ribbon">
+        <div class="flow-summary-title" id="flow-title">
+          All Channels: Overview of web traffic, deployment triggers, and management access.
         </div>
-
-        <div class="node-item">
-          <div class="node-circle">🐙</div>
-          <span class="node-label">GitHub</span>
-          <span class="node-sub">webhook hook</span>
+        <div class="flow-pipeline-track" id="flow-track">
+          <span class="track-step">Clients</span>
+          <span class="track-arrow">→</span>
+          <span class="track-step">Cloud Edge</span>
+          <span class="track-arrow">→</span>
+          <span class="track-step">Outbound Tunnel</span>
+          <span class="track-arrow">→</span>
+          <span class="track-step">Homelab Services</span>
         </div>
+      </div>
 
-        <div class="node-item">
-          <div class="node-circle">☁️</div>
-          <span class="node-label">Cloudflare</span>
-          <span class="node-sub">Zero Trust Tunnel</span>
-        </div>
+      <!-- THE ARCHITECTURE DIAGRAM DRAWING (SVG) -->
+      <div class="diagram-canvas-container">
+        <svg class="architecture-svg" viewBox="0 0 1080 580" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Interactive Homelab Architecture Schematic Diagram">
+          
+          <defs>
+            <!-- Arrowhead Markers -->
+            <marker id="arrow-ingress" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#0F6E56" />
+            </marker>
+            <marker id="arrow-git" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#534AB7" />
+            </marker>
+            <marker id="arrow-admin" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#b45309" />
+            </marker>
+          </defs>
 
-        <div class="node-item">
-          <div class="node-circle">🚀</div>
-          <span class="node-label">Coolify</span>
-          <span class="node-sub">Nixpacks Build</span>
-        </div>
+          <!-- ========================================== -->
+          <!-- ZONE 1: CLIENTS & SOURCES -->
+          <!-- ========================================== -->
+          <rect class="svg-zone-box" x="20" y="25" width="245" height="530" rx="10" />
+          <text class="svg-zone-label" x="35" y="52">01. Clients &amp; Sources</text>
 
-        <div class="node-item">
-          <div class="node-circle" style="border-color: #1D9E75;">⚡</div>
-          <span class="node-label">Bare Metal</span>
-          <span class="node-sub">Lenovo Legion Y540</span>
-        </div>
+          <!-- Node 1: Public Visitors -->
+          <g class="svg-node" id="node-visitors" data-ingress="true">
+            <rect class="svg-node-rect" x="35" y="75" width="215" height="85" rx="8" />
+            <text class="svg-node-title" x="52" y="108">🌐 Public Visitors</text>
+            <text class="svg-node-role" x="52" y="128">Web Browsers · HTTPS</text>
+            <text class="svg-node-badge" x="52" y="145">TLS 1.3 · Port 443</text>
+          </g>
+
+          <!-- Node 2: Dev Workstation -->
+          <g class="svg-node" id="node-dev" data-git="true" data-admin="true">
+            <rect class="svg-node-rect" x="35" y="235" width="215" height="90" rx="8" />
+            <text class="svg-node-title" x="52" y="268">💻 Dev Workstation</text>
+            <text class="svg-node-role" x="52" y="288">Local Workstation</text>
+            <text class="svg-node-badge" x="52" y="306">Git CLI &amp; Terminal SSH</text>
+          </g>
+
+          <!-- Node 3: GitHub Repo -->
+          <g class="svg-node" id="node-github" data-git="true">
+            <rect class="svg-node-rect" x="35" y="415" width="215" height="85" rx="8" />
+            <text class="svg-node-title" x="52" y="448">🐙 GitHub Repository</text>
+            <text class="svg-node-role" x="52" y="468">Source &amp; Webhook CI</text>
+            <text class="svg-node-badge" x="52" y="486">main branch · HMAC Signed</text>
+          </g>
+
+          <!-- ========================================== -->
+          <!-- ZONE 2: CLOUD EDGE & PERIMETER -->
+          <!-- ========================================== -->
+          <rect class="svg-zone-box" x="295" y="25" width="270" height="530" rx="10" />
+          <text class="svg-zone-label" x="312" y="52">02. Cloud Edge &amp; Perimeter</text>
+
+          <!-- Node 4: Cloudflare Edge -->
+          <g class="svg-node" id="node-cloudflare" data-ingress="true" data-admin="true">
+            <rect class="svg-node-rect" x="315" y="75" width="230" height="95" rx="8" />
+            <text class="svg-node-title" x="332" y="108">🛡️ Cloudflare Edge</text>
+            <text class="svg-node-role" x="332" y="128">Anycast CDN &amp; DNS</text>
+            <text class="svg-node-badge" x="332" y="146">DDoS Shield &amp; TLS Edge</text>
+          </g>
+
+          <!-- Node 5: Outbound Tunnel -->
+          <g class="svg-node" id="node-tunnel" data-ingress="true" data-git="true" data-admin="true">
+            <rect class="svg-node-rect" x="315" y="315" width="230" height="105" rx="8" />
+            <text class="svg-node-title" x="332" y="348">⚡ Outbound Tunnel</text>
+            <text class="svg-node-role" x="332" y="368">Zero-Trust Bridge (cloudflared)</text>
+            <text class="svg-node-badge" x="332" y="386" fill="#0F6E56" font-weight="600">Zero Open Ports · Outbound Only</text>
+            <text class="svg-node-badge" x="332" y="403">Encrypted UDP/QUIC Streams</text>
+          </g>
+
+          <!-- ========================================== -->
+          <!-- ZONE 3: PRIVATE HOMELAB HOST -->
+          <!-- ========================================== -->
+          <rect class="svg-host-box" x="595" y="25" width="465" height="530" rx="12" />
+          <text class="svg-zone-label" x="615" y="52">03. Homelab Host</text>
+          <text class="svg-host-tag" x="850" y="52">Lenovo Laptop · Default-Deny UFW</text>
+
+          <!-- Node 6: Traefik Proxy -->
+          <g class="svg-node" id="node-traefik" data-ingress="true" data-git="true">
+            <rect class="svg-node-rect" x="620" y="85" width="200" height="85" rx="8" />
+            <text class="svg-node-title" x="637" y="118">🔀 Traefik Proxy</text>
+            <text class="svg-node-role" x="637" y="138">Internal Reverse Router</text>
+            <text class="svg-node-badge" x="637" y="155">Zero-Downtime Traffic Swap</text>
+          </g>
+
+          <!-- Node 7: Coolify Engine -->
+          <g class="svg-node" id="node-coolify" data-git="true" data-admin="true">
+            <rect class="svg-node-rect" x="845" y="85" width="195" height="85" rx="8" />
+            <text class="svg-node-title" x="862" y="118">⚙️ Coolify Engine</text>
+            <text class="svg-node-role" x="862" y="138">Automated PaaS &amp; Builds</text>
+            <text class="svg-node-badge" x="862" y="155">Nixpacks · Localhost Control</text>
+          </g>
+
+          <!-- Node 8: Django App -->
+          <g class="svg-node" id="node-django" data-ingress="true" data-git="true">
+            <rect class="svg-node-rect" x="620" y="325" width="200" height="95" rx="8" />
+            <text class="svg-node-title" x="637" y="358">📦 Django App</text>
+            <text class="svg-node-role" x="637" y="378">Application Container</text>
+            <text class="svg-node-badge" x="637" y="396">Gunicorn WSGI · Python 3.12</text>
+          </g>
+
+          <!-- Node 9: PostgreSQL 16 -->
+          <g class="svg-node" id="node-db" data-ingress="true">
+            <rect class="svg-node-rect" x="845" y="325" width="195" height="95" rx="8" />
+            <text class="svg-node-title" x="862" y="358">🗄️ PostgreSQL 16</text>
+            <text class="svg-node-role" x="862" y="378">Relational Database</text>
+            <text class="svg-node-badge" x="862" y="396">Persistent Host Storage</text>
+          </g>
+
+          <!-- ========================================== -->
+          <!-- CONNECTING WIRES & ARROWS (THE DRAWING) -->
+          <!-- ========================================== -->
+
+          <!-- 1. VISITOR INGRESS CABLES (GREEN) -->
+          <g class="svg-channel-cables" id="wires-ingress">
+            
+            <!-- Wire V1: Visitors -> Cloudflare Edge -->
+            <path class="svg-wire wire-ingress active-pulse" d="M 250 117 L 315 117" marker-end="url(#arrow-ingress)" />
+            <rect class="svg-wire-label-bg" x="260" y="105" width="45" height="16" />
+            <text class="svg-wire-label-text ingress" x="282" y="113">HTTPS</text>
+
+            <!-- Wire V2: Cloudflare Edge -> Outbound Tunnel -->
+            <path class="svg-wire wire-ingress active-pulse" d="M 430 170 L 430 315" marker-end="url(#arrow-ingress)" />
+            <rect class="svg-wire-label-bg" x="402" y="235" width="56" height="16" />
+            <text class="svg-wire-label-text ingress" x="430" y="243">Edge Proxy</text>
+
+            <!-- Wire V3: Outbound Tunnel -> Traefik Proxy -->
+            <path class="svg-wire wire-ingress active-pulse" d="M 545 350 C 585 350, 585 127, 620 127" marker-end="url(#arrow-ingress)" />
+            <rect class="svg-wire-label-bg" x="552" y="205" width="64" height="16" />
+            <text class="svg-wire-label-text ingress" x="584" y="213">Tunnel Ingress</text>
+
+            <!-- Wire V4: Traefik Proxy -> Django App -->
+            <path class="svg-wire wire-ingress active-pulse" d="M 720 170 L 720 325" marker-end="url(#arrow-ingress)" />
+            <rect class="svg-wire-label-bg" x="692" y="235" width="56" height="16" />
+            <text class="svg-wire-label-text ingress" x="720" y="243">HTTP Route</text>
+
+            <!-- Wire V5: Django App -> PostgreSQL -->
+            <path class="svg-wire wire-ingress active-pulse" d="M 820 372 L 845 372" marker-end="url(#arrow-ingress)" />
+            <rect class="svg-wire-label-bg" x="817" y="354" width="30" height="14" />
+            <text class="svg-wire-label-text ingress" x="832" y="361">SQL</text>
+          </g>
+
+          <!-- 2. GIT AUTO-DEPLOY CABLES (PURPLE) -->
+          <g class="svg-channel-cables" id="wires-git">
+            
+            <!-- Wire G1: Dev Workstation -> GitHub -->
+            <path class="svg-wire wire-git active-pulse" d="M 142 325 L 142 415" marker-end="url(#arrow-git)" />
+            <rect class="svg-wire-label-bg" x="117" y="362" width="50" height="16" />
+            <text class="svg-wire-label-text git" x="142" y="370">git push</text>
+
+            <!-- Wire G2: GitHub -> Outbound Tunnel -->
+            <path class="svg-wire wire-git active-pulse" d="M 250 457 C 285 457, 285 390, 315 390" marker-end="url(#arrow-git)" />
+            <rect class="svg-wire-label-bg" x="257" y="415" width="50" height="16" />
+            <text class="svg-wire-label-text git" x="282" y="423">Webhook</text>
+
+            <!-- Wire G3: Outbound Tunnel -> Coolify Engine -->
+            <path class="svg-wire wire-git active-pulse" d="M 545 385 C 620 385, 780 230, 845 140" marker-end="url(#arrow-git)" />
+            <rect class="svg-wire-label-bg" x="680" y="280" width="56" height="16" />
+            <text class="svg-wire-label-text git" x="708" y="288">CI Trigger</text>
+
+            <!-- Wire G4: Coolify Engine -> Django App -->
+            <path class="svg-wire wire-git active-pulse" d="M 885 170 C 885 240, 780 260, 780 325" marker-end="url(#arrow-git)" />
+            <rect class="svg-wire-label-bg" x="800" y="240" width="68" height="16" />
+            <text class="svg-wire-label-text git" x="834" y="248">Nixpacks Swap</text>
+          </g>
+
+          <!-- 3. REMOTE ADMIN CABLES (AMBER) -->
+          <g class="svg-channel-cables" id="wires-admin">
+            
+            <!-- Wire A1: Dev Workstation -> Cloudflare Edge -->
+            <path class="svg-wire wire-admin active-pulse" d="M 250 270 C 285 270, 285 145, 315 145" marker-end="url(#arrow-admin)" />
+            <rect class="svg-wire-label-bg" x="255" y="195" width="54" height="16" />
+            <text class="svg-wire-label-text admin" x="282" y="203">SSH Access</text>
+
+            <!-- Wire A2: Cloudflare Edge -> Outbound Tunnel -->
+            <path class="svg-wire wire-admin active-pulse" d="M 450 170 L 450 315" marker-end="url(#arrow-admin)" />
+            <rect class="svg-wire-label-bg" x="455" y="235" width="48" height="16" />
+            <text class="svg-wire-label-text admin" x="479" y="243">ZT Tunnel</text>
+
+            <!-- Wire A3: Outbound Tunnel -> Coolify Localhost -->
+            <path class="svg-wire wire-admin active-pulse" d="M 545 365 C 640 365, 760 120, 845 110" marker-end="url(#arrow-admin)" />
+            <rect class="svg-wire-label-bg" x="680" y="150" width="70" height="16" />
+            <text class="svg-wire-label-text admin" x="715" y="158">Localhost Plane</text>
+          </g>
+
+        </svg>
+      </div>
+
+    </section>
+
+    <!-- Relevant Technical Details (Grounded & Simple Write-up) -->
+    <section class="technical-writeup" aria-label="Technical Details">
+      <h2 class="writeup-heading">Technical Overview &amp; Design Decisions</h2>
+
+      <div class="writeup-cards-grid">
+        
+        <!-- Section 1 -->
+        <article class="writeup-entry">
+          <span class="writeup-num">01. Bare-Metal Host &amp; Efficiency</span>
+          <h3>Repurposed Hardware</h3>
+          <p>
+            Running on a headless Lenovo laptop with Ubuntu 24.04 provides a quiet, energy-efficient server drawing under 20W at idle. The integrated battery acts as a natural mini-UPS, buffering momentary power drops and preventing database corruption without extra rack hardware.
+          </p>
+        </article>
+
+        <!-- Section 2 -->
+        <article class="writeup-entry">
+          <span class="writeup-num">02. Zero-Inbound Network Security</span>
+          <h3>Zero Open Ports</h3>
+          <p>
+            Residential broadband uses dynamic IPs behind consumer NAT. Rather than opening firewall ports or port-forwarding, the host maintains an outbound-only encrypted tunnel to Cloudflare. The local firewall drops all unsolicited inbound traffic. Admin interfaces bind strictly to localhost and are never exposed publicly.
+          </p>
+        </article>
+
+        <!-- Section 3 -->
+        <article class="writeup-entry">
+          <span class="writeup-num">03. Automated CI/CD &amp; Storage Resilience</span>
+          <h3>Git Automation &amp; Persistence</h3>
+          <p>
+            Commits pushed to GitHub dispatch encrypted webhooks to the local deployment engine, which compiles reproducible container images and signals the reverse proxy to swap traffic with zero downtime. Relational data is mapped to persistent host volumes, separating app updates from database storage.
+          </p>
+        </article>
+
       </div>
     </section>
 
-    <!-- Architecture Phase Breakdown -->
-    <div class="architecture-grid">
-      
-      <!-- Phase 1 -->
-      <article class="step-card">
-        <span class="step-number">Phase 01: Code Origin & Trigger</span>
-        <h2 class="step-title">Local Development & Git Webhooks</h2>
-        <p class="step-desc">
-          Code is authored and validated locally. A single <code>git push origin main</code> executes an atomic push to GitHub. Instead of complex external CI runner bills, GitHub immediately broadcasts an encrypted webhook payload to my self-hosted deployment daemon.
-        </p>
-        <div class="tech-pills-row">
-          <span class="tech-pill">Django 5.0</span>
-          <span class="tech-pill">Git Hooks</span>
-          <span class="tech-pill">HMAC SHA-256 Webhook</span>
-        </div>
-      </article>
-
-      <!-- Phase 2 -->
-      <article class="step-card">
-        <span class="step-number">Phase 02: Ingress & Perimeter Security</span>
-        <h2 class="step-title">Cloudflare Zero Trust Tunnel</h2>
-        <p class="step-desc">
-          The domain <code>oldisserving.live</code> connects without opening any inbound ports on my residential router. A background <strong>Cloudflare Tunnel daemon (cloudflared)</strong> establishes four redundant, persistent outbound TCP/QUIC connections to Cloudflare edge data centers. All inbound web requests pass through Cloudflare DDoS filtering and WAF rules before flowing through this private pipe.
-        </p>
-        <div class="tech-pills-row">
-          <span class="tech-pill">Argo Smart Routing</span>
-          <span class="tech-pill">Zero Inbound Open Ports</span>
-          <span class="tech-pill">TLS Termination</span>
-          <span class="tech-pill">DDoS Shield</span>
-        </div>
-      </article>
-
-      <!-- Phase 3 -->
-      <article class="step-card">
-        <span class="step-number">Phase 03: Self-Hosted PaaS Automation</span>
-        <h2 class="step-title">Coolify Engine & Container Orchestration</h2>
-        <p class="step-desc">
-          Coolify runs locally as an open-source alternative to Heroku or Render. Upon receiving the GitHub webhook, it pulls the repository diff, analyzes the dependency tree, and builds a fresh, reproducible Nixpacks container image. Traefik automatically routes traffic to the newly spun container with zero-downtime rolling deploys.
-        </p>
-        <div class="tech-pills-row">
-          <span class="tech-pill">Coolify PaaS</span>
-          <span class="tech-pill">Docker Engine</span>
-          <span class="tech-pill">Nixpacks</span>
-          <span class="tech-pill">Traefik Reverse Proxy</span>
-        </div>
-      </article>
-
-      <!-- Phase 4 -->
-      <article class="step-card" style="border-color: #1D9E75;">
-        <span class="step-number">Phase 04: The Physical Host</span>
-        <h2 class="step-title">Lenovo Legion Y540 Bare-Metal Server</h2>
-        <p class="step-desc">
-          The final destination. An old gaming laptop repurposed into a headless Linux server running Ubuntu 24.04 LTS on my desk in Paderborn. It handles the Django application process, persistent PostgreSQL database, and reverse proxy 24 hours a day with complete local data sovereignty.
-        </p>
-        
-        <div class="server-visual-card">
-          <div class="server-header">
-            <span class="status-badge"><span class="blink-dot"></span> HOST ONLINE · PADERBORN, GERMANY</span>
-            <span style="color: #888882; font-size: 11px;">siddharth-lenovo-legion</span>
-          </div>
-
-          <div class="telemetry-grid">
-            <div class="metric-box">
-              <div class="metric-name">CPU Load (i7-9750H)</div>
-              <div class="metric-val" id="telemetry-cpu">12.4%</div>
-              <div class="meter-bar"><div class="meter-fill" id="telemetry-cpu-bar" style="width: 12.4%;"></div></div>
-            </div>
-
-            <div class="metric-box">
-              <div class="metric-name">RAM Consumption</div>
-              <div class="metric-val">2.8 GB / 16 GB</div>
-              <div class="meter-bar"><div class="meter-fill" style="width: 17.5%;"></div></div>
-            </div>
-
-            <div class="metric-box">
-              <div class="metric-name">Ingress Latency</div>
-              <div class="metric-val">~14 ms</div>
-              <div class="meter-bar"><div class="meter-fill" style="width: 25%;"></div></div>
-            </div>
-
-            <div class="metric-box">
-              <div class="metric-name">Server Uptime</div>
-              <div class="metric-val" id="telemetry-uptime">4d 14h 28m</div>
-              <div class="meter-bar"><div class="meter-fill" style="width: 85%;"></div></div>
-            </div>
-          </div>
-
-          <!-- Live Terminal Output Stream -->
-          <div class="terminal-stream" id="terminal-stream">
-            <div class="terminal-line"><span class="terminal-time">[12:04:18]</span> <span class="terminal-tag ok">[traefik]</span> HTTP/2 GET 200 / - 14ms</div>
-            <div class="terminal-line"><span class="terminal-time">[12:04:22]</span> <span class="terminal-tag">[cloudflared]</span> 4 connections active to edge FRA</div>
-            <div class="terminal-line"><span class="terminal-time">[12:04:30]</span> <span class="terminal-tag ok">[coolify-daemon]</span> container health check passed (0 restarts)</div>
-            <div class="terminal-line"><span class="terminal-time">[12:04:45]</span> <span class="terminal-tag">[postgresql]</span> persistent volume synced (fsync: ok)</div>
-          </div>
-        </div>
-
-        <div class="tech-pills-row">
-          <span class="tech-pill">Ubuntu 24.04 LTS</span>
-          <span class="tech-pill">Intel i7-9750H</span>
-          <span class="tech-pill">PostgreSQL 16</span>
-          <span class="tech-pill">Headless Linux</span>
-        </div>
-      </article>
-
-    </div>
-
   </main>
 
-  <div class="divider"></div>
-
+  <!-- Credit Footer -->
   <footer class="credit-footer">
-    <p style="opacity: 0.7;">Engineered & Hosted on Bare Metal · Paderborn, Germany</p>
+    <p style="opacity: 0.7;">Engineered &amp; Hosted on Bare Metal · Paderborn, Germany</p>
     <p style="margin-top: 8px; opacity: 0.4;">&copy; 2026 Siddharth Hemnani · M.Sc. Computer Science</p>
   </footer>
 
+  <!-- Interactive Path Highlighting Script -->
   <script>
-    // Live subtle telemetry animation
-    let seconds = 28;
-    let minutes = 14;
-    let hours = 14;
-    let days = 4;
+    (function() {
+      const CHANNELS = {
+        'all': {
+          title: 'All Channels: Complete topology showing visitor web ingress, Git CI/CD webhook deployments, and encrypted administration.',
+          steps: ['Clients & Sources', 'Cloud Edge', 'Outbound Tunnel', 'Homelab Services']
+        },
+        'ingress': {
+          title: 'Visitor Ingress: Public Browser → Cloudflare Edge → Encrypted Tunnel → Traefik Proxy → Django App → PostgreSQL',
+          steps: ['Visitor Browser', 'Cloudflare Edge', 'Outbound Tunnel', 'Traefik Proxy', 'Django App', 'PostgreSQL']
+        },
+        'git': {
+          title: 'Git Auto-Deploy: Dev Workstation → GitHub Webhook → Outbound Tunnel → Coolify Engine → Container Swap',
+          steps: ['Dev Workstation', 'GitHub Push', 'Outbound Tunnel', 'Coolify Engine', 'App Container']
+        },
+        'admin': {
+          title: 'Remote Admin: Authenticated Terminal → Zero-Trust Gateway → Outbound Tunnel → Localhost Management Plane',
+          steps: ['Dev Workstation', 'Cloudflare Access', 'Outbound Tunnel', 'Host Localhost']
+        }
+      };
 
-    setInterval(() => {
-      seconds++;
-      if (seconds >= 60) {
-        seconds = 0;
-        minutes++;
-        if (minutes >= 60) {
-          minutes = 0;
-          hours++;
+      const buttons = document.querySelectorAll('.channel-btn');
+      const titleEl = document.getElementById('flow-title');
+      const trackEl = document.getElementById('flow-track');
+
+      const allNodes = document.querySelectorAll('.svg-node');
+      const wireGroups = {
+        'ingress': document.getElementById('wires-ingress'),
+        'git': document.getElementById('wires-git'),
+        'admin': document.getElementById('wires-admin')
+      };
+
+      function setChannel(channelKey) {
+        if (!CHANNELS[channelKey]) return;
+
+        // 1. Update button states
+        buttons.forEach(btn => {
+          const isActive = btn.getAttribute('data-path') === channelKey;
+          btn.classList.toggle('active', isActive);
+          btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        });
+
+        // 2. Update context ribbon
+        const info = CHANNELS[channelKey];
+        if (titleEl) titleEl.textContent = info.title;
+
+        if (trackEl) {
+          trackEl.innerHTML = '';
+          info.steps.forEach((step, idx) => {
+            const stepEl = document.createElement('span');
+            stepEl.className = 'track-step';
+            stepEl.textContent = step;
+            trackEl.appendChild(stepEl);
+
+            if (idx < info.steps.length - 1) {
+              const arrowEl = document.createElement('span');
+              arrowEl.className = 'track-arrow';
+              arrowEl.textContent = '→';
+              trackEl.appendChild(arrowEl);
+            }
+          });
+        }
+
+        // 3. Update SVG wires & nodes
+        if (channelKey === 'all') {
+          // Show all wires and nodes in normal state
+          Object.values(wireGroups).forEach(group => {
+            if (group) group.classList.remove('dimmed-element');
+          });
+          allNodes.forEach(node => {
+            node.classList.remove('dimmed-element', 'highlighted-node');
+          });
+        } else {
+          // Dim inactive wire groups and highlight active wire group
+          Object.entries(wireGroups).forEach(([key, group]) => {
+            if (group) {
+              group.classList.toggle('dimmed-element', key !== channelKey);
+            }
+          });
+
+          // Dim inactive nodes and illuminate active nodes
+          allNodes.forEach(node => {
+            const isRelevant = node.getAttribute(`data-${channelKey}`) === 'true';
+            node.classList.toggle('dimmed-element', !isRelevant);
+            node.classList.toggle('highlighted-node', isRelevant);
+          });
         }
       }
-      const uptimeEl = document.getElementById('telemetry-uptime');
-      if (uptimeEl) {
-        uptimeEl.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-      }
 
-      // Small realistic CPU oscillation (9% - 15%)
-      const cpuVal = (10 + Math.random() * 5).toFixed(1);
-      const cpuEl = document.getElementById('telemetry-cpu');
-      const cpuBar = document.getElementById('telemetry-cpu-bar');
-      if (cpuEl && cpuBar) {
-        cpuEl.textContent = `${cpuVal}%`;
-        cpuBar.style.width = `${cpuVal}%`;
-      }
-    }, 1000);
+      buttons.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const path = this.getAttribute('data-path');
+          setChannel(path);
+        });
+      });
+    })();
   </script>
 </body>
 </html>

@@ -26,7 +26,7 @@
       <li><a href="{% url 'projects' %}">projects</a></li>
       <li><a href="{% url 'colony_playground' %}">colony ai</a></li>
       <li><a href="{% url 'faq' %}">germany faq</a></li>
-      <li><a href="#">github</a></li>
+      <li><a href="{% url 'homelab' %}">homelab</a></li>
     </ul>
   </nav>
 
@@ -44,13 +44,13 @@
       <p class="section-label" style="margin-bottom: 12px;">what you'll find here</p>
       <a href="{% url 'colony_playground' %}" class="card interactive">
         <div class="card-content">
-          <div class="card-icon" style="background: rgba(0, 255, 255, 0.15);">
+          <div class="card-icon" style="background: rgba(83, 74, 183, 0.12);">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M8 2L14 5.5V10.5L8 14L2 10.5V5.5L8 2Z" stroke="#00aaaa" stroke-width="1.2"/>
+              <path d="M8 2L14 5.5V10.5L8 14L2 10.5V5.5L8 2Z" stroke="#534AB7" stroke-width="1.2"/>
             </svg>
           </div>
           <p class="card-title">Colony: One AI</p>
-          <p class="card-desc">Cloudfight champion model, MCTS referee & interactive arena.</p>
+          <p class="card-desc">Cloudfight champion model, MCTS referee & interactive game.</p>
         </div>
       </a>
       <a href="{% url 'projects' %}" class="card interactive">

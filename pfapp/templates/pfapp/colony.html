@@ -4,36 +4,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Colony: One — Level 5 Champion AI Playground | Siddharth Hemnani</title>
+  <title>Colony: One — Level 5 Champion AI | Siddharth Hemnani</title>
   
   <meta name="csrf-token" content="{{ csrf_token }}">
   
   <!-- Portfolio Base Stylesheet -->
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-  <!-- Colony Cyberpunk Theme Stylesheet -->
+  <!-- Minimalist Colony Stylesheet -->
   <link rel="stylesheet" href="{% static 'css/colony.css' %}">
 
-  <!-- ONNX Runtime Web (WASM / WebGL Engine) -->
+  <!-- ONNX Runtime Web (WASM Client Engine) -->
   <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.19.0/dist/ort.min.js"></script>
 
-  <!-- Colony Playground ES6 Modules -->
+  <!-- ES6 Modules Entrypoint -->
   <script type="module" src="{% static 'js/colony/ui.js' %}"></script>
 </head>
-<body class="colony-theme">
+<body>
 
-  <!-- Portfolio Navigation Bar -->
+  <!-- Navigation Bar -->
   <nav class="nav">
-    <a href="{% url 'index' %}" class="nav-logo" style="color: #e2e8f0; text-decoration: none;">Siddharth Hemnani</a>
+    <a href="{% url 'index' %}" class="nav-logo" style="text-decoration: none;">Siddharth Hemnani</a>
     <ul class="nav-links">
-      <li><a href="{% url 'projects' %}">Projects</a></li>
-      <li><a href="{% url 'colony_playground' %}" style="color: var(--cy-cyan); font-weight: 600;">Colony: One</a></li>
-      <li><a href="{% url 'homelab' %}">Homelab</a></li>
-      <li><a href="{% url 'faq' %}">FAQ</a></li>
+      <li><a href="{% url 'projects' %}">projects</a></li>
+      <li><a href="{% url 'colony_playground' %}" style="color: var(--text-primary); font-weight: 500;">colony ai</a></li>
+      <li><a href="{% url 'faq' %}">germany faq</a></li>
+      <li><a href="{% url 'homelab' %}">homelab</a></li>
     </ul>
   </nav>
 
-  <div class="colony-container">
-    <!-- Breadcrumb Back Nav -->
+  <main class="colony-page-container">
+    
+    <!-- Back Navigation -->
     <div class="colony-back-nav">
       <a href="{% url 'projects' %}" class="colony-back-link">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
@@ -41,487 +42,261 @@
       </a>
     </div>
 
-    <!-- Hero Header -->
+    <!-- Clean Editorial Hero Header -->
     <header class="colony-hero">
       <div class="colony-eyebrow">
-        <span>⚡ Cloudfight Coding Contest</span>
-        <span>•</span>
-        <span>Level 5 Champion AI</span>
+        <span class="pulse-dot"></span>
+        <span>Cloudfight Coding Contest · Level 5 Champion AI</span>
       </div>
-      <h1 class="colony-title">Colony: One</h1>
+      <h1 class="colony-title">Colony: <span>One</span></h1>
       <p class="colony-subtitle">
-        A 2-action deep tactical grid game. Play head-to-head against Siddharth's Level 5 Gen 9 Champion ONNX model, upload your own model to test its strength, or run automated tournaments in the arena with live Elo ratings.
+        A deep, 2-action tactical strategy game. Play directly against my Generation 9 AlphaZero model running client-side inside your browser via WebAssembly, or watch official tournament game replays.
       </p>
 
-      <!-- Live Database Community Match Counter -->
-      <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; font-family: var(--cy-font-mono); font-size: 12px; color: #94a3b8;">
-        <span class="hud-item" style="padding: 6px 14px;">PostgreSQL Matches: <strong id="db-total-matches" style="color: #fff;">{{ total_matches }}</strong></span>
-        <span class="hud-item" style="padding: 6px 14px;">Human Wins: <strong id="db-human-wins" style="color: var(--cy-safe);">{{ player_wins }}</strong></span>
-        <span class="hud-item" style="padding: 6px 14px;">AI Victories: <strong id="db-ai-wins" style="color: var(--cy-magenta);">{{ ai_wins }}</strong></span>
-      </div>
-
-      <div class="btn-row" style="justify-content: center; margin-top: 10px;">
-        <button id="btn-open-upload-modal" class="btn-colony btn-colony-primary">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
-          Upload Your .ONNX Model
-        </button>
-        <button class="btn-colony" onclick="document.querySelector('.tab-btn[data-tab=\'rules\']').click()">
+      <div class="hero-actions-bar">
+        <button id="btn-open-guide-modal" class="btn-guide-pill" type="button">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
-          Rules & Lore
+          How to Play (30s Visual Guide)
+        </button>
+        <button id="btn-reset-game-hero" class="btn-ctrl" type="button">
+          New Game
         </button>
       </div>
     </header>
 
-    <!-- Playground Tabs -->
-    <div class="colony-tabs-bar">
-      <button class="tab-btn active" data-tab="play">
-        <span>🎮</span> Play vs AI
-      </button>
-      <button class="tab-btn" data-tab="arena">
-        <span>⚔️</span> Model Arena
-      </button>
-      <button class="tab-btn" data-tab="leaderboard">
-        <span>🏆</span> Tournament Leaderboard
-      </button>
-      <button class="tab-btn" data-tab="replays">
-        <span>📼</span> Contest Replays
-      </button>
-      <button class="tab-btn" data-tab="rules">
-        <span>📖</span> Rules & Mechanics
-      </button>
-    </div>
-
-    <!-- Live Match Activity Ticker -->
-    <div class="colony-ticker-bar">
-      <div class="ticker-pulse">● LIVE CONTEST MATCHES</div>
-      <div class="ticker-scroller">
-        <span class="ticker-item">⚡ Match #18442: <strong style="color:var(--cy-cyan);">Kernel-76 (Siddharth)</strong> defeated CyberVortex_v4 (+16 Elo) • 2m ago</span>
-        <span class="ticker-item">⚔️ Match #18441: ZeroExploit defeated TraceSniper (+12 Elo) • 7m ago</span>
-        <span class="ticker-item">🛡️ Match #18440: NeuralColony_L5 defeated PingMaster_99 (+19 Elo) • 14m ago</span>
-        <span class="ticker-item">🔥 Match #18439: DeepDaemon_Bot drew against KernelGuard_L3 (+0 Elo) • 22m ago</span>
-        <span class="ticker-item">🏆 Match #18438: <strong style="color:var(--cy-cyan);">Kernel-76 (Siddharth)</strong> won by Bare-Kernel Center Rule (+14 Elo) • 29m ago</span>
+    <!-- Dynamic In-Game Action Coach Prompt Bar -->
+    <section class="action-coach-banner" aria-live="polite">
+      <div class="coach-status-group">
+        <span id="turn-badge" class="turn-pill blue">Your Move</span>
+        <span id="coach-message" class="coach-message">Action 1 of 2: Select a piece to see where it can move or shoot.</span>
       </div>
-    </div>
 
+      <div class="coach-meta-group">
+        <span id="game-round-label">Round 1</span>
+        <span>•</span>
+        <span id="firewall-status-label" class="firewall-indicator">
+          <span>🔥</span> Next Firewall: Round 8
+        </span>
+      </div>
+    </section>
 
-    <!-- TAB 1: PLAY VS AI -->
-    <div id="pane-play" class="tab-pane active">
-      <div class="colony-layout">
-        <!-- Left: Board and Evaluation Bar -->
-        <div class="board-column" style="display: flex; flex-direction: column; align-items: center;">
-          <!-- Evaluation Bar -->
-          <div class="eval-bar-wrapper">
-            <div class="eval-bar-track">
-              <div id="eval-bar-fill" class="eval-bar-fill"></div>
-            </div>
-            <div class="eval-bar-meta">
-              <span>CYAN ADVANTAGE</span>
-              <span id="eval-bar-label">+0.00 (50% Cyan)</span>
-              <span>MAGENTA ADVANTAGE</span>
-            </div>
-          </div>
-
-          <!-- Board Frame -->
-          <div class="board-frame">
-            <div id="colony-board" class="board-grid"></div>
-          </div>
+    <!-- UNIFIED GAME STAGE: Single Board for Both Play & Replays -->
+    <div class="game-stage-grid">
+      
+      <!-- Left Column: The 8x8 Board & Subtle Win Expectancy -->
+      <div class="board-column">
+        <div class="board-outer-frame">
+          <div id="colony-board" class="board-grid-8x8"></div>
         </div>
 
-        <!-- Right: Game HUD & Control Panel -->
-        <div class="colony-panel">
-          <div class="panel-title">
-            <span>Match Command Center</span>
-            <span id="ai-status-badge" class="badge badge-cyan">Initializing...</span>
+        <div class="eval-bar-wrapper">
+          <div class="eval-bar-track">
+            <div id="eval-bar-fill" class="eval-bar-fill"></div>
           </div>
-
-          <!-- HUD Status Grid -->
-          <div class="hud-grid">
-            <div class="hud-item">
-              <div class="hud-label">Side to Move</div>
-              <div class="hud-val">
-                <span id="hud-current-team" class="badge badge-cyan">CYAN</span>
-              </div>
-            </div>
-            <div class="hud-item">
-              <div class="hud-label">Turn Progression</div>
-              <div id="hud-actions-left" class="hud-val">Action 1 of 2</div>
-            </div>
-            <div class="hud-item">
-              <div class="hud-label">Game Round</div>
-              <div id="hud-round-number" class="hud-val">Round 1</div>
-            </div>
-            <div class="hud-item">
-              <div class="hud-label">Firewall Schedule</div>
-              <div id="hud-firewall-status" class="hud-val">Next Shrink: Round 8</div>
-            </div>
-          </div>
-
-          <!-- Side & Model Selectors -->
-          <div class="colony-form-group">
-            <label>Choose Your Team</label>
-            <div class="btn-row">
-              <button id="opt-side-cyan" class="btn-colony btn-colony-primary active" style="flex: 1;">● Play Cyan (1st)</button>
-              <button id="opt-side-mag" class="btn-colony btn-colony-mag" style="flex: 1;">■ Play Magenta (2nd)</button>
-            </div>
-          </div>
-
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
-            <div class="colony-form-group">
-              <label for="sel-ai-model">AI Opponent Model</label>
-              <select id="sel-ai-model" class="colony-select">
-                <option value="champion">Level 5 Gen 9 Champion</option>
-                <option value="level4">Level 4 Contest Model</option>
-                <option value="random">Baseline Random Model</option>
-              </select>
-            </div>
-
-            <div class="colony-form-group">
-              <label for="sel-ai-sims">Search Budget</label>
-              <select id="sel-ai-sims" class="colony-select">
-                <option value="15">Fast (15 Sims)</option>
-                <option value="30" selected>Standard (30 Sims)</option>
-                <option value="60">Referee Match (60 Sims)</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Game Action Controls -->
-          <div class="btn-row">
-            <button id="btn-reset-game" class="btn-colony">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-              Restart Game
-            </button>
-          </div>
-
-          <!-- Live Move Log -->
-          <div class="colony-form-group">
-            <label>Move History Log</label>
-            <div id="move-log-list" class="move-log-box"></div>
+          <div class="eval-bar-meta">
+            <span>Blue (You)</span>
+            <span id="eval-bar-label">50% Win Chance</span>
+            <span>Amber (AI)</span>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- TAB 2: MODEL VS MODEL ARENA -->
-    <div id="pane-arena" class="tab-pane">
-      <div class="colony-panel" style="max-width: 900px; margin: 0 auto;">
-        <div class="panel-title">
-          <span>Head-to-Head Tournament Arena</span>
-          <span class="badge badge-magenta">Glicko-2 & Elo Engine</span>
+      <!-- Right Column: Minimal Command Center & Interactive Piece Helper -->
+      <aside class="colony-control-card">
+        
+        <!-- Mode Switch: Play vs Watch Sample Match -->
+        <div class="control-section-header">
+          <span class="control-section-title">Stage Mode</span>
         </div>
 
-        <p style="font-size: 0.95rem; color: #94a3b8; line-height: 1.6;">
-          Pit two neural networks against each other under identical referee MCTS rules. Sides alternate every match. The arena measures win rate, computes Elo rating differential ($\Delta \text{Elo}$), and calculates 95% confidence intervals matching the official tournament protocol.
-        </p>
-
-        <!-- Model Selection Grid -->
-        <div style="display: grid; grid-template-columns: 1fr 80px 1fr; gap: 16px; align-items: center;">
-          <div class="colony-form-group">
-            <label for="arena-model-a">Model A</label>
-            <select id="arena-model-a" class="colony-select">
-              <option value="champion">Level 5 Gen 9 Champion</option>
-              <option value="level4">Level 4 Contest Model</option>
-              <option value="random">Baseline Random Model</option>
-            </select>
-          </div>
-
-          <div style="text-align: center; font-family: var(--cy-font-mono); font-weight: 800; font-size: 1.2rem; color: #64748b;">
-            VS
-          </div>
-
-          <div class="colony-form-group">
-            <label for="arena-model-b">Model B</label>
-            <select id="arena-model-b" class="colony-select">
-              <option value="level4">Level 4 Contest Model</option>
-              <option value="champion">Level 5 Gen 9 Champion</option>
-              <option value="random">Baseline Random Model</option>
-            </select>
-          </div>
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-          <div class="colony-form-group">
-            <label for="arena-games-count">Total Matches</label>
-            <select id="arena-games-count" class="colony-select">
-              <option value="2">2 Matches (1 as Cyan, 1 as Mag)</option>
-              <option value="5" selected>5 Matches</option>
-              <option value="10">10 Matches</option>
-              <option value="20">20 Matches</option>
-            </select>
-          </div>
-
-          <div class="colony-form-group">
-            <label for="arena-sims-count">MCTS Sims per Action</label>
-            <select id="arena-sims-count" class="colony-select">
-              <option value="10">10 Sims (Fast Simulation)</option>
-              <option value="20" selected>20 Sims (Balanced)</option>
-              <option value="60">60 Sims (Tournament Quality)</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="btn-row">
-          <button id="btn-start-arena" class="btn-colony btn-colony-primary">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            Start Tournament Series
+        <div class="segmented-mode-bar" role="tablist">
+          <button id="mode-btn-play" class="mode-tab-btn active" type="button">
+            <span>🎮</span> Play vs AI
           </button>
-          <button id="btn-stop-arena" class="btn-colony" disabled>Stop</button>
-        </div>
-
-        <!-- Live Arena Stats Card -->
-        <div id="arena-live-stats" class="arena-stats-card" style="display: none;">
-          <div id="arena-current-game" style="font-family: var(--cy-font-mono); font-weight: 700; color: #fff;">
-            Game 1: Loading...
-          </div>
-
-          <div class="arena-stats-grid">
-            <div class="stat-item">
-              <div class="hud-label">Model A Win Rate</div>
-              <div id="arena-winrate" class="stat-num stat-num-cyan">0.0%</div>
-            </div>
-            <div class="stat-item">
-              <div class="hud-label">Elo Differential</div>
-              <div id="arena-elodiff" class="stat-num stat-num-green">+0</div>
-            </div>
-            <div class="stat-item">
-              <div class="hud-label">Score Series</div>
-              <div id="arena-score" class="stat-num stat-num-magenta">0 - 0</div>
-            </div>
-          </div>
-
-          <div id="arena-ci" style="font-family: var(--cy-font-mono); font-size: 12px; color: #94a3b8; text-align: center;">
-            95% Confidence Interval: [+0, +0]
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB: TOURNAMENT LEADERBOARD -->
-    <div id="pane-leaderboard" class="tab-pane">
-      <div class="colony-panel" style="max-width: 1040px; margin: 0 auto;">
-        <div class="panel-title">
-          <span>Official Cloudfight Ascension Leaderboard</span>
-          <span class="badge badge-green">● Live Matchmaking</span>
-        </div>
-
-        <p style="font-size: 0.95rem; color: #94a3b8; line-height: 1.6;">
-          Continuous live tournament ranking calculated using Glicko-2 / Elo style ratings. Every model starts at 1500 Elo. Upload your model to test your architecture against the reigning Champion.
-        </p>
-
-        <div class="leaderboard-table-wrapper">
-          <table class="leaderboard-table">
-            <thead>
-              <tr>
-                <th style="width: 70px;">Rank</th>
-                <th>Team & Submitter</th>
-                <th>Model Architecture</th>
-                <th>Affiliation / University</th>
-                <th>Tier</th>
-                <th>Elo Rating</th>
-                <th>Record (W - L)</th>
-                <th>Win Rate</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for entry in leaderboard %}
-              <tr {% if entry.is_siddharth %}class="row-siddharth"{% endif %}>
-                <td>
-                  {% if forloop.counter == 1 %}
-                    <span class="rank-badge rank-gold">1</span>
-                  {% elif forloop.counter == 2 %}
-                    <span class="rank-badge rank-silver">2</span>
-                  {% elif forloop.counter == 3 %}
-                    <span class="rank-badge rank-bronze">3</span>
-                  {% else %}
-                    <span class="rank-badge rank-default">{{ forloop.counter }}</span>
-                  {% endif %}
-                </td>
-                <td>
-                  <div class="team-cell">
-                    <div class="team-avatar">
-                      {% if entry.is_siddharth %}⬡{% else %}🤖{% endif %}
-                    </div>
-                    <div>
-                      <strong>{{ entry.team_name }}</strong>
-                      {% if entry.is_siddharth %}
-                        <span class="champ-tag">CHAMPION</span>
-                      {% endif %}
-                    </div>
-                  </div>
-                </td>
-                <td><code style="color: #cbd5e1;">{{ entry.model_name }}</code></td>
-                <td><span style="color: #94a3b8;">{{ entry.affiliation }}</span></td>
-                <td><span class="badge {% if entry.level == 'Level 5' %}badge-cyan{% elif entry.level == 'Level 4' %}badge-magenta{% else %}badge-warn{% endif %}">{{ entry.level }}</span></td>
-                <td><strong class="elo-val {% if entry.is_siddharth %}elo-cyan{% elif entry.elo_rating >= 1700 %}elo-safe{% endif %}">{{ entry.elo_rating }}</strong></td>
-                <td>{{ entry.wins }}W – {{ entry.losses }}L</td>
-                <td><strong style="color: var(--cy-safe);">{{ entry.win_rate_pct }}%</strong></td>
-              </tr>
-              {% empty %}
-              <tr>
-                <td colspan="8" style="text-align: center; color: #64748b; padding: 30px;">Loading leaderboard data...</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 10px;">
-          <div style="font-family: var(--cy-font-mono); font-size: 12px; color: #64748b;">
-            Rankings update automatically after each tournament match.
-          </div>
-          <button class="btn-colony btn-colony-primary" onclick="document.getElementById('btn-open-upload-modal').click()">
-            Upload Your Model to Compete
+          <button id="mode-btn-replay" class="mode-tab-btn" type="button">
+            <span>📼</span> Watch Contest Replay
           </button>
         </div>
-      </div>
-    </div>
 
-    <!-- TAB 3: TOURNAMENT REPLAYS -->
-
-    <div id="pane-replays" class="tab-pane">
-      <div class="colony-panel" style="max-width: 900px; margin: 0 auto;">
-        <div class="panel-title">
-          <span>Contest Match Replay Viewer</span>
-          <span class="badge badge-cyan">Level 4 & 5 Cloudfight Data</span>
-        </div>
-
-        <div class="colony-form-group">
-          <label for="replay-select">Select Official Contest Match</label>
-          <select id="replay-select" class="colony-select"></select>
-        </div>
-
-        <!-- Replay Scrubber Controller -->
-        <div class="replay-controller">
-          <button id="btn-replay-first" class="btn-colony" title="First Move">⏮</button>
-          <button id="btn-replay-prev" class="btn-colony" title="Previous Move">◀ Step Back</button>
-          <button id="btn-replay-play" class="btn-colony btn-colony-primary" style="min-width: 100px;">▶ Play</button>
-          <button id="btn-replay-next" class="btn-colony" title="Next Move">Step Next ▶</button>
-          <button id="btn-replay-last" class="btn-colony" title="Last Move">⏭</button>
-          <span id="replay-step-label" style="font-family: var(--cy-font-mono); font-size: 13px; color: #94a3b8; margin-left: 12px;">Move 0 of 0</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB 4: RULES & MECHANICS -->
-    <div id="pane-rules" class="tab-pane">
-      <div class="rules-grid">
-        <!-- Kernel -->
-        <div class="rule-card">
-          <div class="rule-card-header">
-            <span class="icon">⬡</span>
-            <span>Kernel (KE) — The Crown Core</span>
+        <!-- Play Settings (Visible in Play Mode) -->
+        <div id="play-settings-panel" class="settings-group">
+          <div class="setting-row">
+            <label class="setting-label" for="sel-ai-model">Opponent Model</label>
+            <select id="sel-ai-model" class="setting-select">
+              <option value="champion">Champion AI (Gen 9 Level 5)</option>
+              <option value="level4">Intermediate AI (Level 4)</option>
+              <option value="random">Beginner (Random Baseline)</option>
+            </select>
           </div>
-          <p>Moves 1 square in all 8 directions (like a King). Captures on contact.</p>
-          <div class="hud-item" style="border-color: rgba(250, 204, 21, 0.4);">
-            <strong style="color: var(--cy-warn);">Bodyguard Protection Rule:</strong>
-            <p style="margin-top: 4px; font-size: 0.85rem;">
-              When attacked (by move or shot), an adjacent friendly guard is sacrificed instead. The Kernel survives and the attacker remains on its origin tile!
+
+          <div class="setting-row">
+            <label class="setting-label">Your Team</label>
+            <div style="display: flex; gap: 6px;">
+              <button id="opt-side-cyan" class="btn-ctrl" style="font-weight: 600; color: var(--team-blue);" type="button">Play Blue (1st)</button>
+              <button id="opt-side-mag" class="btn-ctrl" style="font-weight: 600; color: var(--team-amber);" type="button">Play Amber (2nd)</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Replay Controls (Visible in Replay Mode) -->
+        <div id="replay-settings-panel" class="settings-group" style="display: none;">
+          <div class="setting-row">
+            <label class="setting-label" for="replay-select">Select Match</label>
+            <select id="replay-select" class="setting-select" style="max-width: 220px;"></select>
+          </div>
+
+          <div class="replay-scrubber-controls">
+            <button id="btn-replay-first" class="btn-ctrl" title="First Move" type="button">⏮</button>
+            <button id="btn-replay-prev" class="btn-ctrl" title="Step Back" type="button">◀ Back</button>
+            <button id="btn-replay-play" class="btn-ctrl" style="font-weight: 600;" type="button">▶ Play</button>
+            <button id="btn-replay-next" class="btn-ctrl" title="Step Next" type="button">Next ▶</button>
+            <button id="btn-replay-last" class="btn-ctrl" title="Final Move" type="button">⏭</button>
+          </div>
+          <div id="replay-step-label" style="text-align: center; font-family: var(--font-mono); font-size: 11.5px; color: var(--text-tertiary);">Move 0 of 0</div>
+        </div>
+
+        <!-- Interactive Visual Piece Reference (Replaces walls of text) -->
+        <div class="piece-guide-box">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <strong style="font-size: 13px; color: var(--text-primary);">Piece Reference (Click to Inspect)</strong>
+            <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-tertiary);">6 Pieces</span>
+          </div>
+
+          <div class="piece-guide-pills">
+            <button class="piece-guide-btn active" data-piece="KERNEL" type="button">⬡ Kernel</button>
+            <button class="piece-guide-btn" data-piece="ICE" type="button">❄ Ice</button>
+            <button class="piece-guide-btn" data-piece="DAEMON" type="button">👾 Daemon</button>
+            <button class="piece-guide-btn" data-piece="EXPLOIT" type="button">⚡ Exploit</button>
+            <button class="piece-guide-btn" data-piece="TRACE" type="button">◉ Trace</button>
+            <button class="piece-guide-btn" data-piece="PING" type="button">▲ Ping</button>
+          </div>
+
+          <div id="piece-guide-description" class="piece-guide-detail">
+            <strong>Kernel (⬡):</strong> Moves 1 square in all 8 directions. Protect with adjacent bodyguards (damage redirects to them).
+          </div>
+        </div>
+
+        <!-- Move History -->
+        <div>
+          <div style="font-size: 12px; font-family: var(--font-mono); color: var(--text-tertiary); margin-bottom: 6px;">Live Move History</div>
+          <div id="move-log-list" class="move-log-stream"></div>
+        </div>
+
+      </aside>
+    </div>
+
+    <!-- PLAIN-ENGLISH ACCORDIONS: Context for Curious Minds -->
+    <section class="curious-minds-section" aria-label="Curious Minds Guide">
+      <h2 class="curious-heading">
+        <span>💡</span> Context for Curious Minds
+      </h2>
+
+      <div class="curious-accordion-group">
+        
+        <!-- Accordion 1 -->
+        <details class="curious-card">
+          <summary class="curious-summary">What is Colony: One &amp; the Cloudfight Contest?</summary>
+          <div class="curious-body">
+            <p>
+              The <strong>Cloudfight Coding Contest (CCC)</strong> is one of Europe's largest competitive programming events. In Level 4 and 5, participants are tasked with programming an autonomous game engine agent for <em>Colony: One</em>—an 8×8 grid game combining chess-like tactical geometry with unique board mechanics.
             </p>
-            <p style="margin-top: 4px; font-size: 0.85rem; font-family: var(--cy-font-mono); color: var(--cy-safe);">
-              Sacrifice Priority: Ping > Exploit > Trace > Daemon > Ice.
+            <p>
+              Unlike traditional turn-based games, Colony features <strong>2 actions per turn</strong>, allowing players to coordinate tactical double-moves (e.g. step forward and shoot in the same turn). Friendly units standing next to the core <strong>Kernel</strong> act as bodyguards, absorbing lethal hits and bouncing the attacker back.
             </p>
           </div>
-        </div>
+        </details>
 
-        <!-- Ping -->
-        <div class="rule-card">
-          <div class="rule-card-header">
-            <span class="icon">▲</span>
-            <span>Ping (PI) — Recon Probe</span>
+        <!-- Accordion 2 -->
+        <details class="curious-card">
+          <summary class="curious-summary">What is an .ONNX model and how is it running in my browser?</summary>
+          <div class="curious-body">
+            <p>
+              <strong>ONNX (Open Neural Network Exchange)</strong> is an open format built to represent machine learning models. Instead of sending board states across the internet to a GPU server, this portfolio runs the neural network <strong>100% locally on your computer or phone</strong> using WebAssembly (WASM).
+            </p>
+            <p>
+              The entire champion model is only <strong>391 KB</strong>. When you make a move, your browser calculates the board tensor, executes the neural network weights, and searches ahead in just a few milliseconds with zero server lag.
+            </p>
           </div>
-          <p>Moves orthogonally up to 2 empty squares. Cannot jump.</p>
-          <p>Captures diagonally up to 2 squares onto an enemy piece (moves onto target).</p>
-        </div>
+        </details>
 
-        <!-- Daemon -->
-        <div class="rule-card">
-          <div class="rule-card-header">
-            <span class="icon">👾</span>
-            <span>Daemon (DE) — Background Heavy</span>
+        <!-- Accordion 3 -->
+        <details class="curious-card">
+          <summary class="curious-summary">What theory &amp; principles make the Champion AI strong?</summary>
+          <div class="curious-body">
+            <p>
+              Standard chess engines struggle in games with 2-action turns because the search tree branches exponentially ($4096 \times 4096$ possible turn combinations). My <strong>Generation 9 Champion Model</strong> solves this using four core innovations:
+            </p>
+            <p>
+              • <strong>PUCT Trap Pruning:</strong> In Monte Carlo Tree Search, low simulation budgets easily fall into traps. The policy head explicitly repels unshielded Kernels away from opponent 2-action threat envelopes.<br>
+              • <strong>1-Ply Static Exchange Evaluation (SEE):</strong> Prevents bad trades (e.g., an expensive Ice unit trading onto a defended enemy Ping).<br>
+              • <strong>Firewall Ring Evacuation:</strong> At rounds 8, 16, 24, and 26, the outer ring is destroyed. The AI anticipates the countdown and safely pulls its army inward.<br>
+              • <strong>Terminal Doom Bypass:</strong> Guarantees that checkmates and bare-kernel endgames register as definitive $+1.0$ or $-1.0$ value scores rather than compressed estimates.
+            </p>
           </div>
-          <p>Slides orthogonally up to 3 squares. At range 2–3 captures by moving onto target. An adjacent enemy blocks movement.</p>
-          <p><strong style="color: var(--cy-magenta);">Shoot Action:</strong> Shoots any adjacent enemy (all 8 directions). The Daemon does not move.</p>
-        </div>
+        </details>
 
-        <!-- Exploit -->
-        <div class="rule-card">
-          <div class="rule-card-header">
-            <span class="icon">⚡</span>
-            <span>Exploit (EX) — Rogue Subroutine</span>
-          </div>
-          <p>L-shaped jump (2 + 1 squares, like a Knight). Leaps over all pieces and locked squares.</p>
-          <p>Captures by landing directly on an enemy piece.</p>
-        </div>
+        <!-- Accordion 4 -->
+        <details class="curious-card">
+          <summary class="curious-summary">For Engineers: Test your own .ONNX model</summary>
+          <div class="curious-body">
+            <p>
+              If you built a model for the Cloudfight contest or want to benchmark your own custom neural network, drop your <code>.onnx</code> file below. It will validate the input shape <code>[batch, 16, 8, 8]</code> and policy/value heads, and let you play against it.
+            </p>
 
-        <!-- Trace -->
-        <div class="rule-card">
-          <div class="rule-card-header">
-            <span class="icon">◉</span>
-            <span>Trace (TR) — Scanner Turret</span>
+            <div id="model-dropzone" class="custom-model-dropzone">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 8px; color: var(--team-blue);"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+              <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 4px;">Click or Drag &amp; Drop custom .onnx file here</div>
+              <div style="font-size: 12px; color: var(--text-tertiary);">Maximum file size: 5 MiB · Processed entirely in-memory</div>
+              <input type="file" id="model-file-input" accept=".onnx" style="display: none;">
+            </div>
+            <div id="upload-status-output" style="margin-top: 10px; font-family: var(--font-mono); font-size: 12px; display: none;"></div>
           </div>
-          <p>Moves 1 square orthogonally onto an empty tile.</p>
-          <p><strong style="color: var(--cy-magenta);">Sniper Shot:</strong> Shoots diagonally at range 2–3. The Trace does not move. Range 1 blocks line and cannot be shot.</p>
-        </div>
+        </details>
 
-        <!-- Ice -->
-        <div class="rule-card">
-          <div class="rule-card-header">
-            <span class="icon">❄</span>
-            <span>Ice (IC) — Defensive Shield</span>
-          </div>
-          <p>Slides up to 2 squares in any of the 8 directions. Path must be clear.</p>
-          <p>Captures by moving onto an enemy piece.</p>
-        </div>
-
-        <!-- Firewall & Timing -->
-        <div class="rule-card" style="grid-column: 1 / -1;">
-          <div class="rule-card-header">
-            <span class="icon">🔥</span>
-            <span>Firewall Shrink & Endgame Resolution</span>
-          </div>
-          <p>
-            At the end of rounds <strong>8, 16, 24, and 26</strong>, the firewall locks the outermost open ring (8x8 → 6x6 → 4x4 → 2x2 → locked). All pieces standing on newly locked squares are immediately destroyed!
-          </p>
-          <p>
-            <strong>Bare Kernels Rule:</strong> When only the two Kernels remain, if distance $\le 2$, the team that just moved loses; otherwise the Kernel closest to the center wins. Ties go to Magenta!
-          </p>
-        </div>
       </div>
-    </div>
-  </div>
+    </section>
 
-  <!-- UPLOAD ONNX MODEL MODAL -->
-  <div id="upload-modal" class="modal-overlay">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 class="modal-title">Upload Tournament .ONNX Model</h3>
-        <button id="btn-close-upload-modal" class="modal-close">&times;</button>
+  </main>
+
+  <!-- 4-STEP VISUAL ONBOARDING MODAL -->
+  <div id="guide-modal" class="guide-modal-overlay">
+    <div class="guide-modal-box">
+      
+      <div class="guide-modal-header">
+        <span id="guide-step-counter" class="guide-step-tag">Step 1 of 4</span>
+        <button id="btn-close-guide" class="btn-close-modal" type="button" aria-label="Close guide">&times;</button>
       </div>
 
-      <p style="font-size: 0.9rem; color: #94a3b8; line-height: 1.5;">
-        Upload your custom ONNX model export. Your model runs entirely inside your browser via WebAssembly with zero server storage.
-      </p>
-
-      <div id="model-dropzone" class="model-dropzone">
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--cy-cyan); margin-bottom: 12px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
-        <div style="font-weight: 700; color: #fff; margin-bottom: 4px;">Click or Drag & Drop .onnx file here</div>
-        <div style="font-size: 0.8rem; color: #64748b;">Maximum file size: 5 MiB (Cloudfight Standard)</div>
-        <input type="file" id="model-file-input" accept=".onnx" style="display: none;">
+      <!-- Slide Container -->
+      <div id="guide-slide-content" class="guide-slide-card">
+        <!-- Rendered dynamically by ui.js -->
       </div>
 
-      <div style="font-family: var(--cy-font-mono); font-size: 11px; color: #64748b; background: #070a14; padding: 12px; border-radius: 6px; line-height: 1.6;">
-        <strong>Contract Requirements:</strong><br>
-        • Input: <code>observation</code> &rarr; float32, dynamic batch, shape <code>[batch, 16, 8, 8]</code><br>
-        • Output 1: <code>policy</code> &rarr; float32, shape <code>[batch, 4096]</code> (action logits)<br>
-        • Output 2: <code>value</code> &rarr; float32, shape <code>[batch]</code> (evaluation $[-1, 1]$)
+      <!-- Modal Footer -->
+      <div class="guide-modal-footer">
+        <div class="guide-dots-indicator">
+          <span class="guide-dot active" data-step="0"></span>
+          <span class="guide-dot" data-step="1"></span>
+          <span class="guide-dot" data-step="2"></span>
+          <span class="guide-dot" data-step="3"></span>
+        </div>
+
+        <div style="display: flex; gap: 8px;">
+          <button id="btn-guide-prev" class="btn-ctrl" type="button">Back</button>
+          <button id="btn-guide-next" class="btn-ctrl" style="background: var(--text-primary); color: var(--bg);" type="button">Next →</button>
+        </div>
       </div>
 
-      <div id="upload-status-output" class="upload-status" style="display: none;"></div>
     </div>
   </div>
 
   <!-- Toast Container -->
   <div id="toast-container"></div>
+
+  <!-- Footer -->
+  <footer class="credit-footer" style="text-align: center; padding: 48px 24px; font-size: 12px; color: var(--text-tertiary);">
+    <p>&copy; 2026 Siddharth Hemnani · M.Sc. Computer Science · Cloudfight Coding Contest Level 5</p>
+  </footer>
 
 </body>
 </html>

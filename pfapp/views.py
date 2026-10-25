@@ -4,7 +4,7 @@ import hashlib
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
-from pfapp.models import GermanyFAQ, Projects, ColonyMatch
+from pfapp.models import GermanyFAQ, Projects, ColonyMatch, ColonyLeaderboardEntry
 
 # Create your views here.
 def index(request):
@@ -72,8 +72,6 @@ def colony_playground(request):
         'total_matches': total_matches,
         'player_wins': player_wins,
         'ai_wins': ai_wins,
-        'recent_matches': recent_matches,
-        'leaderboard': leaderboard,
     }
     return render(request, 'pfapp/colony.html', context)
 
