@@ -85,6 +85,21 @@ class ColonyViewTests(SimpleTestCase):
         self.assertIn('How to Play (30s Visual Guide)', content)
         self.assertIn('Context for Curious Minds', content)
 
+        # Team Ai-DHD attribution strip & team members
+        self.assertIn('Team Ai-DHD', content)
+        self.assertIn('Siddharth Hemnani', content)
+        self.assertIn('Sashreek Dhaimodkar', content)
+        self.assertIn('Vedant Vallakati', content)
+
+        # LinkedIn Links
+        self.assertIn('https://www.linkedin.com/in/siddharth-hemnani-02a030226/', content)
+        self.assertIn('https://www.linkedin.com/in/sashreek-dhaimodkar-b67843234/', content)
+        self.assertIn('https://www.linkedin.com/in/vedant-vallakati/', content)
+
+        # Rebranding check: Kernel-76 removed in favor of Ai-DHD
+        self.assertNotIn('Kernel-76', content)
+        self.assertIn('Ai-DHD Gen 9 Champion', content)
+
         # Check that raw $ LaTeX math is completely eliminated
         self.assertNotIn('$4096 \\times 4096$', content)
         self.assertNotIn('$+1.0$', content)
@@ -96,15 +111,45 @@ class ColonyViewTests(SimpleTestCase):
         self.assertIn('Test .ONNX', content)
         self.assertIn('Replays', content)
 
-        # Check for visible leaderboard
+        # Check for visible leaderboard with Affiliation column & submit button
         self.assertIn('Contest &amp; Challenge Leaderboard', content)
+        self.assertIn('Affiliation', content)
+        self.assertIn('btn-submit-to-leaderboard', content)
+
+        # Check for 3 challenger registration fields
+        self.assertIn('id="challenge-author-name"', content)
+        self.assertIn('id="challenge-model-name"', content)
+        self.assertIn('id="challenge-affiliation"', content)
+
+    def test_projects_page_showcases_team_aidhd(self):
+        response = self.client.get(reverse('projects'))
+        self.assertEqual(response.status_code, 200)
+        content = response.content.decode('utf-8')
+
+        # Team Ai-DHD on projects card
+        self.assertIn('Team <strong>Ai-DHD</strong>:', content)
+        self.assertIn('Siddharth Hemnani', content)
+        self.assertIn('Sashreek Dhaimodkar', content)
+        self.assertIn('Vedant Vallakati', content)
+        self.assertIn('https://www.linkedin.com/in/sashreek-dhaimodkar-b67843234/', content)
+        self.assertIn('https://www.linkedin.com/in/vedant-vallakati/', content)
+        self.assertIn('Ai-DHD Gen 9 Champion', content)
+
+    def test_index_page_references_team_aidhd(self):
+        response = self.client.get(reverse('index'))
+        self.assertEqual(response.status_code, 200)
+        content = response.content.decode('utf-8')
+        self.assertIn('Team Ai-DHD Cloudfight champion model', content)
 
     def test_colony_record_challenge_endpoint(self):
         payload = {
             'model_name': 'TestModel_v1',
+            'team_name': 'TestTeam',
             'author_name': 'TestChallenger',
+            'affiliation': 'RWTH Aachen',
             'challenger_wins': 1,
-            'champion_wins': 1
+            'champion_wins': 1,
+            'total_rounds': 18
         }
         # In SimpleTestCase without DB, endpoint gracefully catches DB error or returns status
         response = self.client.post(

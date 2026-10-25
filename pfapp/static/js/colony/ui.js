@@ -744,8 +744,12 @@ export class ColonyPlaygroundUI {
           name: file.name,
           evaluator: this.runner.createEvaluatorFromSession(session)
         };
+        const modelInput = document.getElementById('challenge-model-name');
+        if (modelInput && !modelInput.value) {
+          modelInput.value = file.name.replace(/\.onnx$/i, '');
+        }
         if (actionArea) actionArea.style.display = 'flex';
-        if (statusText) statusText.textContent = `Model verified! Ready for 2-game series against Champion Gen 9.`;
+        if (statusText) statusText.textContent = `Model verified! Register your challenger details below and battle Team Ai-DHD.`;
       }
     } catch (err) {
       setCheck('check-soundness', false, '✗ Parse Error');
@@ -759,6 +763,11 @@ export class ColonyPlaygroundUI {
 
     const authorInput = document.getElementById('challenge-author-name');
     const authorName = authorInput?.value.trim() || 'Community Challenger';
+    const modelInput = document.getElementById('challenge-model-name');
+    const modelName = modelInput?.value.trim() || this.customModel?.name || 'Custom Model';
+    const affiliationInput = document.getElementById('challenge-affiliation');
+    const affiliation = affiliationInput?.value.trim() || 'Independent';
+
     const statusText = document.getElementById('challenge-status-text');
     const startBtn = document.getElementById('btn-start-h2h-series');
 
@@ -769,9 +778,10 @@ export class ColonyPlaygroundUI {
 
     let challengerWins = 0;
     let championWins = 0;
+    let totalRounds = 0;
 
     // --- GAME 1: Challenger as Blue (Moves 1st) vs Champion as Amber ---
-    if (statusText) statusText.textContent = `Game 1 of 2: ${authorName} (Blue) vs. Champion (Amber)...`;
+    if (statusText) statusText.textContent = `Game 1 of 2: ${authorName} (Blue) vs. Team Ai-DHD Champion (Amber)...`;
     this.game = new ColonyGame();
     this.renderBoard();
 
@@ -787,11 +797,12 @@ export class ColonyPlaygroundUI {
 
     if (this.game.winner === CYAN) challengerWins++;
     else if (this.game.winner === MAGENTA) championWins++;
+    totalRounds += this.game.round;
 
     await new Promise((r) => setTimeout(r, 1200));
 
     // --- GAME 2: Champion as Blue (Moves 1st) vs Challenger as Amber ---
-    if (statusText) statusText.textContent = `Game 2 of 2: Champion (Blue) vs. ${authorName} (Amber)...`;
+    if (statusText) statusText.textContent = `Game 2 of 2: Team Ai-DHD Champion (Blue) vs. ${authorName} (Amber)...`;
     this.game = new ColonyGame();
     this.renderBoard();
 
@@ -805,11 +816,12 @@ export class ColonyPlaygroundUI {
 
     if (this.game.winner === MAGENTA) challengerWins++;
     else if (this.game.winner === CYAN) championWins++;
+    totalRounds += this.game.round;
 
     // Final Outcome
     let winnerSummary = '';
-    if (challengerWins > championWins) winnerSummary = `🎉 ${authorName} defeated the Champion ${challengerWins}-${championWins}!`;
-    else if (championWins > challengerWins) winnerSummary = `🏆 Champion Gen 9 defeated ${authorName} ${championWins}-${challengerWins}.`;
+    if (challengerWins > championWins) winnerSummary = `🎉 ${authorName} defeated Team Ai-DHD ${challengerWins}-${championWins}!`;
+    else if (championWins > challengerWins) winnerSummary = `🏆 Ai-DHD Gen 9 Champion defeated ${authorName} ${championWins}-${challengerWins}.`;
     else winnerSummary = `🤝 Series Tied ${challengerWins}-${championWins}!`;
 
     if (statusText) statusText.textContent = winnerSummary;
@@ -819,10 +831,13 @@ export class ColonyPlaygroundUI {
     try {
       const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
       const payload = {
-        model_name: this.customModel.name,
+        model_name: modelName,
+        team_name: authorName,
         author_name: authorName,
+        affiliation: affiliation,
         challenger_wins: challengerWins,
-        champion_wins: championWins
+        champion_wins: championWins,
+        total_rounds: totalRounds
       };
 
       const resp = await fetch('/api/colony/record-challenge/', {
@@ -833,15 +848,16 @@ export class ColonyPlaygroundUI {
 
       if (resp.ok) {
         const data = await resp.json();
-        // Prepend to visible leaderboard
+        // Insert into visible leaderboard table
         const tbody = document.getElementById('leaderboard-table-body');
         if (tbody) {
           const row = document.createElement('tr');
           row.style.background = 'rgba(83, 74, 183, 0.08)';
           row.innerHTML = `
-            <td><span class="rank-badge">${data.rank}</span></td>
-            <td><strong>${data.team_name}</strong> (New Submission)</td>
+            <td><span class="rank-badge">${data.rank || '#'}</span></td>
+            <td><strong>${data.team_name}</strong> <span style="font-size: 10px; margin-left: 4px; padding: 1px 5px; border-radius: 4px; background: rgba(83, 74, 183, 0.15); color: var(--team-blue); font-weight: 600;">NEW</span></td>
             <td><code>${data.model_name}</code></td>
+            <td>${data.affiliation || 'Independent'}</td>
             <td>Custom ONNX</td>
             <td><strong>${data.elo_rating}</strong></td>
             <td>${challengerWins}W – ${championWins}L</td>
@@ -929,6 +945,17 @@ export class ColonyPlaygroundUI {
     document.getElementById('mode-btn-challenge')?.addEventListener('click', () => setMode('challenge'));
     document.getElementById('mode-btn-replay')?.addEventListener('click', () => setMode('replay'));
     document.getElementById('btn-quick-challenge')?.addEventListener('click', () => setMode('challenge'));
+
+    // Leaderboard Quick-Upload Link
+    document.getElementById('btn-submit-to-leaderboard')?.addEventListener('click', () => {
+      setMode('challenge');
+      const dropzone = document.getElementById('challenge-dropzone');
+      if (dropzone) {
+        dropzone.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        dropzone.style.borderColor = 'var(--team-blue)';
+        setTimeout(() => { dropzone.style.borderColor = ''; }, 1500);
+      }
+    });
 
     // Reset button
     const resetHandler = () => {

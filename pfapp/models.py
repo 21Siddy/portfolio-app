@@ -33,7 +33,7 @@ class ColonyMatch(models.Model):
     ]
 
     player_team = models.CharField(max_length=10, choices=TEAM_CHOICES)
-    ai_model = models.CharField(max_length=100, default='Level 5 Gen 9 Champion')
+    ai_model = models.CharField(max_length=100, default='Ai-DHD Gen 9 Champion')
     winner = models.CharField(max_length=10, choices=WINNER_CHOICES, blank=True, null=True)
     win_reason = models.CharField(max_length=255, blank=True)
     total_rounds = models.PositiveSmallIntegerField(default=1)

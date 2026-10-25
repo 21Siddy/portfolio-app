@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Colony: One — Level 5 Champion AI | Siddharth Hemnani</title>
+  <title>Colony: One — Team Ai-DHD Level 5 Champion AI | Siddharth Hemnani</title>
   
   <meta name="csrf-token" content="{{ csrf_token }}">
   
@@ -49,8 +49,31 @@
         <span>Cloudfight Coding Contest · Level 5 Champion AI</span>
       </div>
       <h1 class="colony-title">Colony: <span>One</span></h1>
+
+      <!-- High-Visibility Team Ai-DHD Attribution Bar -->
+      <div class="team-aidhd-strip">
+        <span class="team-aidhd-label">
+          <span class="pulse-dot" style="width: 6px; height: 6px;"></span>
+          Engineered by <span class="team-aidhd-name">Team Ai-DHD</span>
+        </span>
+        <div class="team-member-pills">
+          <a href="https://www.linkedin.com/in/siddharth-hemnani-02a030226/" target="_blank" rel="noopener noreferrer" class="team-member-pill" title="LinkedIn Profile">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+            <span>Siddharth Hemnani</span>
+          </a>
+          <a href="https://www.linkedin.com/in/sashreek-dhaimodkar-b67843234/" target="_blank" rel="noopener noreferrer" class="team-member-pill" title="LinkedIn Profile">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+            <span>Sashreek Dhaimodkar</span>
+          </a>
+          <a href="https://www.linkedin.com/in/vedant-vallakati/" target="_blank" rel="noopener noreferrer" class="team-member-pill" title="LinkedIn Profile">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+            <span>Vedant Vallakati</span>
+          </a>
+        </div>
+      </div>
+
       <p class="colony-subtitle">
-        A deep, 2-action tactical strategy game. Play directly against my Generation 9 AlphaZero model running client-side inside your browser via WebAssembly, test your own custom .ONNX model in a 2-game series, or watch tournament replays.
+        A deep, 2-action tactical strategy game. Play directly against Team Ai-DHD's Generation 9 AlphaZero champion model running client-side inside your browser via WebAssembly, test your own custom .ONNX model in a 2-game series, or watch tournament replays.
       </p>
 
       <div class="hero-actions-bar">
@@ -151,8 +174,8 @@
               <label class="setting-label" for="sel-ai-model">Opponent Model</label>
             </div>
             <select id="sel-ai-model" class="setting-select">
-              <option value="champion">Champion AI (Gen 9 Level 5)</option>
-              <option value="level4">Intermediate AI (Level 4)</option>
+              <option value="champion">Ai-DHD Gen 9 Champion (Level 5)</option>
+              <option value="level4">Ai-DHD Contest Model (Level 4)</option>
               <option value="random">Beginner (Random Baseline)</option>
             </select>
           </div>
@@ -205,9 +228,26 @@
             </div>
           </div>
 
-          <div id="challenge-action-area" style="display: none; flex-direction: column; gap: 8px;">
-            <input type="text" id="challenge-author-name" class="setting-select" placeholder="Enter Your Team / Submitter Name" value="Community Challenger">
-            <button id="btn-start-h2h-series" class="btn-ctrl" style="background: var(--text-primary); color: var(--bg); font-weight: 600; padding: 9px;" type="button">
+          <!-- Structured Challenger Registration Card -->
+          <div id="challenge-action-area" class="challenge-registration-card" style="display: none;">
+            <div style="font-size: 12.5px; font-weight: 600; color: var(--text-primary); margin-bottom: 2px;">
+              Register Model for Leaderboard
+            </div>
+            <div class="registration-form-grid">
+              <div class="reg-field">
+                <label for="challenge-author-name" class="reg-label">Team / Submitter Name *</label>
+                <input type="text" id="challenge-author-name" class="setting-select" placeholder="e.g. Team Nova" value="Community Challenger" required>
+              </div>
+              <div class="reg-field">
+                <label for="challenge-model-name" class="reg-label">Model Architecture Name *</label>
+                <input type="text" id="challenge-model-name" class="setting-select" placeholder="e.g. NovaNet-v3" value="" required>
+              </div>
+              <div class="reg-field">
+                <label for="challenge-affiliation" class="reg-label">Affiliation / University (Optional)</label>
+                <input type="text" id="challenge-affiliation" class="setting-select" placeholder="e.g. RWTH Aachen or Independent" value="">
+              </div>
+            </div>
+            <button id="btn-start-h2h-series" class="btn-ctrl btn-start-challenge" type="button">
               ⚔️ Run 2-Game H2H Match on Board
             </button>
           </div>
@@ -269,6 +309,11 @@
           <h2 style="font-size: 22px; font-weight: 600; color: var(--text-primary);">Contest &amp; Challenge Leaderboard</h2>
           <p style="font-size: 13.5px; color: var(--text-secondary); margin-top: 4px;">Live Elo rankings from Cloudfight tournaments and custom model head-to-head challenges.</p>
         </div>
+        <div>
+          <button id="btn-submit-to-leaderboard" class="btn-ctrl btn-submit-leaderboard" type="button">
+            <span>⚡ Submit Your .ONNX Model ↑</span>
+          </button>
+        </div>
       </div>
 
       <div class="leaderboard-table-card">
@@ -278,6 +323,7 @@
               <th style="width: 50px;">Rank</th>
               <th>Team / Submitter</th>
               <th>Model Architecture</th>
+              <th>Affiliation</th>
               <th>Tier</th>
               <th>Elo Rating</th>
               <th>Record</th>
@@ -290,17 +336,25 @@
                 <span class="rank-badge {% if forloop.counter == 1 %}gold{% endif %}">{{ entry.rank|default:forloop.counter }}</span>
               </td>
               <td>
-                <strong>{{ entry.team_name }}</strong>
-                {% if entry.is_siddharth %}<span style="font-size: 10px; margin-left: 6px; padding: 1px 6px; border-radius: 4px; background: var(--team-blue); color: #fff;">CHAMPION</span>{% endif %}
+                <strong class="team-cell-name">{{ entry.team_name }}</strong>
+                {% if entry.is_siddharth %}
+                  <span class="champ-pill">CHAMPION</span>
+                  <div class="leaderboard-member-links">
+                    <a href="https://www.linkedin.com/in/siddharth-hemnani-02a030226/" target="_blank" rel="noopener noreferrer" title="Siddharth Hemnani">Siddharth</a> ·
+                    <a href="https://www.linkedin.com/in/sashreek-dhaimodkar-b67843234/" target="_blank" rel="noopener noreferrer" title="Sashreek Dhaimodkar">Sashreek</a> ·
+                    <a href="https://www.linkedin.com/in/vedant-vallakati/" target="_blank" rel="noopener noreferrer" title="Vedant Vallakati">Vedant</a>
+                  </div>
+                {% endif %}
               </td>
               <td><code>{{ entry.model_name }}</code></td>
+              <td>{{ entry.affiliation|default:"—" }}</td>
               <td>{{ entry.level }}</td>
               <td><strong>{{ entry.elo_rating }}</strong></td>
               <td>{{ entry.wins }}W – {{ entry.losses }}L</td>
             </tr>
             {% empty %}
             <tr>
-              <td colspan="6" style="text-align: center; color: var(--text-tertiary); padding: 20px;">No matches recorded yet.</td>
+              <td colspan="7" style="text-align: center; color: var(--text-tertiary); padding: 20px;">No matches recorded yet.</td>
             </tr>
             {% endfor %}
           </tbody>
@@ -347,7 +401,7 @@
           <summary class="curious-summary">What theory &amp; principles make the Champion AI strong?</summary>
           <div class="curious-body">
             <p>
-              Standard chess engines struggle in games with 2-action turns because the search tree branches exponentially (4,096 &times; 4,096 possible turn combinations). My <strong>Generation 9 Champion Model</strong> solves this using four core innovations:
+              Standard chess engines struggle in games with 2-action turns because the search tree branches exponentially (4,096 &times; 4,096 possible turn combinations). Team Ai-DHD's <strong>Generation 9 Champion Model</strong> solves this using four core innovations:
             </p>
             <p>
               • <strong>PUCT Trap Pruning:</strong> In Monte Carlo Tree Search, low simulation budgets easily fall into traps. The policy head explicitly repels unshielded Kernels away from opponent 2-action threat envelopes.<br>
@@ -414,7 +468,7 @@
 
   <!-- Footer -->
   <footer class="credit-footer" style="text-align: center; padding: 48px 24px; font-size: 12px; color: var(--text-tertiary);">
-    <p>&copy; 2026 Siddharth Hemnani · M.Sc. Computer Science · Cloudfight Coding Contest Level 5</p>
+    <p>&copy; 2026 Team Ai-DHD (Siddharth Hemnani, Sashreek Dhaimodkar, Vedant Vallakati) · Cloudfight Coding Contest Level 5 Champion</p>
   </footer>
 
 </body>

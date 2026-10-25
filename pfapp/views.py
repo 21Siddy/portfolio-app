@@ -57,7 +57,7 @@ def colony_playground(request):
         ai_wins = 106
         recent_matches = []
         leaderboard = [
-            {'rank': 1, 'team_name': 'Kernel-76 (Siddharth Hemnani)', 'model_name': 'Gen 9 Champion', 'affiliation': 'Paderborn University', 'level': 'Level 5', 'elo_rating': 1892, 'matches_played': 42, 'wins': 38, 'losses': 4, 'win_rate_pct': 90.5, 'is_siddharth': True},
+            {'rank': 1, 'team_name': 'Ai-DHD (Siddharth, Sashreek & Vedant)', 'model_name': 'Ai-DHD Gen 9 (MCTS-PUCT)', 'affiliation': 'Paderborn University', 'level': 'Level 5', 'elo_rating': 1892, 'matches_played': 42, 'wins': 38, 'losses': 4, 'win_rate_pct': 90.5, 'is_siddharth': True},
             {'rank': 2, 'team_name': 'CyberVortex AI', 'model_name': 'ResNet-Policy v4', 'affiliation': 'TU Munich', 'level': 'Level 5', 'elo_rating': 1815, 'matches_played': 39, 'wins': 32, 'losses': 7, 'win_rate_pct': 82.1, 'is_siddharth': False},
             {'rank': 3, 'team_name': 'ZeroExploit', 'model_name': 'AlphaColony-L5', 'affiliation': 'ETH Zürich', 'level': 'Level 5', 'elo_rating': 1784, 'matches_played': 35, 'wins': 27, 'losses': 8, 'win_rate_pct': 77.1, 'is_siddharth': False},
             {'rank': 4, 'team_name': 'NeuralColony_L5', 'model_name': 'TransformerPolicy_v3', 'affiliation': 'Vienna Tech', 'level': 'Level 5', 'elo_rating': 1740, 'matches_played': 31, 'wins': 23, 'losses': 8, 'win_rate_pct': 74.2, 'is_siddharth': False},
@@ -93,7 +93,7 @@ def colony_record_match(request):
         if player_team not in ['CYAN', 'MAGENTA']:
             return JsonResponse({'error': 'Invalid player team'}, status=400)
 
-        ai_model = str(data.get('ai_model', 'Level 5 Gen 9 Champion'))[:100]
+        ai_model = str(data.get('ai_model', 'Ai-DHD Gen 9 Champion'))[:100]
         winner = str(data.get('winner', '')).upper()
         if winner not in ['CYAN', 'MAGENTA', 'DRAW', '']:
             winner = None
@@ -137,7 +137,8 @@ def colony_record_match(request):
         print(f"Error recording match: {e}")
         return JsonResponse({'error': 'Server error storing match record'}, status=500)
 
-
+
+
 
 def colony_record_challenge(request):
     if request.method != 'POST':
@@ -146,24 +147,30 @@ def colony_record_challenge(request):
     try:
         data = json.loads(request.body.decode('utf-8'))
         model_name = str(data.get('model_name', 'Custom Model'))[:80].strip() or 'Custom Model'
-        author_name = str(data.get('author_name', 'Challenger'))[:80].strip() or 'Challenger'
+        author_name = str(data.get('team_name') or data.get('author_name', 'Challenger'))[:80].strip() or 'Challenger'
+        affiliation = str(data.get('affiliation', 'Independent'))[:80].strip() or 'Independent'
         challenger_wins = min(max(int(data.get('challenger_wins', 0)), 0), 2)
         champion_wins = min(max(int(data.get('champion_wins', 0)), 0), 2)
+        total_rounds = min(max(int(data.get('total_rounds', 1)), 1), 60)
 
+        # Granular Elo calculation with survival round bonus
+        survival_bonus = min(total_rounds, 30)
         if challenger_wins == 2:
-            assigned_elo = 1860
+            assigned_elo = 1860 + survival_bonus
         elif challenger_wins == 1 and champion_wins == 1:
-            assigned_elo = 1750
-        elif challenger_wins == 1:
-            assigned_elo = 1680
+            assigned_elo = 1720 + survival_bonus
+        elif challenger_wins == 1 and champion_wins == 0:
+            assigned_elo = 1760 + survival_bonus
+        elif challenger_wins == 0 and champion_wins == 1:
+            assigned_elo = 1600 + survival_bonus
         else:
-            assigned_elo = 1520
+            assigned_elo = 1480 + min(int(total_rounds * 2), 60)
 
         entry, created = ColonyLeaderboardEntry.objects.get_or_create(
             team_name=author_name,
             defaults={
                 'model_name': model_name,
-                'affiliation': 'Community Challenger',
+                'affiliation': affiliation,
                 'level': 'Custom ONNX',
                 'elo_rating': assigned_elo,
                 'matches_played': 2,
@@ -174,6 +181,8 @@ def colony_record_challenge(request):
         )
         if not created:
             entry.model_name = model_name
+            if affiliation and affiliation != 'Independent':
+                entry.affiliation = affiliation
             entry.matches_played += 2
             entry.wins += challenger_wins
             entry.losses += champion_wins
@@ -192,6 +201,9 @@ def colony_record_challenge(request):
             'rank': entry.rank,
             'team_name': entry.team_name,
             'model_name': entry.model_name,
+            'affiliation': entry.affiliation,
+            'wins': entry.wins,
+            'losses': entry.losses,
         }, status=201)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
